@@ -1,0 +1,55 @@
+#
+# sshd_config -- ssh configuration
+# Copyright (C) 2009-2012  Alan "Shtark" SCHNEIDER
+#                          <shk.schneider[at]gmail.com>
+#
+# This program comes with ABSOLUTELY NO WARRANTY.
+# This is free software, and you are welcome to redistribute it
+# under certain conditions.
+#
+# Note: this configuration only applies to Protocol 2
+#
+
+# General
+Protocol 2
+Port 22
+#ListenAddress [...]
+
+# Login
+LoginGraceTime 30
+PermitRootLogin yes
+
+# Banner
+#Banner /etc/issue.net # before
+#PrintMotd yes # after
+PrintLastLog yes # after
+
+# Restrict access by user/group
+#AllowUsers [...]
+#AllowGroups [...]
+#DenyUsers [...]
+#DenyGroups [...]
+
+# Password
+PasswordAuthentication yes
+PermitEmptyPasswords no
+
+# Pubkey
+PubkeyAuthentication yes
+AuthorizedKeysFile %h/.ssh/authorized_keys
+
+# Forwarding
+AllowTcpForwarding yes
+X11Forwarding no
+
+# Kerberos options
+#KerberosAuthentication no
+#KerberosGetAFSToken no
+#KerberosOrLocalPasswd yes
+#KerberosTicketCleanup yes
+
+# GSSAPI options
+#GSSAPIAuthentication no
+#GSSAPICleanupCredentials yes
+
+# EOF
