@@ -51,7 +51,7 @@ alias ls='ls --color=auto -h'
 alias ne='emacs -nw'
 alias j='jobs'
 alias cp='cp -r'
-alias mkdir='mkdirp -p'
+alias mkdir='mkdir -p'
 alias scp='scp -r'
 # Do NOT set aliases on commands that could be used in scripts!
 
