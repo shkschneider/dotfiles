@@ -9,6 +9,7 @@
 # under certain conditions.
 #
 
+# git: really cool
 function __ps1_git() {
     local DIR USER PROJECT BRANCH COMMITS STATUS
     DIR=$(git rev-parse --git-dir)
@@ -19,12 +20,14 @@ function __ps1_git() {
     BRANCH=$(git branch --no-color | egrep '^\*' | cut -d' ' -f2)
     COMMITS=$(git status | sed -n '2p' | sed -r "s/'.+'//g" | sed -r 's/[^0-9]//g')
     [ -z "$COMMITS" ] && COMMITS="0"
-    STATUS=$(git status --porcelain | awk '{print $1}' | sort | uniq | tr -d "\n")
+    STATUS=$(git status --porcelain | cut -c1 | sort | uniq | tr -d "\n")
     [ -n "$STATUS" ] && COLOR="\e[1;33m" || COLOR="\e[1;32m"
     [ -n "`echo $STATUS | grep '?'`" ] && COLOR="\e[1;31m"
-    printf "\e[1;34m%s \e[1;33m\j ${COLOR}%s/ %s +%s \e[1;34m(\e[1;31m%s\e[1;34m) \$\e[0m " "$USER" "$PROJECT" "$BRANCH" "$COMMITS" "$STATUS"
+    [ "$COMMITS" = "0" ] && CCOLOR="$COLOR" || CCOLOR="\e[1;33m"
+    printf "\e[1;34m%s \e[1;33m\j \e[1;32m%s/ ${COLOR}%s ${CCOLOR}+%s \e[1;34m(\e[1;31m%s\e[1;34m) \$\e[0m " "$USER" "$PROJECT" "$BRANCH" "$COMMITS" "$STATUS"
 }
 
+# hg: really slow
 function __ps1_hg() {
     local DIR USER PROJECT BRANCH STATUS
     DIR=$(hg root)
@@ -36,9 +39,10 @@ function __ps1_hg() {
     STATUS=$(hg status | awk '{print $1}' | sort | uniq | tr -d "\n")
     [ -n "$STATUS" ] && COLOR="\e[1;33m" || COLOR="\e[1;32m"
     [ -n "`echo $STATUS | grep '?'`" ] && COLOR="\e[1;31m"
-    printf "\e[1;34m%s \e[1;33m\j ${COLOR}%s/ %s \e[1;34m(\e[1;31m%s\e[1;34m) \$\e[0m " "$USER" "$PROJECT" "$BRANCH" "$STATUS"
+    printf "\e[1;34m%s \e[1;33m\j \e[1;32m%s/ ${COLOR}%s \e[1;34m(\e[1;31m%s\e[1;34m) \$\e[0m " "$USER" "$PROJECT" "$BRANCH" "$STATUS"
 }
 
+# svn: less info
 function __ps1_svn() {
     local DIR USER PROJECT BRANCH STATUS
     DIR=".svn"
@@ -48,9 +52,10 @@ function __ps1_svn() {
     STATUS=$(svn st | awk '{print $1}' | sort | uniq | tr -d "\n")
     [ -n "$STATUS" ] && COLOR="\e[1;33m" || COLOR="\e[1;32m"
     [ -n "`echo $STATUS | grep '?'`" ] && COLOR="\e[1;31m"
-    printf "\e[1;34m%s \e[1;33m\j ${COLOR}%s #%s \e[1;34m(\e[1;31m%s\e[1;34m) \$\e[0m " "$USER" "$PROJECT" "$REVISION" "$STATUS"
+    printf "\e[1;34m%s \e[1;33m\j \e[1;32m%s ${COLOR}#%s \e[1;34m(\e[1;31m%s\e[1;34m) \$\e[0m " "$USER" "$PROJECT" "$REVISION" "$STATUS"
 }
 
+# This decides which function to call to draw PS1
 function __ps1() {
     if [ -n "`git rev-parse --git-dir 2> /dev/null`" ] ; then
 	export PS1=$(__ps1_git)
@@ -65,6 +70,7 @@ function __ps1() {
     fi
 }
 
+# This defines the function that will decide who draws PS1
 PROMPT_COMMAND=__ps1
 
 # EOF
