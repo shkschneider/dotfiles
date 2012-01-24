@@ -1,0 +1,24 @@
+# ~/.gitrc
+# .git/config
+
+[core]
+	excludesfiles = ~/.gitignore
+	pager = most
+	editor = nano
+
+[user]
+	name = User Name
+	email = useremail
+	signkey = signkey
+
+[color]
+	diff = auto
+	status = auto
+	branch = auto
+	interactive = auto
+	grep = auto
+
+[alias]
+	ci = commit
+	co = checkout
+	st = status
