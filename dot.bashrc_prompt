@@ -20,7 +20,7 @@ function __ps1_git() {
     BRANCH=$(git branch --no-color | egrep '^\*' | cut -d' ' -f2)
     COMMITS=$(git status | sed -n '2p' | sed -r "s/'.+'//g" | sed -r 's/[^0-9]//g')
     [ -z "$COMMITS" ] && COMMITS="0"
-    STATUS=$(git status --porcelain | cut -c1 | sort | uniq | tr -d "\n")
+    STATUS=$(git status --porcelain | awk '{print $1}' | sed 's/??/?/g' | sort | uniq | tr -d "\n")
     [ -n "$STATUS" ] && COLOR="\e[1;33m" || COLOR="\e[1;32m"
     [ -n "`echo $STATUS | grep '?'`" ] && COLOR="\e[1;31m"
     [ "$COMMITS" = "0" ] && CCOLOR="$COLOR" || CCOLOR="\e[1;33m"
