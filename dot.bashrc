@@ -9,15 +9,24 @@
 # under certain conditions.
 #
 
+# /etc/bash/bashrc
+# ~/.bashrc
+
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
 # Preferences
 
+stty -ixon #disable XON/XOFF flow control (^s/^q)
+shopt -s cdspell
+shopt -s histappend
 shopt -s checkwinsize
-export HISTCONTROL=ignoredups
+shopt -s dotglob
 
-export PAGE=most
+umask 022
+
+export HISTCONTROL=ignoredups
+export PAGER=most
 export EDITOR=nano
 
 # Path
@@ -40,10 +49,36 @@ fi
 
 alias ls='ls --color=auto -h'
 alias ne='emacs -nw'
-alias j=jobs'
+alias j='jobs'
 alias cp='cp -r'
 alias mkdir='mkdirp -p'
 alias scp='scp -r'
 # Do NOT set aliases on commands that could be used in scripts!
+
+# Built-in
+
+function extract () {
+    if [ -f $1 ] ; then
+	case $1 in
+	    *.tar.bz2) tar xjf $1 ;;
+	    *.tar.gz) tar xzf $1 ;;
+	    *.bz2) bunzip2 $1 ;;
+	    *.rar) rar x $1 ;;
+	    *.gz) gunzip $1 ;;
+	    *.tar) tar xf $1 ;;
+	    *.tbz2) tar xjf $1 ;;
+	    *.tgz) tar xzf $1 ;;
+	    *.zip) unzip $1 ;;
+	    *.Z) uncompress $1 ;;
+	    *) echo "E: \`$1' cannot be extracted" ;;
+	esac
+    else
+	echo "E: \`$1' is not a valid file"
+    fi
+}
+
+function calc () {
+    echo "$*" | bc -l
+}
 
 # EOF
