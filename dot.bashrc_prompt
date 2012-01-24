@@ -1,0 +1,70 @@
+#!/bin/bash
+#
+# ~/.bashrc_prompt -- bash configuration for prompt
+# Copyright (C) 2012  Alan "Shtark" SCHNEIDER
+#                     <shk.schneider[at]gmail.com>
+#
+# This program comes with ABSOLUTELY NO WARRANTY.
+# This is free software, and you are welcome to redistribute it
+# under certain conditions.
+#
+
+function __ps1_git() {
+    local DIR USER PROJECT BRANCH COMMITS STATUS
+    DIR=$(git rev-parse --git-dir)
+    [ -f $DIR/config ] && USER=$(egrep '^\s*name\s*=\s*.+' $DIR/config | sed -r 's/^\s*name\s*=\s*//' | tr -d "'\"")
+    [ -z "$USER" -a -f ~/.gitconfig ] && USER=$(egrep '^\s*name\s*=\s*.+' ~/.gitconfig | sed -r 's/^\s*name\s*=\s*//' | tr -d "'\"")
+    [ -z "$USER" ] && USER=$(whoami)
+    PROJECT=$(basename `git rev-parse --show-toplevel`)
+    BRANCH=$(git branch --no-color | egrep '^\*' | cut -d' ' -f2)
+    COMMITS=$(git status | sed -n '2p' | sed -r "s/'.+'//g" | sed -r 's/[^0-9]//g')
+    [ -z "$COMMITS" ] && COMMITS="0"
+    STATUS=$(git status --porcelain | awk '{print $1}' | sort | uniq | tr -d "\n")
+    [ -n "$STATUS" ] && COLOR="\e[1;33m" || COLOR="\e[1;32m"
+    [ -n "`echo $STATUS | grep '?'`" ] && COLOR="\e[1;31m"
+    printf "\e[1;34m%s \e[1;33m\j ${COLOR}%s/ %s +%s \e[1;34m(\e[1;31m%s\e[1;34m) \$\e[0m " "$USER" "$PROJECT" "$BRANCH" "$COMMITS" "$STATUS"
+}
+
+function __ps1_hg() {
+    local DIR USER PROJECT BRANCH STATUS
+    DIR=$(hg root)
+    [ -d $DIR/.hg -a -f $DIR/.hg/hgrc ] && USER=$(egrep '^\s*username\s*=\s*.+' $DIR/.hg/hgrc | sed -r 's/^\s*username\s*=\s*//' | cut -d'<' -f1 | sed -r 's/\s+$//' | tr -d "'\"")
+    [ -z "$USER" -a -f ~/.hgrc ] && USER=$(egrep '^\s*usernamename\s*=\s*.+' ~/.hgrc | sed -r 's/^\s*username\s*=\s*//' | cut -d'<' -f1 | sed -r 's/\s+$//' | tr -d "'\"")
+    [ -z "$USER" ] && USER=$(whoami)
+    PROJECT=$(basename `hg root`)
+    BRANCH=$(hg branch | awk '{print $1}')
+    STATUS=$(hg status | awk '{print $1}' | sort | uniq | tr -d "\n")
+    [ -n "$STATUS" ] && COLOR="\e[1;33m" || COLOR="\e[1;32m"
+    [ -n "`echo $STATUS | grep '?'`" ] && COLOR="\e[1;31m"
+    printf "\e[1;34m%s \e[1;33m\j ${COLOR}%s/ %s \e[1;34m(\e[1;31m%s\e[1;34m) \$\e[0m " "$USER" "$PROJECT" "$BRANCH" "$STATUS"
+}
+
+function __ps1_svn() {
+    local DIR USER PROJECT BRANCH STATUS
+    DIR=".svn"
+    USER=$(whoami)
+    PROJECT=$(basename `svn info | sed -n '2p' | rev | cut -d' ' -f1 | rev`)
+    REVISION=$(svn info | sed -n '5p' | rev | cut -d' ' -f1 | rev)
+    STATUS=$(svn st | awk '{print $1}' | sort | uniq | tr -d "\n")
+    [ -n "$STATUS" ] && COLOR="\e[1;33m" || COLOR="\e[1;32m"
+    [ -n "`echo $STATUS | grep '?'`" ] && COLOR="\e[1;31m"
+    printf "\e[1;34m%s \e[1;33m\j ${COLOR}%s #%s \e[1;34m(\e[1;31m%s\e[1;34m) \$\e[0m " "$USER" "$PROJECT" "$REVISION" "$STATUS"
+}
+
+function __ps1() {
+    if [ -n "`git rev-parse --git-dir 2> /dev/null`" ] ; then
+	export PS1=$(__ps1_git)
+    elif [ -n "`hg root 2> /dev/null`" ] ; then
+	export PS1=$(__ps1_hg)
+    elif [ -n "`svn info 2> /dev/null`" ] ; then
+	export PS1=$(__ps1_svn)
+    elif [ `id -u` -eq 0 ] ; then
+        export PS1="\e[1;31m\u@\h \e[1;33m\j \e[1;34m \w \$\e[0m "
+    else
+        export PS1="\e[1;32m\u@\h \e[1;33m\j \e[1;34m \w \$\e[0m "
+    fi
+}
+
+PROMPT_COMMAND=__ps1
+
+# EOF
