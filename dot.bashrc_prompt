@@ -12,7 +12,7 @@
 # git: really cool
 function __ps1_git() {
     local DIR USER PROJECT BRANCH COMMITS STATUS
-    DIR=$(git rev-parse --git-dir)
+    DIR=$1
     [ -f $DIR/config ] && USER=$(egrep '^\s*name\s*=\s*.+' $DIR/config | sed -r 's/^\s*name\s*=\s*//' | tr -d "'\"")
     [ -z "$USER" -a -f ~/.gitconfig ] && USER=$(egrep '^\s*name\s*=\s*.+' ~/.gitconfig | sed -r 's/^\s*name\s*=\s*//' | tr -d "'\"")
     [ -z "$USER" ] && USER=$(whoami)
@@ -24,7 +24,7 @@ function __ps1_git() {
     [ -n "$STATUS" ] && COLOR="\e[1;33m" || COLOR="\e[1;32m"
     [ -n "`echo $STATUS | grep '?'`" ] && COLOR="\e[1;31m"
     [ "$COMMITS" = "0" ] && CCOLOR="$COLOR" || CCOLOR="\e[1;33m"
-    printf "\e[1;34m%s \e[1;33m\j \e[1;32m%s/ ${COLOR}%s ${CCOLOR}+%s \e[1;34m(\e[1;31m%s\e[1;34m) \$\e[0m " "$USER" "$PROJECT" "$BRANCH" "$COMMITS" "$STATUS"
+    printf "\e[1;34m%s %s \e[1;32m%s/ ${COLOR}%s ${CCOLOR}+%s \e[1;34m(\e[1;31m%s\e[1;34m) \$\e[0m " "$USER" "$JOBS" "$PROJECT" "$BRANCH" "$COMMITS" "$STATUS"
 }
 
 # hg: really slow
@@ -39,7 +39,7 @@ function __ps1_hg() {
     STATUS=$(hg status | awk '{print $1}' | sort | uniq | tr -d "\n")
     [ -n "$STATUS" ] && COLOR="\e[1;33m" || COLOR="\e[1;32m"
     [ -n "`echo $STATUS | grep '?'`" ] && COLOR="\e[1;31m"
-    printf "\e[1;34m%s \e[1;33m\j \e[1;32m%s/ ${COLOR}%s \e[1;34m(\e[1;31m%s\e[1;34m) \$\e[0m " "$USER" "$PROJECT" "$BRANCH" "$STATUS"
+    printf "\e[1;34m%s %s \e[1;32m%s/ ${COLOR}%s \e[1;34m(\e[1;31m%s\e[1;34m) \$\e[0m " "$USER" "$JOBS" "$PROJECT" "$BRANCH" "$STATUS"
 }
 
 # svn: less info
@@ -59,22 +59,24 @@ function __ps1_svn() {
     STATUS=$(svn st | awk '{print $1}' | sort | uniq | tr -d "\n")
     [ -n "$STATUS" ] && COLOR="\e[1;33m" || COLOR="\e[1;32m"
     [ -n "`echo $STATUS | grep '?'`" ] && COLOR="\e[1;31m"
-    printf "\e[1;34m%s \e[1;33m\j \e[1;32m%s ${COLOR}#%s \e[1;34m(\e[1;31m%s\e[1;34m) \$\e[0m " "$USER" "$PROJECT" "$REVISION" "$STATUS"
+    printf "\e[1;34m%s %s \e[1;32m%s ${COLOR}#%s \e[1;34m(\e[1;31m%s\e[1;34m) \$\e[0m " "$USER" "$JOBS" "$PROJECT" "$REVISION" "$STATUS"
 }
 
 # This decides which function to call to draw PS1
 function __ps1() {
+    JOBS=$(jobs | wc -l)
+    [ $JOBS -gt 1 ] && JOBS="\e[1;31m\j" || JOBS="\e[1;33m\j"
     GIT=$(git rev-parse --git-dir 2> /dev/null)
     if [ -n "$GIT" -a "$GIT" != "." ] ; then
-	export PS1=$(__ps1_git)
+	export PS1=$(__ps1_git "$GIT")
     elif [ -n "`hg root 2> /dev/null`" ] ; then
 	export PS1=$(__ps1_hg)
     elif [ -n "`svn info 2> /dev/null`" ] ; then
 	export PS1=$(__ps1_svn)
     elif [ `id -u` -eq 0 ] ; then
-        export PS1="\e[1;31m\u@\h \e[1;33m\j \e[1;34m\w \$\e[0m "
+        export PS1="\e[1;31m\u@\h $JOBS \e[1;34m\w \$\e[0m "
     else
-        export PS1="\e[1;32m\u@\h \e[1;33m\j \e[1;34m\w \$\e[0m "
+        export PS1="\e[1;32m\u@\h $JOBS \e[1;34m\w \$\e[0m "
     fi
 }
 
