@@ -16,7 +16,7 @@ function __ps1_git() {
     [ -f $DIR/config ] && USER=$(egrep '^\s*name\s*=\s*.+' $DIR/config | sed -r 's/^\s*name\s*=\s*//' | tr -d "'\"")
     [ -z "$USER" -a -f ~/.gitconfig ] && USER=$(egrep '^\s*name\s*=\s*.+' ~/.gitconfig | sed -r 's/^\s*name\s*=\s*//' | tr -d "'\"")
     [ -z "$USER" ] && USER=$(whoami)
-    PROJECT=$(readlink -f . | sed -r "s#^`dirname $(git rev-parse --show-toplevel)`/##")
+    PROJECT=$(pwd | sed -r "s#^`dirname $(git rev-parse --show-toplevel)`/##")
     BRANCH=$(git branch --no-color | egrep '^\*' | cut -d' ' -f2)
     COMMITS=$(git status | sed -n '2p' | sed -r "s/'.+'//g" | sed -r 's/[^0-9]//g')
     [ -z "$COMMITS" ] && COMMITS="0"
@@ -34,7 +34,7 @@ function __ps1_hg() {
     [ -d $DIR/.hg -a -f $DIR/.hg/hgrc ] && USER=$(egrep '^\s*username\s*=\s*.+' $DIR/.hg/hgrc | sed -r 's/^\s*username\s*=\s*//' | cut -d'<' -f1 | sed -r 's/\s+$//' | tr -d "'\"")
     [ -z "$USER" -a -f ~/.hgrc ] && USER=$(egrep '^\s*usernamename\s*=\s*.+' ~/.hgrc | sed -r 's/^\s*username\s*=\s*//' | cut -d'<' -f1 | sed -r 's/\s+$//' | tr -d "'\"")
     [ -z "$USER" ] && USER=$(whoami)
-    PROJECT=$(readlink -f . | sed -r "s#^`dirname $(basename `hg root`)`/##")
+    PROJECT=$(pwd | sed -r "s#^`dirname $(basename `hg root`)`/##")
     BRANCH=$(hg branch | awk '{print $1}')
     STATUS=$(hg status | awk '{print $1}' | sort | uniq | tr -d "\n")
     [ -n "$STATUS" ] && COLOR="\e[1;33m" || COLOR="\e[1;32m"
@@ -47,7 +47,7 @@ function __ps1_svn() {
     local DIR USER PROJECT BRANCH STATUS
     DIR=".svn"
     USER=$(whoami)
-    PROJECT=$(readlink -f . | sed -r "s#^`dirname $(basename `svn info | sed -n '2p' | rev | cut -d' ' -f1 | rev`)`/##")
+    PROJECT=$(pwd | sed -r "s#^`dirname $(basename `svn info | sed -n '2p' | rev | cut -d' ' -f1 | rev`)`/##")
     REVISION=$(svn info | sed -n '5p' | rev | cut -d' ' -f1 | rev)
     STATUS=$(svn st | awk '{print $1}' | sort | uniq | tr -d "\n")
     [ -n "$STATUS" ] && COLOR="\e[1;33m" || COLOR="\e[1;32m"
