@@ -12,13 +12,11 @@
 	signkey = signkey
 
 [color]
-	diff = auto
-	status = auto
-	branch = auto
-	interactive = auto
-	grep = auto
+	ui = auto
 
 [alias]
 	ci = commit
 	co = checkout
-	st = status
+	st = status --short
+	df = diff
+	dc = diff --cached
