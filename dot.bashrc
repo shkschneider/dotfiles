@@ -29,6 +29,8 @@ alias j='jobs'
 alias cp='cp -r'
 alias mkdir='mkdir -p'
 alias scp='scp -r'
+alias wget="wget --no-check-certificate"
+alias bc="bc -q"
 
 # Completion
 [ -f /etc/bash_completion ] && ! shopt -oq posix && . /etc/bash_completion
