@@ -20,11 +20,15 @@ function __ps1_git() {
     BRANCH=$(git branch --no-color | egrep '^\*' | cut -d' ' -f2)
     COMMITS=$(git status | sed -n '2p' | sed -r "s/'.+'//g" | sed -r 's/[^0-9]//g')
     [ -z "$COMMITS" ] && COMMITS="0"
-    STATUS=$(git status --porcelain | awk '{print $1}' | sed 's/??/?/g' | sort | uniq | tr -d "\n")
-    [ -n "$STATUS" ] && COLOR="\e[1;33m" || COLOR="\e[1;32m"
-    [ -n "`echo $STATUS | grep '?'`" ] && COLOR="\e[1;31m"
+    STATUS1=$(git status --porcelain | sed -r 's/^\?\?/ ?/g' | cut -c1 | tr -d " " | sort | uniq | tr -d "\n")
+    [ -n "$STATUS1" ] && COLOR1="\e[1;33m"
+    STATUS2=$(git status --porcelain | sed -r 's/^\?\?/ ?/g' | cut -c2 | tr -d " " | sort | uniq | tr -d "\n")
+    [ -n "$STATUS2" ] && COLOR2="\e[1;31m"
+    COLOR="\e[1;32m"
+    [ -n "$STATUS2" ] && COLOR="$COLOR2" || COLOR="$COLOR1"
+    [ -n "$STATUS1$STATUS2" ] && SEP="|"
     [ "$COMMITS" = "0" ] && CCOLOR="$COLOR" || CCOLOR="\e[1;33m"
-    printf "\e[1;34m%s %s \e[1;32m%s/ ${COLOR}%s ${CCOLOR}+%s \e[1;34m(\e[1;31m%s\e[1;34m) \$\e[0m " "$USER" "$JOBS" "$PROJECT" "$BRANCH" "$COMMITS" "$STATUS"
+    printf "\e[1;34m%s %s \e[1;32m%s/ ${COLOR}%s ${CCOLOR}+%s \e[1;34m(${COLOR1}%s\e[1;34m%s${COLOR2}%s\e[1;34m) \$\e[0m " "$USER" "$JOBS" "$PROJECT" "$BRANCH" "$COMMITS" "$STATUS1" "$SEP" "$STATUS2"
 }
 
 # hg: really slow
