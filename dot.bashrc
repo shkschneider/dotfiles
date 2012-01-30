@@ -22,24 +22,25 @@ export EDITOR=nano
 [ -d ~/bin ] && PATH=~/bin:"$PATH"
 
 # Aliases
-# Do NOT set aliases on commands that could be used in scripts!
-alias ls='ls --color=auto -h'
+# Try not to set aliases on commands that could be used in scripts!
+alias ls='ls --color=auto -Fh'
 alias ne='emacs -nw'
 alias j='jobs'
-alias cp='cp -r'
-alias mkdir='mkdir -p'
+# The following are not dangerous
+alias cp='cp -vr'
+alias mkdir='mkdir -pv'
 alias scp='scp -r'
 alias wget="wget --no-check-certificate"
 alias bc="bc -q"
+alias rm='rm -v'
 
 # Completion
 [ -f /etc/bash_completion ] && ! shopt -oq posix && . /etc/bash_completion
 
 # Many more
-if [ -f ~/.bashrc_* ] ; then
-    for FILE in ~/.bashrc_* ; do
-	. $FILE
-    done
-fi
+FILES=$(shopt -s nullglob ; echo ~/.bashrc_*)
+for FILE in $FILES ; do
+    source $FILE
+done
 
 # EOF
