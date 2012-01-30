@@ -27,7 +27,7 @@ function __ps1_git() {
     COLOR="\e[1;32m"
     [ -n "$STATUS2" ] && COLOR="$COLOR2" || COLOR="$COLOR1"
     [ -n "$STATUS1$STATUS2" ] && SEP="|"
-    [ "$COMMITS" = "0" ] && CCOLOR="$COLOR" || CCOLOR="\e[1;33m"
+    [ "$COMMITS" = "0" ] && CCOLOR="\e[1;32m" || CCOLOR="\e[1;33m"
     printf "\e[1;34m%s %s \e[1;32m%s/ ${COLOR}%s ${CCOLOR}+%s \e[1;34m(${COLOR1}%s\e[1;34m%s${COLOR2}%s\e[1;34m) \$\e[0m " "$USER" "$JOBS" "$PROJECT" "$BRANCH" "$COMMITS" "$STATUS1" "$SEP" "$STATUS2"
 }
 
