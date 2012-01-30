@@ -13,7 +13,11 @@
 [ -z "$PS1" ] && return
 
 # Preferences
+shopt -s hostcomplete
+shopt -s cdspell
+shopt -s histappend
 shopt -s checkwinsize
+shopt -s dotglob
 export HISTCONTROL=ignoredups
 export PAGER=most
 export EDITOR=nano
@@ -26,6 +30,9 @@ export EDITOR=nano
 alias ls='ls --color=auto -Fh'
 alias ne='emacs -nw'
 alias j='jobs'
+alias h='history'
+alias setenv=export
+alias unsetenv=unset
 # The following are not dangerous
 alias cp='cp -vr'
 alias mkdir='mkdir -pv'
@@ -33,6 +40,7 @@ alias scp='scp -r'
 alias wget="wget --no-check-certificate"
 alias bc="bc -q"
 alias rm='rm -v'
+alias ..="cd .."
 
 # Completion
 [ -f /etc/bash_completion ] && ! shopt -oq posix && . /etc/bash_completion
