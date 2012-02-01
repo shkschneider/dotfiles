@@ -10,7 +10,7 @@
 # Note: this configuration only applies to Protocol 2
 #
 
-# dot.sshd_config r1
+# dot.sshd_config r2
 
 # General
 Protocol 2
@@ -19,10 +19,10 @@ Port 22
 
 # Login
 LoginGraceTime 30
-PermitRootLogin yes
+PermitRootLogin no
 
 # Banner
-#Banner /etc/issue.net # before
+Banner /etc/issue.net # before
 #PrintMotd yes # after
 PrintLastLog yes # after
 
@@ -41,7 +41,7 @@ PubkeyAuthentication yes
 AuthorizedKeysFile %h/.ssh/authorized_keys
 
 # Forwarding
-AllowTcpForwarding yes
+AllowTcpForwarding no
 X11Forwarding no
 
 # Kerberos options
