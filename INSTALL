@@ -1,0 +1,5 @@
+INSTALL:
+
+$ curl -s https://raw.github.com/leonnib4/linux_conf/master/shk-linux-conf | bash
+
+Will update all shk-linux-conf valid configuration files already existing (no force overwride).
