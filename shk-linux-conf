@@ -41,13 +41,15 @@ done
 function download_conf_file() {
     [ -n "$1" ] && TAG="[$1] "
     printf "  %sdownloading https://raw.github.com/$GITHUB_USER/$GITHUB_REPO/master/$REMOTE_FILE as $LOCAL_FILE...\n" "$TAG"
+    DIR=$(dirname "$ABS_LOCAL_FILE")
+    [ ! -d "$DIR"  && mkdir -p "$DIR" >&2 2> /dev/null
     curl -s https://raw.github.com/$GITHUB_USER/$GITHUB_REPO/master/$REMOTE_FILE > $ABS_LOCAL_FILE
     [ $? -eq 0 ] && printf "  $LOCAL_FILE updated to r$REMOTE_REV\n"
 }
 
 function check_conf_file() {
-    FILE="$1"
-    REMOTE_TAG=$(curl -s https://raw.github.com/$GITHUB_USER/$GITHUB_REPO/master/$REMOTE_FILE | egrep "^.+ .*$FILE r" | cut -d' ' -f2-)
+    FILE=$(basename "$REMOTE_FILE" | sed 's#dot.##')
+    REMOTE_TAG=$(curl -s https://raw.github.com/$GITHUB_USER/$GITHUB_REPO/$REMOTE_FILE | egrep "^.+ .*$FILE r" | cut -d' ' -f2-)
     if [ -n "$REMOTE_TAG" ] ; then
 	REMOTE_REV=$(echo $REMOTE_TAG | cut -d' ' -f2 | tr -d "[a-z]")
 	[ -z "$REMOTE_REV" ] && REMOTE_REV="0"
@@ -74,17 +76,31 @@ function check_conf_file() {
 	   printf "$LOCAL_FILE: not found so not checked\n" >&2
 	   [ $ALL = "true" ] && download_conf_file "all" "$REMOTE_FILE" "$ABS_LOCAL_FILE"
 	fi
+    else
+	echo "$FILE: no tag found" >&2
+    fi
+}
+
+function check_conf_dir() {
+    local REMOTE_FILES REMOTE_FILE REMOTE_DIRS REMOTE_DIR REMOTE_PATH
+    REMOTE_PATH="$1"
+    REMOTE_FILES=$(curl -s https://github.com/$GITHUB_USER/$GITHUB_REPO/$REMOTE_PATH | egrep "<td.+>\s+<a href=\"/$GITHUB_USER/$GITHUB_REPO/blob" | sed -r 's/<[^>]*>//g' | sed -r 's/^\s+//g')
+    if [ -n "$REMOTE_FILES" ] ; then
+	for REMOTE_FILE in $REMOTE_FILES ; do
+	    REMOTE_FILE="master/"$(echo "$REMOTE_PATH$REMOTE_FILE" | sed 's#tree/master/##')
+	    check_conf_file
+	done
+    fi
+    REMOTE_DIRS=$(curl -s https://github.com/$GITHUB_USER/$GITHUB_REPO/$REMOTE_PATH | egrep "<td.+>\s+<a href=\"/$GITHUB_USER/$GITHUB_REPO/tree" | sed -r 's/<[^>]*>//g' | sed -r 's/^\s+//g')
+    if [ -n "$REMOTE_DIRS" ] ; then
+	[ -z "$REMOTE_PATH" ] && REMOTE_PATH="tree/master/"
+	for REMOTE_DIR in $REMOTE_DIRS ; do
+	    check_conf_dir $REMOTE_PATH$REMOTE_DIR/
+	done
     fi
 }
 
 echo "Getting file list from $GITHUB_USER@github:$GITHUB_REPO..."
-REMOTE_FILES=$(curl -s https://github.com/$GITHUB_USER/$GITHUB_REPO | grep "href=\"/$GITHUB_USER/$GITHUB_REPO/blob" | sed -r 's/<[^>]*>//g' | sed -r 's/^\s+//g')
-if [ -n "$REMOTE_FILES" ] ; then
-    for REMOTE_FILE in $REMOTE_FILES ; do
-	check_conf_file $(echo $REMOTE_FILE | sed -r "s/^dot.//")
-    done
-else
-    echo "shk-linux-conf: nothing found" >&2 && exit 1
-fi
+check_conf_dir ""
 
 # EOF
