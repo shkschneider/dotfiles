@@ -9,6 +9,8 @@
 # under certain conditions.
 #
 
+# dot.bashrc_prompt r13
+
 # git: really cool
 function __ps1_git() {
     local DIR USER PROJECT BRANCH COMMITS STATUS

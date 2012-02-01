@@ -1,5 +1,14 @@
-# ~/.gitconfig
-# .git/config
+#
+# ~/.gitconfig -- git configuration
+# Copyright (C) 2012  Alan "Shtark" SCHNEIDER
+#                     <shk.schneider[at]gmail.com>
+#
+# This program comes with ABSOLUTELY NO WARRANTY.
+# This is free software, and you are welcome to redistribute it
+# under certain conditions.
+#
+
+# dot.gitconfig r2
 
 [core]
 	excludesfiles = ~/.gitignore
@@ -20,3 +29,5 @@
 	st = status --short
 	df = diff
 	dc = diff --cached
+
+# EOF

@@ -11,6 +11,8 @@
 # See <http://www.zzapper.co.uk/zshtips.html> for more.
 #
 
+# dot.zshrc r1
+
 # zsh modules
 
 autoload -U compinit && compinit

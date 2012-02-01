@@ -8,6 +8,8 @@
 # under certain conditions.
 #
 
+# dot.ssh_config r1
+
 Host *
 SendEnv LANG LC_*
 HashKnownHosts yes

@@ -8,6 +8,8 @@
 ;; under certain conditions.
 ;;
 
+;; dot.emacs r1
+
 ;; Most oftently changed setting
 (normal-erase-is-backspace-mode 1)
 

@@ -1,4 +1,17 @@
-# .gitignore
+#
+# ~/.gitignore -- git ignore configuration
+# Copyright (C) 2012  Alan "Shtark" SCHNEIDER
+#                     <shk.schneider[at]gmail.com>
+#
+# This program comes with ABSOLUTELY NO WARRANTY.
+# This is free software, and you are welcome to redistribute it
+# under certain conditions.
+#
+
+# dot.gitignore r2
+
 *.ignore
 *~
 \#*\#
+
+# EOF

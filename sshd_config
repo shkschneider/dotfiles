@@ -10,6 +10,8 @@
 # Note: this configuration only applies to Protocol 2
 #
 
+# dot.sshd_config r1
+
 # General
 Protocol 2
 Port 22
