@@ -12,16 +12,18 @@
 ;; You are encouraged to copy and modify this file.  Please clearly document
 ;; modifications with authorship and motivation.  Bug reports, code
 ;; contributions, and suggestions are appreciated.
-;; 
+;;
 ;; SOURCE
 ;; New versions of this file may be obtained from (as of 1998/11/08)
 ;; http://www.in-machina.com/~reece/emacs/shebang.el
 ;; ftp://in-machina.com/pub/reece/emacs/shebang.el
-;; 
+;;
 ;; AUTHOR
 ;; Reece Hart, http://www.in-machina.com/~reece/, PGP:0xD178AAF9
 ;; Do not send unsolicited bulk email.  Boycott companies which do so.
-;; 
+;;
+
+;; ~/.emacs.d/shebang.el r1
 
 (defvar shebang-check-interpreter t
   "Verify that the interpreter exists.")
