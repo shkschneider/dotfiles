@@ -70,17 +70,19 @@ function __ps1_svn() {
 function __ps1() {
     JOBS=$(jobs | wc -l)
     [ $JOBS -gt 1 ] && JOBS="\e[1;31m\j" || JOBS="\e[1;33m\j"
-    GIT=$(git rev-parse --git-dir 2> /dev/null)
-    if [ -n "$GIT" -a "$GIT" != "." ] ; then
-	export PS1=$(__ps1_git "$GIT")
-    elif [ -n "`hg root 2> /dev/null`" ] ; then
-	export PS1=$(__ps1_hg)
-    elif [ -n "`svn info 2> /dev/null`" ] ; then
-	export PS1=$(__ps1_svn)
-    elif [ `id -u` -eq 0 ] ; then
+    if [ `id -u` -eq 0 ] ; then
         export PS1="\e[1;31m\u@\h $JOBS \e[1;34m\w \$\e[0m "
     else
-        export PS1="\e[1;32m\u@\h $JOBS \e[1;34m\w \$\e[0m "
+	GIT=$(git rev-parse --git-dir 2> /dev/null)
+	if [ -n "$GIT" -a "$GIT" != "." ] ; then
+	    export PS1=$(__ps1_git "$GIT")
+	elif [ -n "`hg root 2> /dev/null`" ] ; then
+	    export PS1=$(__ps1_hg)
+	elif [ -n "`svn info 2> /dev/null`" ] ; then
+	    export PS1=$(__ps1_svn)
+	else
+            export PS1="\e[1;32m\u@\h $JOBS \e[1;34m\w \$\e[0m "
+	fi
     fi
 }
 
