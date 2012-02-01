@@ -40,10 +40,10 @@ done
 
 function download_conf_file() {
     [ -n "$1" ] && TAG="[$1] "
-    printf "  %sdownloading https://raw.github.com/$GITHUB_USER/$GITHUB_REPO/master/$REMOTE_FILE as $LOCAL_FILE...\n" "$TAG"
+    printf "  %sdownloading https://raw.github.com/$GITHUB_USER/$GITHUB_REPO/$REMOTE_FILE as $LOCAL_FILE...\n" "$TAG"
     DIR=$(dirname "$ABS_LOCAL_FILE")
     [ ! -d "$DIR"  && mkdir -p "$DIR" >&2 2> /dev/null
-    curl -s https://raw.github.com/$GITHUB_USER/$GITHUB_REPO/master/$REMOTE_FILE > $ABS_LOCAL_FILE
+    curl -s https://raw.github.com/$GITHUB_USER/$GITHUB_REPO/$REMOTE_FILE > $ABS_LOCAL_FILE
     [ $? -eq 0 ] && printf "  $LOCAL_FILE updated to r$REMOTE_REV\n"
 }
 
