@@ -35,8 +35,8 @@
 ;(server-start)
 
 ;; Author
-(setq user-full-name "Alan SCHNEIDER")
-(setq user-mail-address "shk.schneider@gmail.com")
+(setq user-full-name "User Name")
+(setq user-mail-address "you@gmail.com")
 
 ;; Language
 (set-language-environment 'utf-8)
