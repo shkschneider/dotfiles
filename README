@@ -1,16 +1,35 @@
-linux_conf -- configuration files for my linux installations
-Copyright (C) 2007-2012  Alan "Shtark" SCHNEIDER
+shk-linux-conf -- synchronise you configuration files via a git repository
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+INSTALL FROM A REPOSITORY
 
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+Default repository is mine.
+It can be changed in the script or via script options -u and -r.
+
+$ wget --no-check-certificate -qO- https://raw.github.com/leonnib4/linux_conf/master/shk-linux-conf | bash
+- or -
+$ curl -s https://raw.github.com/leonnib4/linux_conf/master/shk-linux-conf | bash
+
+---
+Note that some operations will require root permissions because user cannot write to /etc/ and so on.
+---
+
+
+CREATE YOUR OWN REPOSITORY
+
+
+You can put your files anywhere you want, script goes recursively.
+The files you want to propose as an update MUST have a valid TAG:
+
+Regex: ^.+ .*filename r[0-9]+$
+Example: # /etc/php/php.ini r0
+         ;; ~/.emacs r42
+
+First part can be anything.
+Second part is a path, that can be absolute or start from home: use ~.
+Last part tags the release of the file.
+
+---
+It is important that you remember to increment the release count everytime you change the file on the repo, so that the script utilised remotely can detect that the tag has changed and start updating.
+---

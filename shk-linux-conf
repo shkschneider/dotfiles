@@ -9,7 +9,6 @@
 # under certain conditions.
 #
 
-CHECK_ONLY="false"
 GITHUB_USER="leonnib4"
 GITHUB_REPO="linux_conf"
 FORCE="false"
