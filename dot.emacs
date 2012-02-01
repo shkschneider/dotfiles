@@ -17,7 +17,6 @@
 ;(if (file-exists-p (expand-file-name "~/.emacs.d"))
 ;    (add-to-list 'load-path (expand-file-name "~/.emacs.d/"))
 ;    (require 'shebang)
-;    (require 'php-mode)
 ;)
 
 ;; KeyBinding
