@@ -1,5 +1,5 @@
 #
-# ~/.gitignore -- git ignore configuration
+# dot.gitignore -- git ignore configuration
 # Copyright (C) 2012  Alan "Shtark" SCHNEIDER
 #                     <shk.schneider[at]gmail.com>
 #
@@ -8,7 +8,7 @@
 # under certain conditions.
 #
 
-# dot.gitignore r2
+# ~/.gitignore r3
 
 *.ignore
 *~

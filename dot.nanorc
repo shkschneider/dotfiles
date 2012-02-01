@@ -1,5 +1,5 @@
 #
-# ~/.bashrc -- bash configuration
+# dot.bashrc -- bash configuration
 # Copyright (C) 2009-2012  Alan "Shtark" SCHNEIDER
 #                          <shk.schneider[at]gmail.com>
 #
@@ -8,7 +8,7 @@
 # under certain conditions.
 #
 
-# dot.nanorc r1
+# /etc/nanorc r2
 
 set autoindent
 # set backup

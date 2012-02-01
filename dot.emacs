@@ -1,5 +1,5 @@
 ;;
-;; ~/.emacs -- emacs configuration
+;; dot.emacs -- emacs configuration
 ;; Copyright (C) 2009-2012  Alan "Shtark" SCHNEIDER
 ;;                          <shk.schneider[at]gmail.com>
 ;;
@@ -8,7 +8,7 @@
 ;; under certain conditions.
 ;;
 
-;; dot.emacs r1
+;; ~/.emacs r2
 
 ;; Most oftently changed setting
 (normal-erase-is-backspace-mode 1)

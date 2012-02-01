@@ -8,7 +8,7 @@
 # under certain conditions.
 #
 
-# dot.ssh_config r1
+# /etc/ssh/ssh_config r2
 
 Host *
 SendEnv LANG LC_*

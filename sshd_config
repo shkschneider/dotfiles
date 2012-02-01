@@ -7,10 +7,8 @@
 # This is free software, and you are welcome to redistribute it
 # under certain conditions.
 #
-# Note: this configuration only applies to Protocol 2
-#
 
-# dot.sshd_config r2
+# /etc/ssh/sshd_config r3
 
 # General
 Protocol 2

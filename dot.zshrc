@@ -1,6 +1,6 @@
 #!/bin/zsh
 #
-# ~/.zshrc -- zsh configuration
+# dot.zshrc -- zsh configuration
 # Copyright (C) 2009-2012  Alan "Shtark" SCHNEIDER
 #                          <shk.schneider[at]gmail.com>
 #
@@ -11,7 +11,7 @@
 # See <http://www.zzapper.co.uk/zshtips.html> for more.
 #
 
-# dot.zshrc r1
+# ~/.zshrc r2
 
 # zsh modules
 

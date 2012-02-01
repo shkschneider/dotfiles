@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# ~/.bashrc_prompt -- bash configuration for prompt
+# dot.bashrc_prompt -- bash configuration for prompt
 # Copyright (C) 2012  Alan "Shtark" SCHNEIDER
 #                     <shk.schneider[at]gmail.com>
 #
@@ -9,7 +9,7 @@
 # under certain conditions.
 #
 
-# dot.bashrc_prompt r13
+# ~/.bashrc_prompt r14
 
 # git: really cool
 function __ps1_git() {

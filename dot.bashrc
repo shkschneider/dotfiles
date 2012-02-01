@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# ~/.bashrc -- bash configuration
+# dot.bashrc -- bash configuration
 # Copyright (C) 2009-2012  Alan "Shtark" SCHNEIDER
 #                          <shk.schneider[at]gmail.com>
 #
@@ -9,7 +9,7 @@
 # under certain conditions.
 #
 
-# dot.bashrc r7
+# ~/.bashrc r8
 
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return

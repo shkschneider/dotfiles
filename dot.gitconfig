@@ -1,5 +1,5 @@
 #
-# ~/.gitconfig -- git configuration
+# dot.gitconfig -- git configuration
 # Copyright (C) 2012  Alan "Shtark" SCHNEIDER
 #                     <shk.schneider[at]gmail.com>
 #
@@ -8,7 +8,7 @@
 # under certain conditions.
 #
 
-# dot.gitconfig r2
+# ~/.gitconfig r3
 
 [core]
 	excludesfiles = ~/.gitignore
