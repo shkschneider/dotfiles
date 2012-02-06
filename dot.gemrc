@@ -1,0 +1,15 @@
+#
+# dot.gemrc -- ruby gems configuration file
+# Copyright (C) 2012  Alan "Shtark" SCHNEIDER
+#                     <shk.schneider[at]gmail.com>
+#
+# This program comes with ABSOLUTELY NO WARRANTY.
+# This is free software, and you are welcome to redistribute it
+# under certain conditions.
+#
+
+# ~/.gemrc r0
+
+gem: --no-ri --no-rdoc
+
+# EOF
