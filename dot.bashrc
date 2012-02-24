@@ -9,7 +9,7 @@
 # under certain conditions.
 #
 
-# ~/.bashrc r8
+# ~/.bashrc r9
 
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
@@ -23,6 +23,9 @@ shopt -s dotglob
 export HISTCONTROL=ignoredups
 export PAGER=most
 export EDITOR=nano
+
+# Prompt
+export PS1="\u@\h $(jobs | wc -l) \w \$ "
 
 # Path
 [ -d ~/bin ] && PATH=~/bin:"$PATH"
