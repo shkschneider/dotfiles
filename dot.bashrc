@@ -9,7 +9,7 @@
 # under certain conditions.
 #
 
-# ~/.bashrc r9
+# ~/.bashrc r10
 
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
@@ -43,6 +43,7 @@ alias cp='cp -vr'
 alias mkdir='mkdir -pv'
 alias scp='scp -r'
 alias wget="wget --no-check-certificate"
+alias curl="curl -s"
 alias bc="bc -q"
 alias rm='rm -v'
 alias ..="cd .."
