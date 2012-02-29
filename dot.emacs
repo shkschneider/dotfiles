@@ -8,7 +8,7 @@
 ;; under certain conditions.
 ;;
 
-;; ~/.emacs r3
+;; ~/.emacs r4
 
 ;; Most oftently changed setting
 (normal-erase-is-backspace-mode 0)
@@ -26,6 +26,7 @@
 (global-set-key [(meta g)] 'goto-line)
 (global-set-key (kbd "C-c C-q") 'indent-region)
 (global-set-key (kbd "C-c C-w") 'delete-trailing-whitespace)
+(global-set-key [(control s)] 'isearch-forward-regexp)
 (global-set-key [(control r)] 'replace-regexp)
 (global-set-key [(control t)] 'replace-rectangle)
 (global-set-key [(control l)] 'global-linum-mode)
