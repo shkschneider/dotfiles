@@ -8,10 +8,10 @@
 ;; under certain conditions.
 ;;
 
-;; ~/.emacs r2
+;; ~/.emacs r3
 
 ;; Most oftently changed setting
-(normal-erase-is-backspace-mode 1)
+(normal-erase-is-backspace-mode 0)
 
 ;; Autoload
 ;(if (file-exists-p (expand-file-name "~/.emacs.d"))
@@ -29,6 +29,8 @@
 (global-set-key [(control r)] 'replace-regexp)
 (global-set-key [(control t)] 'replace-rectangle)
 (global-set-key [(control l)] 'global-linum-mode)
+(global-set-key [(control y)] (defun page-up () (interactive) (scroll-down 10)))
+(global-set-key [(control v)] (defun page-down () (interactive) (scroll-up 10)))
 
 ;; Emacs23+
 ;(server-start)
