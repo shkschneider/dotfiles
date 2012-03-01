@@ -9,7 +9,7 @@
 # under certain conditions.
 #
 
-# ~/.bashrc_prompt r14
+# ~/.bashrc_prompt r15
 
 # git: really cool
 function __ps1_git() {
@@ -75,7 +75,7 @@ function __ps1() {
     [ $JOBS -eq 1 ] && JCOLOR="\e[1;33m"
     [ $JOBS -gt 1 ] && JCOLOR="\e[1;31m"
     if [ `id -u` -eq 0 ] ; then
-        export PS1="\e[1;31m\u@\h $JOBS \e[1;34m\w \$\e[0m "
+        export PS1="\e[1;31m\u@\h $JCOLOR$JOBS \e[1;34m\w \$\e[0m "
     else
 	GIT=$(git rev-parse --git-dir 2> /dev/null)
 	if [ -n "$GIT" -a "$GIT" != "." ] ; then
