@@ -20,6 +20,7 @@ shopt -s cdspell
 shopt -s histappend
 shopt -s checkwinsize
 shopt -s dotglob
+shopt -s checkhash
 export HISTCONTROL=ignoredups
 
 # Path
