@@ -8,7 +8,7 @@
 # under certain conditions.
 #
 
-# ~/.gitconfig r4
+# ~/.gitconfig r5
 
 [core]
 	excludesfiles = ~/.gitignore
@@ -29,11 +29,13 @@
 	st = status --short
 	df = diff
 	dc = diff --cached
-        # commits by author
-        al = shortlog --pretty=format:'%h %ar: %s'
-        # fast git-shortlog
-        sl = log --pretty=format:'%h [%an] %s'
-        # commit count by author
+        # log authors
+        la = shortlog --pretty=format:'%h %ar: %s'
+        # log short
+        ls = log --pretty=format:'%h [%an] %s'
+        # rank
         rk = shortlog -s
+        # log graph
+        lg = log --pretty=format:'%h [%an] %s' --graph
 
 # EOF
