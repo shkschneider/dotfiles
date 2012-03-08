@@ -9,7 +9,7 @@
 # under certain conditions.
 #
 
-# /etc/bash.bashrc r0
+# /etc/bash.bashrc r1
 
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
@@ -28,14 +28,14 @@ export HISTCONTROL=ignoredups
 # Aliases
 # Try not to set aliases on commands that could be used in scripts!
 alias ls='ls --color=auto -Fh'
-alias ne='emacs -nw'
-alias j='jobs'
-alias h='history'
 alias setenv=export
 alias unsetenv=unset
 
 # Completion
 [ -f /etc/bash_completion ] && ! shopt -oq posix && . /etc/bash_completion
+
+# Command not found
+command_not_found_handle() { echo "bash: command not found: \`$1'"; }
 
 JOBS=$(jobs | wc -l)
 [ $JOBS -eq 0 ] && JCOLOR="\e[1;32m"
