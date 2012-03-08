@@ -11,21 +11,10 @@
 
 # ~/.bashrc r10
 
-# If not running interactively, don't do anything
-[ -z "$PS1" ] && return
-
 # Preferences
-shopt -s hostcomplete
-shopt -s cdspell
-shopt -s histappend
-shopt -s checkwinsize
-shopt -s dotglob
 export HISTCONTROL=ignoredups
 export PAGER=most
 export EDITOR=nano
-
-# Prompt
-export PS1="\u@\h $(jobs | wc -l) \w \$ "
 
 # Path
 [ -d ~/bin ] && PATH=~/bin:"$PATH"
@@ -47,9 +36,6 @@ alias curl="curl -s"
 alias bc="bc -q"
 alias rm='rm -v'
 alias ..="cd .."
-
-# Completion
-[ -f /etc/bash_completion ] && ! shopt -oq posix && . /etc/bash_completion
 
 # Many more
 FILES=$(shopt -s nullglob ; echo ~/.bashrc_*)
