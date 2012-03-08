@@ -8,7 +8,7 @@
 # under certain conditions.
 #
 
-# ~/.gitconfig r5
+# ~/.gitconfig r6
 
 [core]
 	excludesfiles = ~/.gitignore
@@ -29,6 +29,7 @@
 	st = status --short
 	df = diff
 	dc = diff --cached
+	cl = clean -df
         # log authors
         la = shortlog --pretty=format:'%h %ar: %s'
         # log short
