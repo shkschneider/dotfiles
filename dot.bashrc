@@ -19,24 +19,6 @@ export EDITOR=nano
 # Path
 [ -d ~/bin ] && PATH=~/bin:"$PATH"
 
-# Aliases
-# Try not to set aliases on commands that could be used in scripts!
-alias ls='ls --color=auto -Fh'
-alias ne='emacs -nw'
-alias j='jobs'
-alias h='history'
-alias setenv=export
-alias unsetenv=unset
-# The following are not dangerous
-alias cp='cp -vr'
-alias mkdir='mkdir -pv'
-alias scp='scp -r'
-alias wget="wget --no-check-certificate"
-alias curl="curl -s"
-alias bc="bc -q"
-alias rm='rm -v'
-alias ..="cd .."
-
 # Many more
 FILES=$(shopt -s nullglob ; echo ~/.bashrc_*)
 for FILE in $FILES ; do
