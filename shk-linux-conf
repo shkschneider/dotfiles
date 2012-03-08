@@ -13,11 +13,13 @@ GITHUB_USER="leonnib4"
 GITHUB_REPO="linux_conf"
 FORCE="false"
 ALL="false"
+LIST="false"
 
 function usage() {
     echo "Usage: shk-linux-conf [-c] [-u GITHUB_USER] [-r GITHUB_REPO] [-f] [-a]" >&2
     echo "       Options:" >&2
-    echo "                -c  only checks and quits (safe)" >&2
+    echo "                -l  only list files on repository" >&2
+    echo "                -c  only checks and quits" >&2
     echo "                -u  specify the github username" >&2
     echo "                -r  specify the github repository name" >&2
     echo "       Files must be on the root of master branch." >&2
@@ -27,21 +29,23 @@ function usage() {
     exit 1
 }
 
-while getopts u:r:fa OPT; do
+while getopts u:r:fal OPT; do
     case "$OPT" in
 	u) GITHUB_USER=$OPTARG ;;
 	r) GITHUB_REPO=$OPTARG ;;
 	f) FORCE="true" ;;
 	a) ALL="true" ;;
+	l) LIST="true" ;;
 	\?|*) usage ;;
     esac
 done
+I=0 ; while [ $I -lt $OPTIND ] ; do ((I++)) && shift ; done
 
 function download_conf_file() {
     [ -n "$1" ] && TAG="[$1] "
     printf "  %sdownloading https://raw.github.com/$GITHUB_USER/$GITHUB_REPO/$REMOTE_FILE as $LOCAL_FILE...\n" "$TAG"
     DIR=$(dirname "$ABS_LOCAL_FILE")
-    [ ! -d "$DIR"  && mkdir -p "$DIR" >&2 2> /dev/null
+    [ ! -d "$DIR" ] && mkdir -p "$DIR" 2> /dev/null
     curl -s https://raw.github.com/$GITHUB_USER/$GITHUB_REPO/$REMOTE_FILE > $ABS_LOCAL_FILE
     [ $? -eq 0 ] && printf "  $LOCAL_FILE updated to r$REMOTE_REV\n"
 }
@@ -54,7 +58,10 @@ function check_conf_file() {
 	[ -z "$REMOTE_REV" ] && REMOTE_REV="0"
 	LOCAL_FILE=$(echo $REMOTE_TAG | cut -d' ' -f1)
 	ABS_LOCAL_FILE=$(echo $LOCAL_FILE | sed "s#~#$HOME#")
+	[ $LIST = "true" ] && echo "$(echo $REMOTE_FILE | sed -r "s#^master/##") -> $LOCAL_FILE" && return
 	if [ -f "$ABS_LOCAL_FILE" ] ; then
+	    OWNER=$(find "$(dirname "$ABS_LOCAL_FILE")" -maxdepth 1 -name "$(basename "$ABS_LOCAL_FILE")" -printf "%u")
+	    [ "_$OWNER" != "_$(whoami)" ] && echo "$LOCAL_FILE: not owned by $(whoami)" >&2 && return
 	    LOCAL_TAG=$(cat $ABS_LOCAL_FILE | egrep "^.+ .*$FILE r" | cut -d' ' -f2-)
 	    LOCAL_REV=$(echo $LOCAL_TAG | cut -d' ' -f2 | tr -d "[a-z]")
 	    if [ -z "$LOCAL_REV" ] ; then
@@ -75,14 +82,13 @@ function check_conf_file() {
 	   printf "$LOCAL_FILE: not found so not checked\n" >&2
 	   [ $ALL = "true" ] && download_conf_file "all" "$REMOTE_FILE" "$ABS_LOCAL_FILE"
 	fi
-    else
-	echo "$FILE: no tag found" >&2
     fi
 }
 
 function check_conf_dir() {
     local REMOTE_FILES REMOTE_FILE REMOTE_DIRS REMOTE_DIR REMOTE_PATH
     REMOTE_PATH="$1"
+    REMOTE_PATH=${REMOTE_PATH:=""}
     REMOTE_FILES=$(curl -s https://github.com/$GITHUB_USER/$GITHUB_REPO/$REMOTE_PATH | egrep "<td.+>\s+<a href=\"/$GITHUB_USER/$GITHUB_REPO/blob" | sed -r 's/<[^>]*>//g' | sed -r 's/^\s+//g')
     if [ -n "$REMOTE_FILES" ] ; then
 	for REMOTE_FILE in $REMOTE_FILES ; do
@@ -92,14 +98,24 @@ function check_conf_dir() {
     fi
     REMOTE_DIRS=$(curl -s https://github.com/$GITHUB_USER/$GITHUB_REPO/$REMOTE_PATH | egrep "<td.+>\s+<a href=\"/$GITHUB_USER/$GITHUB_REPO/tree" | sed -r 's/<[^>]*>//g' | sed -r 's/^\s+//g')
     if [ -n "$REMOTE_DIRS" ] ; then
-	[ -z "$REMOTE_PATH" ] && REMOTE_PATH="tree/master/"
+	REMOTE_PATH=${REMOTE_PATH:="tree/master/"}
 	for REMOTE_DIR in $REMOTE_DIRS ; do
 	    check_conf_dir $REMOTE_PATH$REMOTE_DIR/
 	done
     fi
 }
 
+[ -z "$GITHUB_USER" ] || [ -z "$GITHUB_REPO" ] && usage
+
 echo "Getting file list from $GITHUB_USER@github:$GITHUB_REPO..."
-check_conf_dir ""
+if [ $# -gt 0 ] ; then
+    for ARGV in $@ ; do
+	ARGV=$(echo "$ARGV" | sed -r 's#^/##')
+	REMOTE_FILE=$(echo "master/$ARGV")
+	check_conf_file
+    done
+else
+    check_conf_dir
+fi
 
 # EOF
