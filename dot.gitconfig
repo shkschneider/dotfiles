@@ -8,7 +8,7 @@
 # under certain conditions.
 #
 
-# ~/.gitconfig r3
+# ~/.gitconfig r4
 
 [core]
 	excludesfiles = ~/.gitignore
@@ -16,9 +16,9 @@
 	editor = nano
 
 [user]
-	name = User Name
-	email = useremail
-	signkey = signkey
+	#name = User Name
+	#email = useremail
+	#signkey = signkey
 
 [color]
 	ui = auto
@@ -29,5 +29,11 @@
 	st = status --short
 	df = diff
 	dc = diff --cached
+        # commits by author
+        al = shortlog --pretty=format:'%h %ar: %s'
+        # fast git-shortlog
+        sl = log --pretty=format:'%h [%an] %s'
+        # commit count by author
+        rk = shortlog -s
 
 # EOF
