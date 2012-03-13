@@ -9,15 +9,16 @@
 # under certain conditions.
 #
 
-# ~/.bashrc_aliases r0
+# ~/.bashrc_aliases r1
 
-# Try not to set aliases on commands that could be used in scripts!
+# Try not to abuse of aliases
 alias ls='ls --color=auto -Fh'
 alias ne='emacs -nw'
 alias j='jobs'
 alias h='history'
 alias setenv=export
 alias unsetenv=unset
+
 # The following are not dangerous
 alias cp='cp -vr'
 alias mkdir='mkdir -pv'
@@ -27,5 +28,6 @@ alias curl="curl -s"
 alias bc="bc -q"
 alias rm='rm -v'
 alias ..="cd .."
+alias valgrind='valgrind --leak-check=full --show-reachable=yes'
 
 # EOF

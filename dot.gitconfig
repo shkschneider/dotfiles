@@ -8,7 +8,7 @@
 # under certain conditions.
 #
 
-# ~/.gitconfig r5
+# ~/.gitconfig r7
 
 [core]
 	excludesfiles = ~/.gitignore
@@ -26,9 +26,10 @@
 [alias]
 	ci = commit
 	co = checkout
-	st = status --short
+	st = status --short --branch
 	df = diff
 	dc = diff --cached
+	cl = clean -df
         # log authors
         la = shortlog --pretty=format:'%h %ar: %s'
         # log short
