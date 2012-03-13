@@ -80,7 +80,7 @@ function check_conf_file() {
 	    fi
 	else
 	   printf "$LOCAL_FILE: not found so not checked\n" >&2
-	   [ $ALL = "true" ] && download_conf_file "all" "$REMOTE_FILE" "$ABS_LOCAL_FILE"
+	   [ $ALL = "true" ] || [ $FORCE = "true" ] && download_conf_file "all" "$REMOTE_FILE" "$ABS_LOCAL_FILE"
 	fi
     fi
 }
