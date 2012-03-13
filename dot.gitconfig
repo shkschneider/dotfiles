@@ -8,7 +8,7 @@
 # under certain conditions.
 #
 
-# ~/.gitconfig r6
+# ~/.gitconfig r7
 
 [core]
 	excludesfiles = ~/.gitignore
@@ -26,7 +26,7 @@
 [alias]
 	ci = commit
 	co = checkout
-	st = status --short
+	st = status --short --branch
 	df = diff
 	dc = diff --cached
 	cl = clean -df
