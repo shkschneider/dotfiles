@@ -8,7 +8,7 @@
 # under certain conditions.
 #
 
-# ~/.gitconfig r7
+# ~/.gitconfig r8
 
 [core]
 	excludesfiles = ~/.gitignore
