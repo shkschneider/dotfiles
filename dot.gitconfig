@@ -27,8 +27,8 @@
 	ci = commit
 	co = checkout
 	st = status --short --branch
-	df = diff
-	dc = diff --cached
+	df = diff --word-diff
+	dc = diff --cached --word-diff
 	cl = clean -df
         # log authors
         la = shortlog --pretty=format:'%h %ar: %s'
