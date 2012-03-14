@@ -9,7 +9,7 @@
 # under certain conditions.
 #
 
-# ~/.bashrc_prompt r15
+# ~/.bashrc_prompt r16
 
 # git: really cool
 function __ps1_git() {
@@ -20,7 +20,11 @@ function __ps1_git() {
     [ -z "$USER" ] && USER=$(whoami)
     PROJECT=$(pwd | sed -r "s#^`dirname $(git rev-parse --show-toplevel)`/##")
     BRANCH=$(git branch --no-color | egrep '^\*' | cut -d' ' -f2)
-    COMMITS=$(git status | sed -n '2p' | sed -r "s/'.+'//g" | sed -r 's/[^0-9]//g')
+    if [ -n "$(git status -sb | egrep '\[behind [0-9]+\]$')" ] ; then
+        COMMITS=$(git status | sed -n '2p' | sed -r "s/'.+'//g" | sed -r 's/[^0-9]//g')
+    else
+        COMMITS="+$(git status | sed -n '2p' | sed -r "s/'.+'//g" | sed -r 's/[^0-9]//g')"
+    fi
     [ -z "$COMMITS" ] && COMMITS="0"
     STATUS1=$(git status --porcelain | sed -r 's/^\?\?/ ?/g' | cut -c1 | tr -d " " | sort | uniq | tr -d "\n")
     [ -n "$STATUS1" ] && COLOR1="\e[1;33m"
@@ -30,7 +34,7 @@ function __ps1_git() {
     [ -n "$STATUS2" ] && COLOR="$COLOR2" || COLOR="$COLOR1"
     [ -n "$STATUS1$STATUS2" ] && SEP="|"
     [ "$COMMITS" = "0" ] && CCOLOR="\e[1;32m" || CCOLOR="\e[1;33m"
-    printf "\e[1;34m%s ${JCOLOR}%s \e[1;32m%s/ ${COLOR}%s ${CCOLOR}+%s \e[1;34m(${COLOR1}%s\e[1;34m%s${COLOR2}%s\e[1;34m) \$\e[0m " "$USER" "$JOBS" "$PROJECT" "$BRANCH" "$COMMITS" "$STATUS1" "$SEP" "$STATUS2"
+    printf "\e[1;34m%s ${JCOLOR}%s \e[1;32m%s/ ${COLOR}%s ${CCOLOR}%s \e[1;34m(${COLOR1}%s\e[1;34m%s${COLOR2}%s\e[1;34m) \$\e[0m " "$USER" "$JOBS" "$PROJECT" "$BRANCH" "$COMMITS" "$STATUS1" "$SEP" "$STATUS2"
 }
 
 # hg: really slow
