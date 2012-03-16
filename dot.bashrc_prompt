@@ -9,7 +9,7 @@
 # under certain conditions.
 #
 
-# ~/.bashrc_prompt r19
+# ~/.bashrc_prompt r20
 
 # git: really cool
 function __ps1_git() {
@@ -19,7 +19,7 @@ function __ps1_git() {
     [ -z "$USER" -a -f ~/.gitconfig ] && USER=$(egrep '^\s*name\s*=\s*.+' ~/.gitconfig | sed -r 's/^\s*name\s*=\s*//' | tr -d "'\"")
     [ -z "$USER" ] && USER=$(whoami)
     PROJECT=$(pwd | sed -r "s#^`dirname $(git rev-parse --show-toplevel)`/##")
-    BRANCH=$(git branch --no-color | egrep '^\*' | cut -d' ' -f2)
+    BRANCH=$(git branch --no-color | egrep '^\*' | cut -c3-)
     BEHIND=$(git status -sb | head -1 | egrep '^.+behind ([0-9]+).+$' | sed -r 's/^.+behind ([0-9]+).+$/-\1/')
     AHEAD=$(git status -sb | head -1 | egrep '^.+ahead ([0-9]+).+$' | sed -r 's/^.+ahead ([0-9]+).+$/+\1/')
     COMMITS="$BEHIND$AHEAD"
