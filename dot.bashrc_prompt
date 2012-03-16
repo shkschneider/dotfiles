@@ -9,7 +9,7 @@
 # under certain conditions.
 #
 
-# ~/.bashrc_prompt r18
+# ~/.bashrc_prompt r19
 
 # git: really cool
 function __ps1_git() {
@@ -72,25 +72,27 @@ function __ps1_svn() {
 
 # This decides which function to call to draw PS1
 function __ps1() {
+    EXIT=$?
+    [ $EXIT -ne 0 ] && EXIT="\e[1;31m$EXIT" || EXIT="\e[1;32m$EXIT"
     JOBS=$(jobs | wc -l)
     [ $JOBS -eq 0 ] && JCOLOR="\e[1;32m"
     [ $JOBS -eq 1 ] && JCOLOR="\e[1;33m"
     [ $JOBS -gt 1 ] && JCOLOR="\e[1;31m"
     if [ `id -u` -eq 0 ] ; then
-        export PS1="\e[1;31m\u@\h $JCOLOR$JOBS \e[1;34m\w \$\e[0m "
+        export PS1="$EXIT \e[1;31m\u@\h $JCOLOR$JOBS \e[1;34m\w \$\e[0m "
     else
 	GIT=$(git rev-parse --git-dir 2> /dev/null)
 	if [ -n "$GIT" -a "$GIT" != "." ] ; then
-	    export PS1=$(__ps1_git "$GIT")
+	    export PS1="$EXIT "$(__ps1_git "$GIT")
 	elif [ -n "`hg root 2> /dev/null`" ] ; then
-	    export PS1=$(__ps1_hg)
+	    export PS1="$EXIT "$(__ps1_hg)
 	elif [ -n "`svn info 2> /dev/null`" ] ; then
-	    export PS1=$(__ps1_svn)
+	    export PS1="$EXIT "$(__ps1_svn)
 	else
 	    if [ -z "`pwd | egrep "^$HOME"`" ] ; then
-		export PS1="\e[1;33m\u@\h $JCOLOR$JOBS \e[1;34m\w \$\e[0m "
+		export PS1="$EXIT \e[1;33m\u@\h $JCOLOR$JOBS \e[1;34m\w \$\e[0m "
 	    else
-		export PS1="\e[1;32m\u@\h $JCOLOR$JOBS \e[1;34m\w \$\e[0m "
+		export PS1="$EXIT \e[1;32m\u@\h $JCOLOR$JOBS \e[1;34m\w \$\e[0m "
 	    fi
 	fi
     fi
