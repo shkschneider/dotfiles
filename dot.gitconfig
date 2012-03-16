@@ -8,12 +8,12 @@
 # under certain conditions.
 #
 
-# ~/.gitconfig r8
+# ~/.gitconfig r9
 
 [core]
 	excludesfiles = ~/.gitignore
-	pager = most
-	editor = nano
+	#pager = most
+	#editor = nano
 
 [user]
 	#name = User Name
@@ -26,17 +26,41 @@
 [alias]
 	ci = commit
 	co = checkout
+	br = branch
 	st = status --short --branch
-	df = diff --word-diff
-	dc = diff --cached --word-diff
+	df = diff
+	dc = diff --cached
+	ds = diff --stat
 	cl = clean -df
+        am = commit --amend
+	dfw = diff --word-diff
+	dcw = diff --cached --word-diff
+	authors = "!git log --format='%aN' | sort -u"
+
+	# add-remove
+	ar = "!git add -u && git ls-files --deleted -z | xargs -0 git rm 2>/dev/null"
+	# restore
+	re = reset --hard HEAD
+	# undo add
+	ua = reset --mixed
+	# undo commit
+	uc = reset --soft HEAD^
+	# undo pull
+	up = reset --hard HEAD@{0}
+	# undo merge
+	um = reset --hard HEAD@{0}
+	# undo rebase
+	ur = reset --hard HEAD@{0}
         # log authors
         la = shortlog --pretty=format:'%h %ar: %s'
         # log short
         ls = log --pretty=format:'%h [%an] %s'
         # rank
-        rk = shortlog -s
+        rk = "!git log --format='%aN'  | awk '{arr[$0]++} END{for (i in arr){print arr[i], i;}}' | sort -nr"
         # log graph
-        lg = log --pretty=format:'%h [%an] %s' --graph
+        lg = log --pretty=oneline --abbrev-commit --graph
+
+	# tarball
+	tgz = "!git archive HEAD --prefix=`git rev-parse --short HEAD` --format=tar | gzip > ../`git rev-parse --short HEAD`.tar.gz"
 
 # EOF
