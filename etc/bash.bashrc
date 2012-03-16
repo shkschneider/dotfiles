@@ -9,7 +9,7 @@
 # under certain conditions.
 #
 
-# /etc/bash.bashrc r1
+# /etc/bash.bashrc r2
 
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
@@ -39,19 +39,22 @@ alias unsetenv=unset
 # Command not found
 command_not_found_handle() { echo "bash: command not found: \`$1'"; }
 
-JOBS=$(jobs | wc -l)
-[ $JOBS -eq 0 ] && JCOLOR="\e[1;32m"
-[ $JOBS -eq 1 ] && JCOLOR="\e[1;33m"
-[ $JOBS -gt 1 ] && JCOLOR="\e[1;31m"
-if [ `id -u` -eq 0 ] ; then
-    export PS1="\e[1;31m\u@\h $JCOLOR$JOBS \e[1;34m\w \$\e[0m "
-elif [ -z "`pwd | egrep "^$HOME"`" ] ; then
-    export PS1="\e[1;33m\u@\h $JCOLOR$JOBS \e[1;34m\w \$\e[0m "
-else
-    export PS1="\e[1;32m\u@\h $JCOLOR$JOBS \e[1;34m\w \$\e[0m "
-fi
+function __ps1() {
+    EXIT=$?
+    [ $EXIT -ne 0 ] && EXIT="\e[1;31m$EXIT" || EXIT="\e[1;32m$EXIT"
+    JOBS=$(jobs | wc -l)
+    [ $JOBS -eq 0 ] && JCOLOR="\e[1;32m"
+    [ $JOBS -eq 1 ] && JCOLOR="\e[1;33m"
+    [ $JOBS -gt 1 ] && JCOLOR="\e[1;31m"
+    if [ $(id -u) -eq 0 ] ; then
+        export PS1="$EXIT \e[1;31m\u@\h $JCOLOR$JOBS \e[1;34m\w \$\e[0m "
+    elif [ -z "$(pwd | egrep "^$HOME")" ] ; then
+        export PS1="$EXIT \e[1;33m\u@\h $JCOLOR$JOBS \e[1;34m\w \$\e[0m "
+    else
+        export PS1="$EXIT \e[1;32m\u@\h $JCOLOR$JOBS \e[1;34m\w \$\e[0m "
+    fi
+}
 
-# Goto HOME
-cd ~
+PROMPT_COMMAND=__ps1
 
 # EOF
