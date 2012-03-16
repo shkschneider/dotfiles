@@ -25,6 +25,7 @@ export HISTCONTROL=ignoredups
 
 # Path
 [ -d $HOME/bin ] && PATH="$HOME/bin:$PATH"
+PATH=$(echo $(env | egrep 'PATH=' | cut -d'=' -f2 | tr ":" "\n" | uniq | tr "\n" ":" | sed -r 's/:$//'))
 
 # Aliases
 # Try not to set aliases on commands that could be used in scripts!
