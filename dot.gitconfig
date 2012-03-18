@@ -8,7 +8,7 @@
 # under certain conditions.
 #
 
-# ~/.gitconfig r12
+# ~/.gitconfig r13
 
 [core]
 	excludesfiles = ~/.gitignore
@@ -28,7 +28,7 @@
 	s = show
 	a = add
 	t = tag
-	ci = commit
+	ci = commit --no-status
 	co = checkout
 	br = branch
 	rc = rebase --continue
