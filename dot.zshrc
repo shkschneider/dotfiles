@@ -1,7 +1,7 @@
 #!/bin/zsh
 #
 # dot.zshrc -- zsh configuration
-# Copyright (C) 2009-2012  Alan "Shtark" SCHNEIDER
+# Copyright (C) 2009-2012  Alan SCHNEIDER
 #                          <shk.schneider[at]gmail.com>
 #
 # This program comes with ABSOLUTELY NO WARRANTY.
