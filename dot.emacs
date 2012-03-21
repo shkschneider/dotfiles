@@ -30,8 +30,8 @@
 (global-set-key [(control r)] 'replace-regexp)
 (global-set-key [(control t)] 'replace-rectangle)
 (global-set-key [(control l)] 'global-linum-mode)
-(global-set-key [(control y)] (defun page-up () (interactive) (scroll-down 10)))
-(global-set-key [(control v)] (defun page-down () (interactive) (scroll-up 10)))
+;(global-set-key [(control y)] (defun page-up () (interactive) (scroll-down 10)))
+;(global-set-key [(control v)] (defun page-down () (interactive) (scroll-up 10)))
 
 ;; Emacs23+
 ;(server-start)
@@ -58,7 +58,7 @@
 (setq line-number-mode t
       column-number-mode t
       linum-format "%\ 3d ")
-(global-linum-mode 1)
+(global-linum-mode t)
 (setq display-time-format " %A %e %B %Y, %H:%M "
       display-time-24hr-format t)
 (display-time)
@@ -66,8 +66,8 @@
 (setq-default show-trailing-whitespace t)
 
 ;; Colors
-(global-font-lock-mode 1) ; colorfull
-(show-paren-mode 1) ; highlight parent items
+(global-font-lock-mode t) ; colorfull
+(show-paren-mode t) ; highlight parent items
 (transient-mark-mode t) ; highlight selection
 (setq search-highlight t)
 
@@ -75,6 +75,8 @@
 (setq scroll-step 1)
 (delete-selection-mode t)
 (setq mouse-yank-at-point t)
+(setq backup-directory-alist '(("." . "/tmp")))
+(add-hook 'before-save-hook (lambda() (delete-trailing-whitespace)))
 
 ;; Fix
 (fset 'yes-or-no-p 'y-or-n-p)
