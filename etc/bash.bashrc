@@ -9,7 +9,7 @@
 # under certain conditions.
 #
 
-# /etc/bash.bashrc r2
+# /etc/bash.bashrc r3
 
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
@@ -23,13 +23,15 @@ shopt -s dotglob
 shopt -s checkhash
 export HISTCONTROL=ignoredups
 
+# umask
+umask 022
+
 # Path
 [ -d $HOME/bin ] && PATH="$HOME/bin:$PATH"
 PATH=$(echo $(env | egrep 'PATH=' | cut -d'=' -f2 | tr ":" "\n" | uniq | tr "\n" ":" | sed -r 's/:$//'))
 
 # Aliases
-# Try not to set aliases on commands that could be used in scripts!
-alias ls='ls --color=auto -Fh'
+# Try not to set aliases with options here
 alias setenv=export
 alias unsetenv=unset
 
@@ -41,7 +43,13 @@ command_not_found_handle() { echo "bash: command not found: \`$1'"; }
 
 function __ps1() {
     EXIT=$?
-    [ $EXIT -ne 0 ] && EXIT="\e[1;31m$EXIT" || EXIT="\e[1;32m$EXIT"
+    if [ $EXIT -eq 0 ] ; then
+        EXIT="\e[1;32m$EXIT"
+    elif [ $EXIT -eq 148 ] ; then
+        EXIT="\e[1;33m$EXIT"
+    else
+        EXIT="\e[1;31m$EXIT"
+    fi
     JOBS=$(jobs | wc -l)
     [ $JOBS -eq 0 ] && JCOLOR="\e[1;32m"
     [ $JOBS -eq 1 ] && JCOLOR="\e[1;33m"

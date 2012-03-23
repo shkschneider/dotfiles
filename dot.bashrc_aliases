@@ -9,17 +9,12 @@
 # under certain conditions.
 #
 
-# ~/.bashrc_aliases r1
+# ~/.bashrc_aliases r2
 
-# Try not to abuse of aliases
 alias ls='ls --color=auto -Fh'
 alias ne='emacs -nw'
 alias j='jobs'
 alias h='history'
-alias setenv=export
-alias unsetenv=unset
-
-# The following are not dangerous
 alias cp='cp -vr'
 alias mkdir='mkdir -pv'
 alias scp='scp -r'

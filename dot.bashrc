@@ -9,16 +9,11 @@
 # under certain conditions.
 #
 
-# ~/.bashrc r11
+# ~/.bashrc r12
 
 # Preferences
-export HISTCONTROL=ignoredups
 export PAGER=most
 export EDITOR=nano
-
-# Path
-[ -d ~/bin ] && PATH=~/bin:"$PATH"
-PATH=$(echo $(env | egrep 'PATH=' | cut -d'=' -f2 | tr ":" "\n" | uniq | tr "\n" ":" | sed -r 's/:$//'))
 
 # Many more
 FILES=$(shopt -s nullglob ; echo ~/.bashrc_*)
