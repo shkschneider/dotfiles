@@ -22,6 +22,7 @@ shopt -s checkwinsize
 shopt -s dotglob
 shopt -s checkhash
 export HISTCONTROL=ignoredups
+export MYSQL_HISTFILE=/dev/null
 
 # umask
 umask 022

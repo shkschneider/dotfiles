@@ -12,6 +12,8 @@
 # ~/.bash_logout r0
 
 history -c
-[ -f "$HOME/.bash_history" ] && rm -f "$HOME/.bash_history"
+rm -f "$HOME/.bash_history"
+
+rm -f "$HOME/.mysql_history"
 
 # EOF
