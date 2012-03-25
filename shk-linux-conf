@@ -59,8 +59,10 @@ function get_file() {
     flag="$1"
     remote="$2"
     local="$3"
+    dir=$(dirname "$local")
     tmp="/tmp/$(basename "$local")"
-    mkdir -p "$(dirname "$local")"
+    [ ! -w "$dir" ] && printf "shk-linux-conf: $dir: permission denied" >&2 && errors=$(($errors + 1)) && return
+    mkdir -p "$dir"
     if [ -n "$flag" ] ; then
 	printf "  [$flag] '$remote' -> '$local'\n"
     else
@@ -87,6 +89,7 @@ function get_local_infos() {
     if [ ! -f "$path" ] ; then
 	tag="0"
     else
+        [ ! -r "$path" ] && printf "shk-linux-conf: $path: permission denied" >&2 && errors=$(($errors + 1)) && return 0
 	tag=$(cat "$path" | egrep '^\S+ \S+ r[0-9]+$' | cut -d' ' -f3 | cut -c2-)
     fi
     if [ -n "$tag" ] ; then
