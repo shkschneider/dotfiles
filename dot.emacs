@@ -8,53 +8,51 @@
 ;; under certain conditions.
 ;;
 
-;; ~/.emacs r4
+;; ~/.emacs r5
 
 ;; Most oftently changed setting
+
 (normal-erase-is-backspace-mode 0)
 
-;; Autoload
-;(if (file-exists-p (expand-file-name "~/.emacs.d"))
-;    (add-to-list 'load-path (expand-file-name "~/.emacs.d/"))
-;    (require 'shebang)
-;)
-
-;; KeyBinding
-(global-set-key (kbd "RET") 'newline-and-indent)
-(global-set-key [home] 'beginning-of-line)
-(global-set-key [end] 'end-of-line)
-(global-set-key [(meta g)] 'goto-line)
-(global-set-key (kbd "C-c C-q") 'indent-region)
-(global-set-key (kbd "C-c C-w") 'delete-trailing-whitespace)
-(global-set-key [(control s)] 'isearch-forward-regexp)
-(global-set-key [(control r)] 'replace-regexp)
-(global-set-key [(control t)] 'replace-rectangle)
-(global-set-key [(control l)] 'global-linum-mode)
-;(global-set-key [(control y)] (defun page-up () (interactive) (scroll-down 10)))
-;(global-set-key [(control v)] (defun page-down () (interactive) (scroll-up 10)))
-
 ;; Emacs23+
-;(server-start)
+
+;(if (>= emacs-major-version 23) (server-start))
 
 ;; Author
+
 (setq user-full-name "User Name")
 (setq user-mail-address "you@gmail.com")
 
+;; CustomConf & Autoload
+
+(if (file-exists-p (expand-file-name "~/.myemacs")) (load-file (expand-file-name "~/.myemacs")))
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/"))
+(require 'shebang nil 'noerror)
+(require 'templates nil 'noerror)
+(require 'shell-interactions nil 'noerror)
+(require 'bindkeys nil 'noerror)
+(require 'timestamp nil 'noerror)
+;(require 'compile-init nil 'noerror)
+;(require 'abbrev)
+
 ;; Language
-(set-language-environment 'utf-8)
+
 (prefer-coding-system 'utf-8)
+(set-language-environment 'utf-8)
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
-(setq locale-coding-system 'utf-8)
 (set-selection-coding-system 'utf-8)
+(setq locale-coding-system 'utf-8)
 
 ;; Interface
+
 (setq inhibit-splash-screen t
       initial-scratch-message nil
       inhibit-startup-message t)
-(menu-bar-mode nil)
-(setq truncate-partial-width-windows nil) ; do not split lines
+(menu-bar-mode -1)
+(setq truncate-partial-width-windows nil)
 (setq visible-bell t)
+;?(setq ring-bell-function (lambda() (call-process "artsplay" nil 0 nil "/path/to/audio/file"))
 (setq line-number-mode t
       column-number-mode t
       linum-format "%\ 3d ")
@@ -62,26 +60,105 @@
 (setq display-time-format " %A %e %B %Y, %H:%M "
       display-time-24hr-format t)
 (display-time)
-(blink-cursor-mode t) ; makes cursor blink
 (setq-default show-trailing-whitespace t)
+(setq european-calendar-style 't)
+(setq calendar-week-start-day 1)
+;TODO: disable mouse wheel scroll
 
-;; Colors
-(global-font-lock-mode t) ; colorfull
-(show-paren-mode t) ; highlight parent items
-(transient-mark-mode t) ; highlight selection
+(global-font-lock-mode t)
+(show-paren-mode t)
+(transient-mark-mode t)
 (setq search-highlight t)
 
+                                        ; highlight-current-line don't mess with syntax hightlighting unlike standard hl-line
+(require 'highlight-current-line)
+(highlight-current-line-on t)
+(set-face-background 'highlight-current-line-face "black")
+;(global-hl-line-mode t)
+;(set-face-background 'hl-line "black")
+
 ;; Edition
+
 (setq scroll-step 1)
 (delete-selection-mode t)
 (setq mouse-yank-at-point t)
-(setq backup-directory-alist '(("." . "/tmp")))
-(add-hook 'before-save-hook (lambda() (delete-trailing-whitespace)))
+(setq backup-directory-alist '(("." . "/.emacs.d/tmp")))
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+(setq next-line-add-newlines nil)
+(setq default-major-mode 'text-mode)
+(global-auto-revert-mode 1)
+(setq x-select-enable-clipboard t)
+;TODO: (shift-select-mode t)
+
+;; Functions
+
+(defun top-of-screen()
+  (interactive)
+  (forward-line (- (window-height) 2))
+  )
+
+(defun bottom-of-screen()
+  (interactive)
+  (forward-line (- (- (window-height) 2)))
+  )
+
+(defun clone-line()
+  (interactive)
+  (save-excursion
+    (beginning-of-line)
+    (let ((begin(point)))
+      (forward-line)
+      (copy-region-as-kill begin(point))
+      (yank)
+      (forward-line -1)
+      (back-to-indentation)
+      )
+    )
+  )
+
+(defun kill-whole-line()
+  (interactive)
+  (save-excursion
+    (beginning-of-line)
+    (let ((begin(point)))
+      (forward-line)
+      (kill-region begin(point))
+      (forward-line -1)
+      (back-to-indentation)
+      )
+    )
+)
+
+(defun match-parenthesis(args)
+  (interactive "p")
+  (cond ((looking-at "\\s\(") (forward-list 1))
+	(t (backward-char 1)
+	   (cond ((looking-at "\\s\)")
+		  (forward-char 1) (backward-list 1))
+		 (t (while (not (looking-at "\\s("))
+		      (backward-char 1)
+		      (cond ((looking-at "\\s\)")
+			     (message "->> )")
+			     (forward-char 1)
+			     (backward-list 1)
+			     (backward-char 1)))
+		      ))
+		 )
+	   ))
+  )
 
 ;; Fix
+
 (fset 'yes-or-no-p 'y-or-n-p)
+
 (setq make-backup-files nil)
 (setq confirm-kill-emacs nil)
-; DONT USE TABS
+(setq require-final-newline t)
+(setq-default indent-tabs-mode nil)
+
+(put 'overwrite-mode 'disabled t)
+(put 'erase-buffer 'disabled nil)
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
 
 ;; EOF

@@ -1,0 +1,5 @@
+;;
+;; Elisp
+;;
+
+(provide 'name)
