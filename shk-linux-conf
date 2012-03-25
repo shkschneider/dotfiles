@@ -119,32 +119,40 @@ function get_remote_infos() {
 }
 
 function list() {
-    while read file ; do
-	printf "."
-	file=$(echo "$file" | sed -r "s#^.+/$github_user/$github_repo/blob/[0-9a-f]+/(\S+)\".+\$#\1#")
-	get_remote_infos "$file"
-	if [ $? -eq 1 ] ; then
-	    get_local_infos "${remote_paths_array[$index - 1]}"
-	fi
-    done < <(curl -s "https://github.com/$github_user/$github_repo" | egrep "/$github_user/$github_repo/blob/[0-9a-f]+/\S+")
-    printf "\n"
+    local uri="$1"
+    [ -z "$uri" ] && return
+    while read line ; do
+        if [ -n "$(echo $line | egrep "/$github_user/$github_repo/blob/[0-9a-f]+/\S+")" ] ; then
+	    file=$(echo "$line" | sed -r "s#^.+/$github_user/$github_repo/blob/[0-9a-f]+/(\S+)\".+\$#\1#")
+	    printf "."
+	    get_remote_infos "$file"
+	    #if [ $? -eq 1 ] ; then
+	    #    get_local_infos "${remote_paths_array[$index - 1]}"
+	    #fi
+        elif [ -n "$(echo $line | egrep "/$github_user/$github_repo/tree/[0-9a-f]+/\S+")" ] ; then
+	    dir=$(echo "$line" | sed -r "s#^.+/$github_user/$github_repo/tree/[0-9a-f]+/(\S+)\".+\$#\1#")
+            printf "."
+            list "/tree/$repo_branch/$dir"
+        fi
+    done < <(curl -s "https://github.com/$github_user/$github_repo$uri" | grep "href=" | grep -v "rel='permalink'" | grep -v "Breadcrumb")
 }
 
 CMD="$1"
 case $CMD in
     "--list")
 	i=0
-	list
+	list "/"
+        printf "\n"
 	while [ $i -lt $index ] ; do
 	    echo "${remote_files_array[$i]} r${remote_tags_array[$i]} -- ${remote_paths_array[$i]}"
 	    i=$(($i + 1))
 	done
-	echo "$index remote files parsed"
 	;;
     "--check"|"--update")
 	shift
 	if [ $# -eq 0 ] ; then
-	    list
+	    list "/"
+            printf "\n"
 	else
 	    for file in $@ ; do
 		get_remote_infos "$file"
