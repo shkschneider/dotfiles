@@ -8,7 +8,7 @@
 ;; under certain conditions.
 ;;
 
-;; ~/.emacs.d/timestamp.el r0
+;; ~/.emacs.d/timestamp.el r1
 
 (setq time-stamp-pattern "8/Last modified:[ \t]+\\\\?[\"<]+%:y-%02m-%02d %02H:%02M:%02S %u\\\\?[\">]")
 (setq time-stamp-format "%:y-%02m-%02d %02H:%02M:%02S %u %f")

@@ -8,7 +8,7 @@
 ;; under certain conditions.
 ;;
 
-;; ~/.emacs.d/bindkeys r0
+;; ~/.emacs.d/bindkeys r1
 
 ;; Thx <http://www.cs.rutgers.edu/LCSR-Computing/some-docs/emacs-chart.html>
 

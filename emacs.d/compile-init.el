@@ -2,7 +2,7 @@
 ;; From <http://www.emacswiki.org/emacs/AutoCompilerInit>
 ;;
 
-;; ~/.emacs.d/compile.el r0
+;; ~/.emacs.d/compile.el r1
 
 (defun compile-init-file ()
   (let ((byte-compile-warnings '(unresolved)))

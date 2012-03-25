@@ -8,7 +8,7 @@
 ;; under certain conditions.
 ;;
 
-;; ~/.emacs.d/shell-interactions.el r0
+;; ~/.emacs.d/shell-interactions.el r1
 
 ; Thx <http://www.squidoo.com/emacs-command>
 

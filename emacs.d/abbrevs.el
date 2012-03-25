@@ -8,7 +8,7 @@
 ;; under certain conditions.
 ;;
 
-;; ~/.emacs.d/abbrevs.el r0
+;; ~/.emacs.d/abbrevs.el r1
 
 (setq-default abbrev-mode t)
 (read-abbrev-file "~/.emacs.d/abbrevs.el")
