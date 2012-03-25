@@ -126,9 +126,9 @@ function list() {
 	    file=$(echo "$line" | sed -r "s#^.+/$github_user/$github_repo/blob/[0-9a-f]+/(\S+)\".+\$#\1#")
 	    printf "."
 	    get_remote_infos "$file"
-	    #if [ $? -eq 1 ] ; then
-	    #    get_local_infos "${remote_paths_array[$index - 1]}"
-	    #fi
+	    if [ $? -eq 1 ] ; then
+	        get_local_infos "${remote_paths_array[$index - 1]}"
+	    fi
         elif [ -n "$(echo $line | egrep "/$github_user/$github_repo/tree/[0-9a-f]+/\S+")" ] ; then
 	    dir=$(echo "$line" | sed -r "s#^.+/$github_user/$github_repo/tree/[0-9a-f]+/(\S+)\".+\$#\1#")
             printf "."
