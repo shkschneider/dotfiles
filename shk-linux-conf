@@ -53,15 +53,16 @@ local_tags_array=()
 remote_files_array=()
 remote_url_array=()
 remote_paths_array=()
+remote_realpaths_array=()
 remote_tags_array=()
 
 function get_file() {
-    flag="$1"
-    remote="$2"
-    local="$3"
-    dir=$(dirname "$local")
-    tmp="/tmp/$(basename "$local")"
-    [ ! -w "$dir" ] && printf "shk-linux-conf: $dir: permission denied" >&2 && errors=$(($errors + 1)) && return
+    local flag="$1"
+    local remote="$2"
+    local local="$3"
+    local dir=$(dirname "$local")
+    local tmp="/tmp/$(basename "$local")"
+    [ ! -w "$dir" ] && printf "shk-linux-conf: $dir: permission denied\n" >&2 && errors=$(($errors + 1)) && return
     mkdir -p "$dir"
     if [ -n "$flag" ] ; then
 	printf "  [$flag] '$remote' -> '$local'\n"
@@ -71,9 +72,9 @@ function get_file() {
     curl -s "$remote" > "$tmp"
     downloads=$(($download + 1))
     if [ $? -ne 0 ] || [ ! -f "$tmp" ] ; then
-	size=0
+	local size=0
     else
-	size=$(stat -c %s "$tmp")
+	local size=$(stat -c %s "$tmp")
     fi
     if [ $size -ne 0 ] ; then
 	mv "$tmp" "$local" >/dev/null
@@ -84,13 +85,13 @@ function get_file() {
 }
 
 function get_local_infos() {
-    path="$1"
-    file=$(basename "$path")
+    local path="$1"
+    local file=$(basename "$path")
     if [ ! -f "$path" ] ; then
-	tag="0"
+	local tag="0"
     else
         [ ! -r "$path" ] && printf "shk-linux-conf: $path: permission denied" >&2 && errors=$(($errors + 1)) && return 0
-	tag=$(cat "$path" | egrep '^\S+ \S+ r[0-9]+$' | cut -d' ' -f3 | cut -c2-)
+	local tag=$(cat "$path" | egrep '^\S+ \S+ r[0-9]+$' | cut -d' ' -f3 | cut -c2-)
     fi
     if [ -n "$tag" ] ; then
 	local_files_array[$index - 1]="$file"
@@ -103,14 +104,16 @@ function get_local_infos() {
 }
 
 function get_remote_infos() {
-    url="https://raw.github.com/$github_user/$github_repo/$repo_branch/$file"
-    tag=$(curl -s "$url" | egrep '^\S+ \S+ r[0-9]+$')
-    path=$(echo "$tag" | cut -d' ' -f2 | sed -r "s#^~#$HOME#")
-    tag=$(echo "$tag" | cut -d' ' -f3 | cut -c2-)
+    local url="https://raw.github.com/$github_user/$github_repo/$repo_branch/$file"
+    local tag=$(curl -s "$url" | egrep '^\S+ \S+ r[0-9]+$')
+    local path=$(echo "$tag" | cut -d' ' -f2)
+    local realpath=$(echo "$path" | sed -r "s#^~#$HOME#")
+    local tag=$(echo "$tag" | cut -d' ' -f3 | cut -c2-)
     if [ -n "$tag" ] ; then
 	remote_files_array[$index]="$file"
 	remote_url_array[$index]="$url"
 	remote_paths_array[$index]="$path"
+	remote_realpaths_array[$index]="$realpath"
 	remote_tags_array[$index]="$tag"
 	index=$(($index + 1))
 	return 1
@@ -127,7 +130,7 @@ function list() {
 	    printf "."
 	    get_remote_infos "$file"
 	    if [ $? -eq 1 ] ; then
-	        get_local_infos "${remote_paths_array[$index - 1]}"
+	        get_local_infos "${remote_realpaths_array[$index - 1]}"
 	    fi
         elif [ -n "$(echo $line | egrep "/$github_user/$github_repo/tree/[0-9a-f]+/\S+")" ] ; then
 	    dir=$(echo "$line" | sed -r "s#^.+/$github_user/$github_repo/tree/[0-9a-f]+/(\S+)\".+\$#\1#")
@@ -140,11 +143,12 @@ function list() {
 CMD="$1"
 case $CMD in
     "--list")
+        [ $# -ne 1 ] && usage
 	i=0
 	list "/"
         printf "\n"
 	while [ $i -lt $index ] ; do
-	    echo "${remote_files_array[$i]} r${remote_tags_array[$i]} -- ${remote_paths_array[$i]}"
+	    echo "[${remote_files_array[$i]}] ${remote_paths_array[$i]} r${remote_tags_array[$i]}"
 	    i=$(($i + 1))
 	done
 	;;
@@ -157,7 +161,7 @@ case $CMD in
 	    for file in $@ ; do
 		get_remote_infos "$file"
 		if [ $? -eq 1 ] ; then
-		    get_local_infos "${remote_paths_array[$index - 1]}"
+		    get_local_infos "${remote_realpaths_array[$index - 1]}"
 		else
 		    errors=$(($errors + 1))
 		    echo "$file: no such remote file" >&2
@@ -166,37 +170,35 @@ case $CMD in
 	fi
 	i=0
 	while [ $i -lt $index ] ; do
-	    echo -n "${remote_paths_array[$i]}: local(r${local_tags_array[$i]}) remote(r${remote_tags_array[$i]}) -- "
-	    case $CMD in
-		"--check")
-		    if [ ${local_tags_array[$i]} -eq 0 ] ; then
-			echo "file not found"
-			[ $force = "true" ] && echo "  [force] will download"
-		    elif [ ${local_tags_array[$i]} -eq ${remote_tags_array[$i]} ] ; then
-			echo "up to date"
-		    elif [ ${local_tags_array[$i]} -lt ${remote_tags_array[$i]} ] ; then
-			echo "update available"
-			echo "  will update"
-		    else
-			echo "something is wrong"
-			[ $force = "true" ] && echo "  [force] will download"
-		    fi
-		    ;;
-		"--update")
-		    if [ ${local_tags_array[$i]} -eq 0 ] ; then
-			echo "file not found"
-			[ $force = "true" ] && get_file "force" "${remote_url_array[$i]}" "${remote_paths_array[$i]}"
-		    elif [ ${local_tags_array[$i]} -eq ${remote_tags_array[$i]} ] ; then
-			echo "up to date"
-		    elif [ ${local_tags_array[$i]} -lt ${remote_tags_array[$i]} ] ; then
-			echo "update available"
-			get_file "" "${remote_url_array[$i]}" "${remote_paths_array[$i]}"
-		    else
-			echo "something is wrong"
-			[ $force = "true" ] && get_file "force" "${remote_url_array[$i]}" "${remote_paths_array[$i]}"
-		    fi
-		    ;;
-	    esac
+	    echo -n "[${remote_files_array[$i]}] ${remote_paths_array[$i]} local(r${local_tags_array[$i]}) remote(r${remote_tags_array[$i]}) -- "
+	    if [ ${local_tags_array[$i]} -eq 0 ] ; then
+		echo "file not found"
+		if [ $force = "true" ] ; then
+                    if [ $CMD = "--check" ] ; then
+                        echo "  [force] will download"
+                    elif [ $CMD = "--update" ] ; then
+                        get_file "force" "${remote_url_array[$i]}" "${remote_realpaths_array[$i]}"
+                    fi
+                fi
+	    elif [ ${local_tags_array[$i]} -eq ${remote_tags_array[$i]} ] ; then
+		echo "up to date"
+	    elif [ ${local_tags_array[$i]} -lt ${remote_tags_array[$i]} ] ; then
+		echo "update available"
+                if [ $CMD = "--check" ] ; then
+		    echo "  will update"
+                elif [ $CMD = "--update" ] ; then
+		    get_file "" "${remote_url_array[$i]}" "${remote_realpaths_array[$i]}"
+                fi
+	    else
+		echo "something is wrong"
+		if [ $force = "true" ] ; then
+                    if [ $CMD = "--check" ] ; then
+                        echo "  [force] will download"
+                    elif [ $CMD = "--update" ] ; then
+                        get_file "force" "${remote_url_array[$i]}" "${remote_realpaths_array[$i]}"
+                    fi
+                fi
+	    fi
 	    i=$(($i + 1))
 	done
 	;;
