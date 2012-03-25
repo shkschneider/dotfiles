@@ -9,113 +9,196 @@
 # under certain conditions.
 #
 
-GITHUB_USER="leonnib4"
-GITHUB_REPO="linux_conf"
-FORCE="false"
-ALL="false"
-LIST="false"
+github_user="leonnib4"
+github_repo="linux_conf"
+repo_branch="master"
+force="false"
 
 function usage() {
-    echo "Usage: shk-linux-conf [-c] [-u GITHUB_USER] [-r GITHUB_REPO] [-f] [-a]" >&2
+    echo "Usage: shk-linux-conf [OPTIONS] <COMMAND>" >&2
     echo "       Options:" >&2
-    echo "                -l  only list files on repository" >&2
-    echo "                -c  only checks and quits" >&2
-    echo "                -u  specify the github username" >&2
-    echo "                -r  specify the github repository name" >&2
-    echo "       Files must be on the root of master branch." >&2
-    echo "                -f  forces the download of untracked files (WARNING: overwrites)" >&2
-    echo "                -a  forces the download of all missing files (add files)" >&2
-    echo "       Without -f or -a options this script only updates the shk-linux-conf valid files already present." >&2
+    echo "                --user=GITHUB_USER" >&2
+    echo "                --repo=GITHUB_REPO" >&2
+    echo "                --branch=REPO_BRANCH" >&2
+    echo "                --force" >&2
+    echo "       Commands:" >&2
+    echo "                --list" >&2
+    echo "                --check [GITHUB_FILE ...]" >&2
+    echo "                --update [GITHUB_FILE ...]" >&2
     exit 1
 }
 
-while getopts u:r:fal OPT; do
-    case "$OPT" in
-	u) GITHUB_USER=$OPTARG ;;
-	r) GITHUB_REPO=$OPTARG ;;
-	f) FORCE="true" ;;
-	a) ALL="true" ;;
-	l) LIST="true" ;;
-	\?|*) usage ;;
+[ $# -eq 0 ] && usage
+
+for argv in $@ ; do
+    var=$(echo $argv | cut -d'=' -f1)
+    value=$(echo $argv | cut -d'=' -f2-)
+    case $var in
+	"--user") github_user="$value" && shift ;;
+	"--repo") github_repo="$value" && shift ;;
+	"--branch") repo_branch="$value" && shift ;;
+	"--force") force="true" && shift ;;
+	"--") shift && break ;;
     esac
 done
-I=0 ; while [ $I -lt $OPTIND ] ; do ((I++)) && shift ; done
+echo "$github_user@github:$github_repo/$repo_branch"
 
-function download_conf_file() {
-    [ -n "$1" ] && TAG="[$1] "
-    printf "  %sdownloading https://raw.github.com/$GITHUB_USER/$GITHUB_REPO/$REMOTE_FILE as $LOCAL_FILE...\n" "$TAG"
-    DIR=$(dirname "$ABS_LOCAL_FILE")
-    [ ! -d "$DIR" ] && mkdir -p "$DIR" 2> /dev/null
-    curl -s https://raw.github.com/$GITHUB_USER/$GITHUB_REPO/$REMOTE_FILE > $ABS_LOCAL_FILE
-    [ $? -eq 0 ] && printf "  $LOCAL_FILE updated to r$REMOTE_REV\n"
+[ -z "$github_user" ] || [ -z "$github_repo" ] || [ -z "$repo_branch" ] && usage
+
+index=0
+errors=0
+downloads=0
+local_files_array=()
+local_tags_array=()
+remote_files_array=()
+remote_url_array=()
+remote_paths_array=()
+remote_tags_array=()
+
+function get_file() {
+    flag="$1"
+    remote="$2"
+    local="$3"
+    tmp="/tmp/$(basename "$local")"
+    mkdir -p "$(dirname "$local")"
+    if [ -n "$flag" ] ; then
+	printf "  [$flag] '$remote' -> '$local'\n"
+    else
+	printf "  '$remote' -> '$local'\n"
+    fi
+    curl -s "$remote" > "$tmp"
+    downloads=$(($download + 1))
+    if [ $? -ne 0 ] || [ ! -f "$tmp" ] ; then
+	size=0
+    else
+	size=$(stat -c %s "$tmp")
+    fi
+    if [ $size -ne 0 ] ; then
+	mv "$tmp" "$local" >/dev/null
+    else
+	errors=$(($errors + 1))
+	printf "  download failed\n" >&2
+    fi
 }
 
-function check_conf_file() {
-    FILE=$(basename "$REMOTE_FILE" | sed 's#dot.##')
-    REMOTE_TAG=$(curl -s https://raw.github.com/$GITHUB_USER/$GITHUB_REPO/$REMOTE_FILE | egrep "^.+ .*$FILE r" | cut -d' ' -f2-)
-    if [ -n "$REMOTE_TAG" ] ; then
-	REMOTE_REV=$(echo $REMOTE_TAG | cut -d' ' -f2 | tr -d "[a-z]")
-	[ -z "$REMOTE_REV" ] && REMOTE_REV="0"
-	LOCAL_FILE=$(echo $REMOTE_TAG | cut -d' ' -f1)
-	ABS_LOCAL_FILE=$(echo $LOCAL_FILE | sed "s#~#$HOME#")
-	[ $LIST = "true" ] && echo "$(echo $REMOTE_FILE | sed -r "s#^master/##") -> $LOCAL_FILE" && return
-	if [ -f "$ABS_LOCAL_FILE" ] ; then
-	    OWNER=$(find "$(dirname "$ABS_LOCAL_FILE")" -maxdepth 1 -name "$(basename "$ABS_LOCAL_FILE")" -printf "%u")
-	    [ "_$OWNER" != "_$(whoami)" ] && echo "$LOCAL_FILE: not owned by $(whoami)" >&2 && return
-	    LOCAL_TAG=$(cat $ABS_LOCAL_FILE | egrep "^.+ .*$FILE r" | cut -d' ' -f2-)
-	    LOCAL_REV=$(echo $LOCAL_TAG | cut -d' ' -f2 | tr -d "[a-z]")
-	    if [ -z "$LOCAL_REV" ] ; then
-		printf "$LOCAL_FILE: not tracked so not updated\n" >&2
-		[ $FORCE = "true" ] && download_conf_file "force" "$REMOTE_FILE" "$ABS_LOCAL_FILE"
-	    else
-		if [ $REMOTE_REV -gt $LOCAL_REV ] ; then
-		    printf "$LOCAL_FILE: update available (r$LOCAL_REV < r$REMOTE_REV)\n"
-		    download_conf_file "" "$REMOTE_FILE" "$ABS_LOCAL_FILE"
-		elif [ $REMOTE_REV -eq $LOCAL_REV ] ; then
-		    printf "$LOCAL_FILE: up to date (r$LOCAL_REV = r$REMOTE_REV)\n"
-		else
-		    printf "$LOCAL_FILE: out of sync (r$LOCAL_REV > r$REMOTE_REV)\n" >&2
-		    [ $FORCE = "true" ] && download_conf_file "force" "$REMOTE_FILE" "$ABS_LOCAL_FILE"
-		fi
-	    fi
-	else
-	   printf "$LOCAL_FILE: not found so not checked\n" >&2
-	   [ $ALL = "true" ] || [ $FORCE = "true" ] && download_conf_file "all" "$REMOTE_FILE" "$ABS_LOCAL_FILE"
+function get_local_infos() {
+    path="$1"
+    file=$(basename "$path")
+    if [ ! -f "$path" ] ; then
+	tag="0"
+    else
+	tag=$(cat "$path" | egrep '^\S+ \S+ r[0-9]+$' | cut -d' ' -f3 | cut -c2-)
+    fi
+    if [ -n "$tag" ] ; then
+	local_files_array[$index - 1]="$file"
+	local_tags_array[$index - 1]="$tag"
+	return 1
+    fi
+    local_files_array[$index - 1]="$file"
+    local_tags_array[$index - 1]="0"
+    return 0
+}
+
+function get_remote_infos() {
+    url="https://raw.github.com/$github_user/$github_repo/$repo_branch/$file"
+    tag=$(curl -s "$url" | egrep '^\S+ \S+ r[0-9]+$')
+    path=$(echo "$tag" | cut -d' ' -f2 | sed -r "s#^~#$HOME#")
+    tag=$(echo "$tag" | cut -d' ' -f3 | cut -c2-)
+    if [ -n "$tag" ] ; then
+	remote_files_array[$index]="$file"
+	remote_url_array[$index]="$url"
+	remote_paths_array[$index]="$path"
+	remote_tags_array[$index]="$tag"
+	index=$(($index + 1))
+	return 1
+    fi
+    return 0
+}
+
+function list() {
+    while read file ; do
+	printf "."
+	file=$(echo "$file" | sed -r "s#^.+/$github_user/$github_repo/blob/[0-9a-f]+/(\S+)\".+\$#\1#")
+	get_remote_infos "$file"
+	if [ $? -eq 1 ] ; then
+	    get_local_infos "${remote_paths_array[$index - 1]}"
 	fi
-    fi
+    done < <(curl -s "https://github.com/$github_user/$github_repo" | egrep "/$github_user/$github_repo/blob/[0-9a-f]+/\S+")
+    printf "\n"
 }
 
-function check_conf_dir() {
-    local REMOTE_FILES REMOTE_FILE REMOTE_DIRS REMOTE_DIR REMOTE_PATH
-    REMOTE_PATH="$1"
-    REMOTE_PATH=${REMOTE_PATH:=""}
-    REMOTE_FILES=$(curl -s https://github.com/$GITHUB_USER/$GITHUB_REPO/$REMOTE_PATH | egrep "<td.+>\s+<a href=\"/$GITHUB_USER/$GITHUB_REPO/blob" | sed -r 's/<[^>]*>//g' | sed -r 's/^\s+//g')
-    if [ -n "$REMOTE_FILES" ] ; then
-	for REMOTE_FILE in $REMOTE_FILES ; do
-	    REMOTE_FILE="master/"$(echo "$REMOTE_PATH$REMOTE_FILE" | sed 's#tree/master/##')
-	    check_conf_file
+CMD="$1"
+case $CMD in
+    "--list")
+	i=0
+	list
+	while [ $i -lt $index ] ; do
+	    echo "${remote_files_array[$i]} r${remote_tags_array[$i]} -- ${remote_paths_array[$i]}"
+	    i=$(($i + 1))
 	done
-    fi
-    REMOTE_DIRS=$(curl -s https://github.com/$GITHUB_USER/$GITHUB_REPO/$REMOTE_PATH | egrep "<td.+>\s+<a href=\"/$GITHUB_USER/$GITHUB_REPO/tree" | sed -r 's/<[^>]*>//g' | sed -r 's/^\s+//g')
-    if [ -n "$REMOTE_DIRS" ] ; then
-	REMOTE_PATH=${REMOTE_PATH:="tree/master/"}
-	for REMOTE_DIR in $REMOTE_DIRS ; do
-	    check_conf_dir $REMOTE_PATH$REMOTE_DIR/
+	echo "$index remote files parsed"
+	;;
+    "--check"|"--update")
+	shift
+	if [ $# -eq 0 ] ; then
+	    list
+	else
+	    for file in $@ ; do
+		get_remote_infos "$file"
+		if [ $? -eq 1 ] ; then
+		    get_local_infos "${remote_paths_array[$index - 1]}"
+		else
+		    errors=$(($errors + 1))
+		    echo "$file: no such remote file" >&2
+		fi
+	    done
+	fi
+	i=0
+	while [ $i -lt $index ] ; do
+	    echo -n "${remote_paths_array[$i]}: local(r${local_tags_array[$i]}) remote(r${remote_tags_array[$i]}) -- "
+	    case $CMD in
+		"--check")
+		    if [ ${local_tags_array[$i]} -eq 0 ] ; then
+			echo "file not found"
+			[ $force = "true" ] && echo "  [force] will download"
+		    elif [ ${local_tags_array[$i]} -eq ${remote_tags_array[$i]} ] ; then
+			echo "up to date"
+		    elif [ ${local_tags_array[$i]} -lt ${remote_tags_array[$i]} ] ; then
+			echo "update available"
+			echo "  will update"
+		    else
+			echo "something is wrong"
+			[ $force = "true" ] && echo "  [force] will download"
+		    fi
+		    ;;
+		"--update")
+		    if [ ${local_tags_array[$i]} -eq 0 ] ; then
+			echo "file not found"
+			[ $force = "true" ] && get_file "force" "${remote_url_array[$i]}" "${remote_paths_array[$i]}"
+		    elif [ ${local_tags_array[$i]} -eq ${remote_tags_array[$i]} ] ; then
+			echo "up to date"
+		    elif [ ${local_tags_array[$i]} -lt ${remote_tags_array[$i]} ] ; then
+			echo "update available"
+			get_file "" "${remote_url_array[$i]}" "${remote_paths_array[$i]}"
+		    else
+			echo "something is wrong"
+			[ $force = "true" ] && get_file "force" "${remote_url_array[$i]}" "${remote_paths_array[$i]}"
+		    fi
+		    ;;
+	    esac
+	    i=$(($i + 1))
 	done
-    fi
-}
+	;;
+    "--help")
+	usage
+	;;
+    *)
+	echo "$CMD: unknown command" >&2
+	usage
+	;;
+esac
 
-[ -z "$GITHUB_USER" ] || [ -z "$GITHUB_REPO" ] && usage
-
-echo "Getting file list from $GITHUB_USER@github:$GITHUB_REPO..."
-if [ $# -gt 0 ] ; then
-    for ARGV in $@ ; do
-	ARGV=$(echo "$ARGV" | sed -r 's#^/##')
-	REMOTE_FILE=$(echo "master/$ARGV")
-	check_conf_file
-    done
-else
-    check_conf_dir
-fi
+echo -n "$index remote files parsed, $downloads downloaded ($errors errors)"
+[ $force = "true" ] && echo " [force]" || echo ""
 
 # EOF
