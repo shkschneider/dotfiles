@@ -9,7 +9,9 @@
 # under certain conditions.
 #
 
-# ~/.bash_logout r0
+# ~/.bash_logout r2
+
+[ "$SHLVL" = 1 ] && [ -x /usr/bin/clear_console ] && /usr/bin/clear_console -q
 
 history -c
 rm -f "$HOME/.bash_history"

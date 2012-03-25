@@ -8,7 +8,7 @@
 # under certain conditions.
 #
 
-# ~/.inputc r0
+# ~/.inputc r1
 
 # do not bell on tab-completion
 set bell-style bell

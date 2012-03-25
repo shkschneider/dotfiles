@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# dot.bash_logout -- bash logout global configuration
+# dot.bash_logout -- bash configuration for logout
 # Copyright (C) 2012  Alan SCHNEIDER
 #                     <shk.schneider[at]gmail.com>
 #
@@ -9,9 +9,8 @@
 # under certain conditions.
 #
 
-# /etc/skel/.bash_logout r0
+# ~/.bash_logout r1
 
-# when leaving the console clear the screen to increase privacy
-if [ "$SHLVL" = 1 ]; then
-    [ -x /usr/bin/clear_console ] && /usr/bin/clear_console -q
-fi
+[ "$SHLVL" = 1 ] && [ -x /usr/bin/clear_console ] && /usr/bin/clear_console -q
+
+# EOF

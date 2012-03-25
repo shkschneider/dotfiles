@@ -9,7 +9,7 @@
 # under certain conditions.
 #
 
-# /etc/skel/.profile r0
+# /etc/skel/.profile r1
 
 umask 022
 

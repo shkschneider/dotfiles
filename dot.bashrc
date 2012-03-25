@@ -16,7 +16,7 @@ export PAGER=most
 export EDITOR=nano
 
 # Many more
-FILES=$(shopt -s nullglob ; echo ~/.bashrc_*)
+FILES=$(shopt -s nullglob ; echo $HOME/.bashrc_*)
 for FILE in $FILES ; do
     source $FILE
 done
