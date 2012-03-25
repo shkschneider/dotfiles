@@ -183,6 +183,16 @@ function show_infos() {
 
 cmd="$1"
 shift
+url="https://github.com/$github_user/$github_repo/"
+http=$(curl -sI "$url" | egrep '^HTTP')
+http_code=$(echo "$http" | cut -d' ' -f2)
+http_status=$(echo "$http" | cut -d' ' -f3- | tr -d "\n")
+case $http_code in
+    "") echo "shk-linux-conf: $url: connexion problem" >&2 && exit 1 ;;
+    "403"|"404") echo "shk-linux-conf: $url: $http_code - $http_status" >&2 && exit 1 ;;
+    *) echo "$github_user@github:$github_repo/$repo_branch" ;;
+esac
+
 case $cmd in
     "--list")
         [ $# -ne 0 ] && usage
@@ -213,6 +223,6 @@ case $cmd in
 	;;
 esac
 
-printf "$index remote files parsed, $downloads downloaded ($errors errors)\n"
+echo "$index remote files parsed, $downloads downloaded ($errors errors)"
 
 # EOF
