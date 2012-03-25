@@ -51,12 +51,12 @@
 ;(global-set-key (kbd "C-c C-u")  'uncomment-region)
 
 ; C-x <>
-(global-set-key (kbd "C-x u") 'upcase-region) ;upcase-word
 (global-set-key (kbd "C-x d") 'downcase-region) ;downcase-word
+(global-set-key (kbd "C-x l") 'global-linum-mode)
+(global-set-key (kbd "C-x u") 'upcase-region) ;upcase-word
+(global-set-key (kbd "C-x x") 'erase-buffer)
 (global-set-key (kbd "C-x 1") 'delete-window)
 (global-set-key (kbd "C-x 2") 'delete-other-windows)
-(global-set-key (kbd "C-x l") 'global-linum-mode)
-(global-set-key (kbd "C-x x") 'erase-buffer)
 (global-set-key (kbd "C-x =") 'count-lines-region)
 (global-set-key (kbd "C-x $") 'shell-command)
 (global-set-key (kbd "C-x #") 'eshell)
@@ -64,26 +64,25 @@
 (global-set-key (kbd "C-x [") 'scroll-down) ;forward-page
 (global-set-key (kbd "C-x }") 'end-of-buffer)
 (global-set-key (kbd "C-x {") 'beginning-of-buffer)
-(global-set-key (kbd "C-x SPC") 'mark-paragraph)
 (global-set-key (kbd "C-x -") 'advertised-undo)
 (global-set-key (kbd "C-x _") 'revert-buffer)
+(global-set-key (kbd "C-x SPC") 'mark-paragraph)
 
 ; C-x C-<>
-(global-set-key (kbd "C-x C-f") 'find-file-at-point)
+(global-set-key (kbd "C-x C-b") 'electric-buffer-list)
+(global-set-key (kbd "C-x C-c") 'save-buffers-kill-emacs)
 (global-set-key (kbd "C-x C-d") 'dired-at-point)
+(global-set-key (kbd "C-x C-f") 'find-file-at-point)
 (global-set-key (kbd "C-x C-i") 'insert-file)
+(global-set-key (kbd "C-x C-r") 'string-insert-rectangle)
 (global-set-key (kbd "C-x C-s") 'save-buffer)
 (global-set-key (kbd "C-x C-w") 'write-file)
-(global-set-key (kbd "C-x C-c") 'save-buffers-kill-emacs)
-(global-set-key (kbd "C-x C-b") 'electric-buffer-list)
-(global-set-key (kbd "C-x C-r") 'string-insert-rectangle)
 
 ; M-<>
-(global-set-key (kbd "M-g") 'goto-line)
-(global-set-key (kbd "M-w") 'mark-whole-buffer)
-(global-set-key (kbd "M-i") 'insert-shell)
 (global-set-key (kbd "M-a") 'apply-shell)
-(global-set-key (kbd "M-s") 'apply-sed)
+(global-set-key (kbd "M-g") 'goto-line)
+(global-set-key (kbd "M-i") 'insert-shell)
+(global-set-key (kbd "M-w") 'mark-whole-buffer)
 
 (provide 'bindkeys)
 
