@@ -21,4 +21,6 @@ for FILE in $FILES ; do
     source $FILE
 done
 
+[ -f "$HOME/.mybashrc" ] && source "$HOME/.mybashrc"
+
 # EOF

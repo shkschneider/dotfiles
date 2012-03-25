@@ -138,4 +138,6 @@ unsetenv()
     fi
 }
 
+[ -f "$HOME/.myzshrc" ] && source "$HOME/.myzshrc"
+
 # EOF
