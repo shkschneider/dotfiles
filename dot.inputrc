@@ -8,13 +8,10 @@
 # under certain conditions.
 #
 
-# ~/.inputc r1
-
-# do not bell on tab-completion
-set bell-style bell
+# ~/.inputc r2
 
 set expand-tilde off
-set input-meta off
+set input-meta on
 set convert-meta on
 set output-meta off
 set horizontal-scroll-mode off
@@ -22,8 +19,7 @@ set history-preserve-point on
 set mark-directories on
 set mark-symlinked-directories on
 set match-hidden-files off
-
-# completion settings
+set bell-style bell
 set page-completions off
 set completion-query-items 2000
 set completion-ignore-case off
@@ -34,16 +30,11 @@ set print-completions-horizontally off
 
 set editing-mode emacs
 
-# reload file
 "\C-x\C-r": re-read-init-file
-
 C-n: history-search-forward
 C-p: history-search-backward
 
 $if mode=emacs
-
-# make control-tab complete from history
-# C-TAB: dynamic-complete-history
 
 "\e[A": history-search-backward
 "\e[B": history-search-forward
