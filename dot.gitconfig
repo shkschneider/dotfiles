@@ -8,7 +8,7 @@
 # under certain conditions.
 #
 
-# ~/.gitconfig r13
+# ~/.gitconfig r14
 
 [core]
 	excludesfiles = ~/.gitignore
@@ -65,7 +65,7 @@
         # rank
         rk = "!git log --format='%aN'  | awk '{arr[$0]++} END{for (i in arr){print arr[i], i;}}' | sort -nr"
         # log graph
-        lg = log --decorate --all --graph --oneline
+        lg = log --decorate --graph --oneline
 
 	# tarball
 	tgz = "!git archive HEAD --prefix=`git rev-parse --short HEAD` --format=tar | gzip > ../`git rev-parse --short HEAD`.tar.gz"
