@@ -8,7 +8,7 @@
 # under certain conditions.
 #
 
-# ~/.gitconfig r14
+# ~/.gitconfig r15
 
 [core]
 	excludesfiles = ~/.gitignore
@@ -24,48 +24,44 @@
 	ui = auto
 
 [alias]
-	l = log --decorate --abbrev-commit
 	s = show
 	a = add
 	t = tag
+
+	l = log --decorate --abbrev-commit
+        la = shortlog --pretty=format:'%h %ar: %s'
+        ls = log --pretty=format:'%h [%an] %s'
+        lg = log --decorate --graph --oneline
+
 	ci = commit --no-status
+	ca = commit --no-status --all
+        am = commit --amend
+	ar = "!git add -u && git ls-files --deleted -z | xargs -0 git rm 2>/dev/null"
+
 	co = checkout
 	br = branch
 	rc = rebase --continue
 	rs = rebase --skip
 	ra = rebase --abort
+
 	st = status --short --branch
-	df = diff
-	dc = diff --cached
+
+	df = diff --patch-with-stat
+	dc = diff --patch-with-stat --cached
 	ds = diff --stat
-	cl = clean -df
-        am = commit --amend
 	dfw = diff --word-diff
 	dcw = diff --cached --word-diff
-	authors = "!git log --format='%aN' | sort -u"
 
-	# add-remove
-	ar = "!git add -u && git ls-files --deleted -z | xargs -0 git rm 2>/dev/null"
-	# restore
+	cl = clean -df
+	authors = "!git log --format='%aN' | sort -u"
+        rank = "!git log --format='%aN'  | awk '{arr[$0]++} END{for (i in arr){print arr[i], i;}}' | sort -nr"
+
 	re = reset --hard HEAD
-	# undo add
-	ua = reset --mixed
-	# undo commit
-	uc = reset --soft HEAD^
-	# undo pull
-	up = reset --hard HEAD@{0}
-	# undo merge
-	um = reset --hard HEAD@{0}
-	# undo rebase
-	ur = reset --hard HEAD@{0}
-        # log authors
-        la = shortlog --pretty=format:'%h %ar: %s'
-        # log short
-        ls = log --pretty=format:'%h [%an] %s'
-        # rank
-        rk = "!git log --format='%aN'  | awk '{arr[$0]++} END{for (i in arr){print arr[i], i;}}' | sort -nr"
-        # log graph
-        lg = log --decorate --graph --oneline
+	unadd = reset --mixed
+	uncommit = reset --soft HEAD^
+	unpull = reset --hard HEAD@{0}
+	unmerge = reset --hard HEAD@{0}
+	unrebase = reset --hard HEAD@{0}
 
 	# tarball
 	tgz = "!git archive HEAD --prefix=`git rev-parse --short HEAD` --format=tar | gzip > ../`git rev-parse --short HEAD`.tar.gz"
