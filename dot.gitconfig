@@ -8,10 +8,11 @@
 # under certain conditions.
 #
 
-# ~/.gitconfig r15
+# ~/.gitconfig r16
 
 [core]
 	excludesfiles = ~/.gitignore
+	attributesfile = ~/.gitattributes
 	#pager = most
 	#editor = nano
 
@@ -19,9 +20,6 @@
 	#name = User Name
 	#email = useremail
 	#signkey = signkey
-
-[color]
-	ui = auto
 
 [alias]
 	s = show
@@ -65,5 +63,28 @@
 
 	# tarball
 	tgz = "!git archive HEAD --prefix=`git rev-parse --short HEAD` --format=tar | gzip > ../`git rev-parse --short HEAD`.tar.gz"
+
+[color]
+	ui = auto
+[color "branch"]
+	current = yellow reverse
+	local = yellow
+	remote = green
+[color "diff"]
+	meta = yellow bold
+	frag = magenta bold
+	old = red bold
+	new = green bold
+[color "status"]
+	added = yellow
+	changed = green
+	untracked = cyan
+[merge]
+	# Include summaries of merged commits in newly created merge commit messages
+	log = true
+[branch "master"]
+	# Use `origin` as the default remote on the `master` branch in all cases
+	remote = origin
+	merge = refs/heads/master
 
 # EOF
