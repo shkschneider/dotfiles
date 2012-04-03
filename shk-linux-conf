@@ -140,7 +140,7 @@ function list() {
 	    dir=$(echo "$line" | sed -r "s#^.+/$github_user/$github_repo/tree/[0-9a-f]+/(\S+)\".+\$#\1#")
             list "/tree/$repo_branch/$dir" "$brief"
         fi
-    done < <(curl -s "https://github.com/$github_user/$github_repo$uri" | grep "href=" | grep -v "rel='permalink'" | grep -v "Breadcrumb")
+    done < <(curl -s "https://github.com/$github_user/$github_repo$uri" | grep "href=" | grep -v "rel='permalink'" | grep -v "Breadcrumb" | egrep "/[0-9a-f]+/")
 }
 
 function show_brief_infos() {
