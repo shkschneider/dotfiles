@@ -8,7 +8,7 @@
 # under certain conditions.
 #
 
-# ~/.gitconfig r16
+# ~/.gitconfig r17
 
 [core]
 	excludesfiles = ~/.gitignore
@@ -36,8 +36,8 @@
         am = commit --amend
 	ar = "!git add -u && git ls-files --deleted -z | xargs -0 git rm 2>/dev/null"
 
-	co = checkout
-	br = branch
+	co = checkout --track
+	br = branch --track
 	rc = rebase --continue
 	rs = rebase --skip
 	ra = rebase --abort
