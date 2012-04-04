@@ -8,10 +8,19 @@
 # under certain conditions.
 #
 
-# ~/.gitignore r3
+# ~/.gitignore r4
 
 *.ignore
 *~
 \#*\#
+a.out
+*.o
+*.pyc
+Thumbs.db
+Desktop.ini
+.Trash
+LOST+FOUND
+.DS_Store
+._*
 
 # EOF
