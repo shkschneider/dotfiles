@@ -15,6 +15,7 @@
 [ -z "$PS1" ] && return
 
 # Preferences
+shopt -s autocd
 shopt -s hostcomplete
 shopt -s cdspell
 shopt -s histappend
