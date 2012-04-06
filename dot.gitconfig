@@ -8,7 +8,7 @@
 # under certain conditions.
 #
 
-# ~/.gitconfig r18
+# ~/.gitconfig r19
 
 [core]
 	excludesfiles = ~/.gitignore
@@ -33,8 +33,8 @@
 
 	ci = commit --no-status
 	ca = commit --no-status --all
-        am = commit --amend
 	ar = "!git add -u && git ls-files --deleted -z | xargs -0 git rm 2>/dev/null"
+        reci = commit --amend
 
 	co = checkout
 	br = branch
