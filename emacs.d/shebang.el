@@ -2,7 +2,7 @@
 ;; From <http://www.emacswiki.org/emacs/MakingScriptsExecutableOnSave>
 ;;
 
-;; ~/.emacs.d/shebang.el r1
+;; ~/.emacs.d/shebang.el r2
 
 (add-hook 'after-save-hook
 	  (lambda() (and
