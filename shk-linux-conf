@@ -9,7 +9,7 @@
 # under certain conditions.
 #
 
-github_user="leonnib4"
+github_user="shkschneider"
 github_repo="linux_conf"
 repo_branch="master"
 force="false"
