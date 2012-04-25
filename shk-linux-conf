@@ -89,7 +89,7 @@ function get_local_infos() {
     if [ ! -f "$path" ] ; then
 	local tag="0"
     else
-        [ ! -r "$path" ] && printf "shk-linux-conf: $path: permission denied" >&2 && errors=$(($errors + 1)) && return 0
+        [ ! -r "$path" ] || [ ! -w "$path" ] && printf "shk-linux-conf: $path: permission denied\n" >&2 && errors=$(($errors + 1)) && return 0
 	local tag=$(cat "$path" | egrep '^\S+ \S+ r[0-9]+$' | cut -d' ' -f3 | cut -c2-)
     fi
     if [ -n "$tag" ] ; then
@@ -151,33 +151,37 @@ function show_brief_infos() {
 function show_infos() {
     local i=$1
     printf "[${remote_files_array[$i]}] ${remote_paths_array[$i]} <local r${local_tags_array[$i]} | r${remote_tags_array[$i]} remote> -- "
-    if [ ${local_tags_array[$i]} -eq 0 ] ; then
-	printf "file not found\n"
-	if [ $force = "true" ] ; then
-            if [ $cmd = "--check" ] ; then
-                printf "  [force] will download\n"
-            elif [ $cmd = "--update" ] ; then
-                get_file "force" "${remote_url_array[$i]}" "${remote_realpaths_array[$i]}"
+    if [ -n "${local_tags_array[$i]}" ] ; then
+        if [ ${local_tags_array[$i]} -eq 0 ] ; then
+	    printf "file not found\n"
+	    if [ $force = "true" ] ; then
+                if [ $cmd = "--check" ] ; then
+                    printf "  [force] will download\n"
+                elif [ $cmd = "--update" ] ; then
+                    get_file "force" "${remote_url_array[$i]}" "${remote_realpaths_array[$i]}"
+                fi
             fi
-        fi
-    elif [ ${local_tags_array[$i]} -eq ${remote_tags_array[$i]} ] ; then
-	printf "up to date\n"
-    elif [ ${local_tags_array[$i]} -lt ${remote_tags_array[$i]} ] ; then
-	printf "update available\n"
-        if [ $cmd = "--check" ] ; then
-	    printf "  will update\n"
-        elif [ $cmd = "--update" ] ; then
-	    get_file "" "${remote_url_array[$i]}" "${remote_realpaths_array[$i]}"
+        elif [ ${local_tags_array[$i]} -eq ${remote_tags_array[$i]} ] ; then
+	    printf "up to date\n"
+        elif [ ${local_tags_array[$i]} -lt ${remote_tags_array[$i]} ] ; then
+	    printf "update available\n"
+            if [ $cmd = "--check" ] ; then
+	        printf "  will update\n"
+            elif [ $cmd = "--update" ] ; then
+	        get_file "" "${remote_url_array[$i]}" "${remote_realpaths_array[$i]}"
+            fi
+        else
+	    printf "something is wrong\n"
+	    if [ $force = "true" ] ; then
+                if [ $cmd = "--check" ] ; then
+                    printf "  [force] will download\n"
+                elif [ $cmd = "--update" ] ; then
+                    get_file "force" "${remote_url_array[$i]}" "${remote_realpaths_array[$i]}"
+                fi
+            fi
         fi
     else
 	printf "something is wrong\n"
-	if [ $force = "true" ] ; then
-            if [ $cmd = "--check" ] ; then
-                printf "  [force] will download\n"
-            elif [ $cmd = "--update" ] ; then
-                get_file "force" "${remote_url_array[$i]}" "${remote_realpaths_array[$i]}"
-            fi
-        fi
     fi
 }
 
