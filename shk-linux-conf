@@ -155,9 +155,9 @@ function show_infos() {
         if [ ${local_tags_array[$i]} -eq 0 ] ; then
 	    printf "file not found\n"
 	    if [ $force = "true" ] ; then
-                if [ $cmd = "--check" ] ; then
+                if [ $cmd = "check" ] ; then
                     printf "  [force] will download\n"
-                elif [ $cmd = "--update" ] ; then
+                elif [ $cmd = "update" ] ; then
                     get_file "force" "${remote_url_array[$i]}" "${remote_realpaths_array[$i]}"
                 fi
             fi
@@ -165,17 +165,17 @@ function show_infos() {
 	    printf "up to date\n"
         elif [ ${local_tags_array[$i]} -lt ${remote_tags_array[$i]} ] ; then
 	    printf "update available\n"
-            if [ $cmd = "--check" ] ; then
+            if [ $cmd = "check" ] ; then
 	        printf "  will update\n"
-            elif [ $cmd = "--update" ] ; then
+            elif [ $cmd = "update" ] ; then
 	        get_file "" "${remote_url_array[$i]}" "${remote_realpaths_array[$i]}"
             fi
         else
 	    printf "something is wrong\n"
 	    if [ $force = "true" ] ; then
-                if [ $cmd = "--check" ] ; then
+                if [ $cmd = "check" ] ; then
                     printf "  [force] will download\n"
-                elif [ $cmd = "--update" ] ; then
+                elif [ $cmd = "update" ] ; then
                     get_file "force" "${remote_url_array[$i]}" "${remote_realpaths_array[$i]}"
                 fi
             fi
