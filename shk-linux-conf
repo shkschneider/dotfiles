@@ -22,9 +22,9 @@ function usage() {
     echo "                --branch=REPO_BRANCH" >&2
     echo "                --force" >&2
     echo "       Commands:" >&2
-    echo "                --list" >&2
-    echo "                --check [GITHUB_FILE ...]" >&2
-    echo "                --update [GITHUB_FILE ...]" >&2
+    echo "                list" >&2
+    echo "                check [GITHUB_FILE ...]" >&2
+    echo "                update [GITHUB_FILE ...]" >&2
     exit 1
 }
 
@@ -198,11 +198,11 @@ case $http_code in
 esac
 
 case $cmd in
-    "--list")
+    "list")
         [ $# -ne 0 ] && usage
 	list "/" "--brief"
 	;;
-    "--check"|"--update")
+    "check"|"update")
 	if [ $# -eq 0 ] ; then
 	    list "/"
 	else
