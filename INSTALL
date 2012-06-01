@@ -7,9 +7,9 @@ INSTALL FROM A REPOSITORY
 Default repository is mine.
 It can be changed in the script or via script options -u and -r.
 
-$ wget --no-check-certificate -qO- https://raw.github.com/leonnib4/linux_conf/master/shk-linux-conf | bash
+$ wget --no-check-certificate -qO- https://raw.github.com/shkschneider/linux_conf/master/shk-linux-conf | bash
 - or -
-$ curl -s https://raw.github.com/leonnib4/linux_conf/master/shk-linux-conf | bash
+$ curl -s https://raw.github.com/shkschneider/linux_conf/master/shk-linux-conf | bash
 
 Usage:
 $ shk-linux-conf --list
