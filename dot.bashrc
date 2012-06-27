@@ -9,11 +9,13 @@
 # under certain conditions.
 #
 
-# ~/.bashrc r12
+# ~/.bashrc r13
 
 # Preferences
 export PAGER=most
 export EDITOR=nano
+export LESS='-R'
+export LESSOPEN='|~/.lessfilter %s'
 
 # Many more
 FILES=$(shopt -s nullglob ; echo $HOME/.bashrc_*)
