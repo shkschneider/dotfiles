@@ -71,6 +71,10 @@
 	# Include summaries of merged commits in newly created merge commit messages
 	log = true
 
+[push]
+	# Push to where it pulled
+	default = tracking
+
 [branch "master"]
 	# Use 'origin' as the default remote on the 'master' branch in all cases
 	remote = origin
