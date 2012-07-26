@@ -23,7 +23,7 @@
 
 [alias]
 	s = show
-	a = add
+	a = add -u
 	t = tag
 
 	l = log --decorate --abbrev-commit
