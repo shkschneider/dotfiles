@@ -8,7 +8,7 @@
 # under certain conditions.
 #
 
-# ~/.gitconfig r19
+# ~/.gitconfig r20
 
 [core]
 	excludesfiles = ~/.gitignore
@@ -71,13 +71,12 @@
 	# Include summaries of merged commits in newly created merge commit messages
 	log = true
 
+[pull]
+	# Push to where it pulled
+	default = upstream
+
 [push]
 	# Push to where it pulled
 	default = tracking
-
-[branch "master"]
-	# Use 'origin' as the default remote on the 'master' branch in all cases
-	remote = origin
-	merge = refs/heads/master
 
 # EOF
