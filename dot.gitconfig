@@ -8,7 +8,7 @@
 # under certain conditions.
 #
 
-# ~/.gitconfig r20
+# ~/.gitconfig r21
 
 [core]
 	excludesfiles = ~/.gitignore
@@ -64,6 +64,9 @@
 	# tarball
 	tgz = "!git archive HEAD --prefix=`git rev-parse --short HEAD` --format=tar | gzip > ../`git rev-parse --short HEAD`.tar.gz"
 
+[apply]
+	whitespace = fix
+
 [color]
 	ui = auto
 
@@ -78,5 +81,9 @@
 [push]
 	# Push to where it pulled
 	default = tracking
+
+[branch "master"]
+	remote = origin
+	merge = refs/heads/master
 
 # EOF

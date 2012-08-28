@@ -8,7 +8,7 @@
 # under certain conditions.
 #
 
-# ~/.gitignore r4
+# ~/.gitignore r5
 
 *.ignore
 *~
@@ -19,8 +19,10 @@ a.out
 Thumbs.db
 Desktop.ini
 .Trash
+.Trashes
 LOST+FOUND
 .DS_Store
 ._*
+.Spotlight*
 
 # EOF
