@@ -9,11 +9,11 @@
 # under certain conditions.
 #
 
-# ~/.bash_logout r3
+# ~/.bash_logout r4
 
 [ "$SHLVL" = 1 ] && [ -x /usr/bin/clear_console ] && /usr/bin/clear_console -q
 
 history -c
-rm -f $HOME/.*_history
+shopt -s nullglob ; rm -f $HOME/.*_history
 
 # EOF
