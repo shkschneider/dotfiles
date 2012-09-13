@@ -9,17 +9,17 @@
 # under certain conditions.
 #
 
-# ~/.bashrc_aliases r2
+# ~/.bashrc_aliases r3
 
-alias ls='ls --color=auto -Fh'
+alias ls='ls --color=auto -Fh --group-directories-first'
 alias ne='emacs -nw'
 alias j='jobs'
 alias h='history'
 alias cp='cp -vr'
 alias mkdir='mkdir -pv'
 alias scp='scp -r'
-alias wget="wget --no-check-certificate"
-alias curl="curl -s"
+alias wget="wget -q --no-check-certificate"
+alias curl="curl -s --insecure"
 alias bc="bc -q"
 alias rm='rm -v'
 alias ..="cd .."
