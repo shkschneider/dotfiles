@@ -8,7 +8,7 @@
 # under certain conditions.
 #
 
-# ~/.gitconfig r21
+# ~/.gitconfig r22
 
 [core]
 	excludesfiles = ~/.gitignore
@@ -43,6 +43,7 @@
 	ra = rebase --abort
 
 	st = status --short --branch
+	sm = submodule
 
 	df = diff --patch-with-stat
 	dc = diff --patch-with-stat --cached
