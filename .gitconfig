@@ -1,0 +1,84 @@
+# ~/.gitconfig
+
+[core]
+	excludesfiles = ~/.gitignore
+	attributesfile = ~/.gitattributes
+	#pager = most
+	#editor = nano
+
+[user]
+	#name = User Name
+	#email = useremail
+	#signkey = signkey
+
+[alias]
+	s = show
+	a = add -u
+	t = tag
+
+	l = log --decorate --abbrev-commit
+        la = shortlog --pretty=format:'%h %ar: %s'
+        ls = log --pretty=format:'%h [%an] %s'
+        lg = log --decorate --graph --oneline
+
+	ci = commit --no-status
+	ca = commit --no-status --all
+	ar = "!git add -u && git ls-files --deleted -z | xargs -0 git rm 2>/dev/null"
+        reci = commit --amend
+
+	co = checkout
+	br = branch
+	rc = rebase --continue
+	rs = rebase --skip
+	ra = rebase --abort
+
+	st = status --short --branch --ignore-submodules=dirty
+	sm = submodule
+
+	df = diff --patch-with-stat
+	dc = diff --patch-with-stat --cached
+	ds = diff --stat
+	dfw = diff --word-diff
+	dcw = diff --cached --word-diff
+
+	cl = clean -df
+	authors = "!git log --format='%aN' | sort -u"
+        rank = "!git log --format='%aN'  | awk '{arr[$0]++} END{for (i in arr){print arr[i], i;}}' | sort -nr"
+
+	re = reset --hard HEAD
+	unadd = reset --mixed
+	uncommit = reset --soft HEAD^
+	unpull = reset --hard HEAD@{0}
+	unmerge = reset --hard HEAD@{0}
+	unrebase = reset --hard HEAD@{0}
+
+	tgz = "!git archive HEAD --prefix=`git rev-parse --short HEAD` --format=tar | gzip > ../`git rev-parse --short HEAD`.tar.gz"
+
+[apply]
+	whitespace = fix
+
+[color]
+	ui = auto
+
+[merge]
+	log = true
+
+[pull]
+	default = upstream
+
+[push]
+	default = tracking
+
+[branch "master"]
+	remote = origin
+	merge = refs/heads/master
+        rebase = true
+        autosetuprebase = always
+
+[branch "devel"]
+	remote = origin
+	merge = refs/heads/devel
+        rebase = true
+        autosetuprebase = always
+
+# EOF

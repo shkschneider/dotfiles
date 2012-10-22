@@ -1,0 +1,9 @@
+#!/bin/sh
+
+rsync \
+    --exclude "$(basename $0)" \
+    --exclude ".git" \
+    --exclude "[A-Z]*" \
+    -Wav --human-readable --progress "." "$HOME"
+
+# EOF

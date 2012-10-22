@@ -1,0 +1,6 @@
+# ~/.hgrc
+
+[ui]
+	#username = "User Name <useremail>"
+
+# EOF
