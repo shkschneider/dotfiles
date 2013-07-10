@@ -41,16 +41,16 @@ done
 
 # Prompt
 function __ps1() {
+    code=$(printf "%03d" $?)
     jobs=$(printf "%03d" $(jobs | wc -l))
     host=$(hostname)
     #date=$(date +%X)
-    code=$(printf "%03d" $?)
     user=$(whoami)
     drive=$(df $(readlink -f .) | tail -1 | awk '{ print $1 }')
     path=$(readlink -f $PWD)
 
     if [ -n "$(git rev-parse --git-dir 2>/dev/null)" ] ; then
-        user=$(git config --get user.name)
+        user=$(git config --get user.name || whoami)
         repo=$(dirname $(dirname $(readlink -f $(git rev-parse --git-dir))))
         path=$(readlink -f . | sed -r "s#^$repo/##")
         branch=$(git rev-parse --abbrev-ref HEAD)
