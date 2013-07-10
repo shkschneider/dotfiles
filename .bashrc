@@ -18,7 +18,7 @@ export MYSQL_HISTFILE=/dev/null
 export EDITOR=nano
 export LESS='-R'
 [ -x "$(which most)" ] && export PAGER=most
-[ -f "$HOME/lessfilter" ] && export LESSOPEN='|~/.lessfilter %s'
+[ -f "$HOME/.lessfilter" ] && export LESSOPEN='|~/.lessfilter %s'
 export LSCOLORS="cxfxbxdxbxegedabagacad"
 
 # Aliases
@@ -32,7 +32,7 @@ umask 022
 [ -f /etc/bash_completion ] && ! shopt -oq posix && . /etc/bash_completion
 
 # Command not found
-command_not_found_handle() { echo "bash: command not found: \`$1'"; }
+command_not_found_handle() { echo "bash: $1: command not found"; }
 
 # Path
 for path in bin sbin ; do
@@ -41,26 +41,27 @@ done
 
 # Prompt
 function __ps1() {
-    EXIT=$?
-    if [ $EXIT -eq 0 ] ; then
-        EXIT="\e[1;32m$EXIT"
-    elif [ $EXIT -eq 148 ] ; then
-        EXIT="\e[1;33m$EXIT"
+    jobs=$(printf "%03d" $(jobs | wc -l))
+    host=$(hostname)
+    #date=$(date +%X)
+    code=$(printf "%03d" $?)
+    user=$(whoami)
+    drive=$(df $(readlink -f .) | tail -1 | awk '{ print $1 }')
+    path=$(readlink -f $PWD)
+
+    if [ -n "$(git rev-parse --git-dir 2>/dev/null)" ] ; then
+        user=$(git config --get user.name)
+        repo=$(dirname $(dirname $(readlink -f $(git rev-parse --git-dir))))
+        path=$(readlink -f . | sed -r "s#^$repo/##")
+        branch=$(git rev-parse --abbrev-ref HEAD)
+        ref=$(git rev-parse HEAD | cut -c1-7)
+        diff=$(git rev-list HEAD --not --remotes | wc -l)
+        export PS1="\e[1;34m[$jobs $path:$branch/$ref+$diff]\n\e[1;32m[$code $user] \$\e[0m "
+    # others
+    # ...
     else
-        EXIT="\e[1;31m$EXIT"
+        export PS1="\e[1;34m[$jobs $drive:$path]\n\e[1;32m[$code $user@$host] \$\e[0m "
     fi
-    JOBS=$(jobs | wc -l)
-    [ $JOBS -eq 0 ] && JCOLOR="\e[1;32m"
-    [ $JOBS -eq 1 ] && JCOLOR="\e[1;33m"
-    [ $JOBS -gt 1 ] && JCOLOR="\e[1;31m"
-    if [ $(id -u) -eq 0 ] ; then
-        COLOR="\e[1;31m"
-    elif [ -z "$(pwd | egrep "^$HOME")" ] ; then
-        COLOR="\e[1;33m"
-    else
-        COLOR="\e[1;32m"
-    fi
-    export PS1="$EXIT $COLOR\u@\h $JCOLOR$JOBS \e[1;34m\w \$\e[0m "
 }
 PROMPT_COMMAND=__ps1
 
