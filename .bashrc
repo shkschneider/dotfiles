@@ -56,7 +56,8 @@ function __ps1() {
         branch=$(git rev-parse --abbrev-ref HEAD)
         ref=$(git rev-parse HEAD | cut -c1-7)
         diff=$(git rev-list HEAD --not --remotes | wc -l)
-        export PS1="\e[1;34m[$jobs $path:$branch/$ref+$diff]\n\e[1;32m[$code $user] \$\e[0m "
+        status=$(git status --porcelain | grep '?' | wc -l)
+        export PS1="\e[1;34m[$jobs $path:$branch/$ref+$diff|$status]\n\e[1;32m[$code $user] \$\e[0m "
     # others
     # ...
     else
