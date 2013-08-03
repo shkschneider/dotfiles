@@ -47,6 +47,9 @@ function __ps1() {
     #date=$(date +%X)
     user=$(whoami)
     drive=$(df $(readlink -f .) | tail -1 | awk '{ print $1 }')
+    if [ -n "$(echo $drive | egrep '^/dev/disk/by-uuid/')" ] ; then
+        drive=$(readlink -f /dev/disk/by-uuid/$(ls -l $drive | awk '{print $NF}'))
+    fi
     path=$(readlink -f $PWD)
 
     if [ -n "$(git rev-parse --git-dir 2>/dev/null)" ] ; then
