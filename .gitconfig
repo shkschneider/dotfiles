@@ -14,7 +14,7 @@
 [alias]
 	s = show
 	a = add -u
-	t = tag
+	t = show-ref --tags
 
 	l = log --decorate --abbrev-commit
         la = shortlog --pretty=format:'%h %ar: %s'
