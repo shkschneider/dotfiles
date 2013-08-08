@@ -13,12 +13,13 @@
 
 [alias]
 	s = show
+	l = log
 	a = add -u
 	t = show-ref --tags
 
-	l = log --decorate --abbrev-commit
-        la = shortlog --pretty=format:'%h %ar: %s'
-        ls = log --pretty=format:'%h [%an] %s'
+	log = log --decorate --abbrev-commit --date=relative
+        la = shortlog --pretty=format:'%h [%ar] %s'
+        ls = log --pretty=format:'%h [%ar by %an] %s' --decorate
         lg = log --decorate --graph --oneline
 
 	ci = commit --no-status
