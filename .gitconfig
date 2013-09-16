@@ -82,4 +82,8 @@
         rebase = true
         autosetuprebase = always
 
+[advice]
+	pushNonFastForward = false
+	statusHints = false
+
 # EOF
