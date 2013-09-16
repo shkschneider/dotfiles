@@ -41,6 +41,11 @@ done
 
 # Prompt
 function __ps1() {
+    #─
+    #┌
+    #└
+    #╭
+    #╰
     code=$(printf "%03d" $?)
     jobs=$(printf "%03d" $(jobs | wc -l))
     host=$(hostname)
