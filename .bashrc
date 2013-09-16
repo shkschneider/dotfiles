@@ -61,7 +61,7 @@ function __ps1() {
         git_path=$(readlink -f . | sed -r "s#^$repo/##")
         git_branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
         git_ref=$(git rev-parse HEAD 2>/dev/null | cut -c1-7)
-        git_status="+$(git rev-list HEAD --not --remotes | wc -l)/$(git status --porcelain 2>/dev/null | grep '?' | wc -l)"
+        git_status="+$(git rev-list HEAD --not --remotes | wc -l)/$(git status --porcelain 2>/dev/null | | egrep '^\s' | wc -l))"
         export PS1="╭\e[1;32m[$user@$host] \e[1;34m[$drive:$path] \e[1;33m[$git_path:$git_branch@$git_ref $git_status]\n\e[0;0m╰\$ "
     else
         export PS1="╭\e[1;32m[$user@$host] \e[1;34m[$drive:$path]\n\e[0;0m╰\$ "
