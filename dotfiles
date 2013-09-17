@@ -6,4 +6,6 @@ rsync \
     --exclude "[A-Z]*" \
     -Wav --human-readable --progress "." "$HOME"
 
+cp bash.bashrc /etc/bash.bashrc
+
 # EOF
