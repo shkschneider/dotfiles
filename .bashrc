@@ -63,10 +63,9 @@ function __ps1() {
     if [ -n "$(git rev-parse --git-dir 2>/dev/null)" ] ; then
         git_repo=$(basename "$(dirname "$(readlink -f "$(git rev-parse --git-dir)")")")
         git_branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "?")
-        git_commit=$(git rev-parse HEAD| cut -c1-7 2>/dev/null || echo "?")
-        git_status_head=$(git rev-list HEAD --not --remotes 2>/dev/null | wc -l || echo "0")
-        git_status_staging=$(git status --porcelain 2>/dev/null | egrep '^\s' | wc -l || echo "0")
-        PS1="[$jobs] $c1[$user@$host] $c2[$drive:$path] $c3[$git_repo:$git_branch@$git_commit +$git_status_head/$git_status_staging]"
+        [ $(git status --porcelain 2>/dev/null | wc -l || echo "0") -gt 0 ] && git_branch="$git_branch*"
+        git_status=$(git rev-list HEAD --not --remotes 2>/dev/null | wc -l || echo "0")
+        PS1="[$jobs] $c1[$user@$host] $c2[$drive:$path] $c3[$git_repo:$git_branch +$git_status]"
     fi
     export PS1="$c0╭$PS1\n$c0╰\$ "
 }
