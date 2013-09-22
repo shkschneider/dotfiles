@@ -38,7 +38,6 @@ export LESS='-R'
 [ -x "$(which most)" ] && export PAGER=most || export PAGER=less
 [ -f "$HOME/.lessfilter" ] && export LESSOPEN='|~/.lessfilter %s'
 export LSCOLORS="cxfxbxdxbxegedabagacad"
-export IGNOREEOF=2
 
 # Aliases
 alias setenv=export
