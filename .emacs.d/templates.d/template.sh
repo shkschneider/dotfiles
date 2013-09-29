@@ -1,5 +1,5 @@
 #/usr/bin/env sh
-# -*- coding: UTF-8 -*- 
+# -*- coding: utf-8 -*- 
 #
 # SH
 #
