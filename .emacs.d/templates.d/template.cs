@@ -5,3 +5,4 @@ cat $0 | sed -n '1,2d;p' >/tmp/cs.$$.c && gcc -Wall -o /tmp/cs.$$ /tmp/cs.$$.c &
  * C-Script
  */
 
+/* EOF */
