@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# -*- coding: UTF-8 -*- 
+# -*- coding: utf-8 -*- 
 #
 # Perl
 #
