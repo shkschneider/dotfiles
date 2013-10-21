@@ -21,6 +21,7 @@
         la = shortlog --pretty=format:'%h [%ar] %s'
         ls = log --pretty=format:'%h [%ar by %an] %s' --decorate
         lg = log --decorate --graph --oneline
+        lga = log --decorate --graph --oneline --all
 
 	ci = commit --no-status
 	ca = commit --no-status --all
