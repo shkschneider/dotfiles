@@ -84,7 +84,7 @@ function __ps1() {
         git_branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "?")
         [ $(git status --porcelain 2>/dev/null | wc -l || echo "0") -gt 0 ] && git_branch="$git_branch*"
         git_status=$(git rev-list HEAD --not --remotes 2>/dev/null | wc -l || echo "0")
-        PS1="[$jobs] $c1[$user@$host] $c2[$drive:$path] $c3[$git_repo:$git_branch +$git_status]"
+        PS1="[$jobs]$c0 $c1[$user@$host]$c0 $c2[$drive:$path]$c0 $c3[$git_repo:$git_branch +$git_status]$c0"
     fi
     export PS1="$c0╭$PS1\n$c0╰\$ "
 }
