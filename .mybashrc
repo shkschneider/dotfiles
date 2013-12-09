@@ -61,4 +61,13 @@ function ports() {
     netstat -nape --inet 2>/dev/null | egrep '[0-9]+:[0-9]+'
 }
 
+function clean() {
+    if [ -n "$1" ] ; then
+        SEARCH="$1"
+    else
+        SEARCH="."
+    fi
+    find "$SEARCH" \( -name "*~" -print -or -name ".*~" -print -or -name "#*" -print -or -name ".#*" -print \) -exec rm -fr {} \;
+}
+
 # EOF
