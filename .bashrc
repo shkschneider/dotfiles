@@ -59,6 +59,14 @@ done
 
 # Prompt
 function __ps1() {
+    user=$(whoami)
+    [ -z "$user" ] && user="johndoe"
+    host=$(hostname)
+    [ -n "$SSH_CLIENT$SSH2_CLIENT" ] && host="ssh:$(hostname)"
+    drive=$(df "$(readlink -f . 2>/dev/null)" | tail -1 | awk '{ print $1 }')
+    [ -n "$(echo $drive | egrep '^/dev/disk/by-uuid/')" ] && drive=$(readlink -f "/dev/disk/by-uuid/$(ls -l $drive | awk '{print $NF}')")
+    path=$(readlink -f "." | sed "s#$HOME#~#")
+
     # always surrounds non-printing sequences with \[...\]                                                                                                                                                                               
     if [ -n "$(git rev-parse --git-dir 2>/dev/null)" ] ; then
         git_repo=$(basename "$(dirname "$(readlink -f "$(git rev-parse --git-dir)")")")
