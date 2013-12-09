@@ -72,7 +72,7 @@ function __ps1() {
     [ -n "$(echo $drive | egrep '^/dev/disk/by-uuid/')" ] && drive=$(readlink -f "/dev/disk/by-uuid/$(ls -l $drive | awk '{print $NF}')")
     path=$(readlink -f "." | sed "s#$HOME#~#")
 
-    # always surrounds non-printing sequences with \[...\]                                                                                                                                                                               
+    # always surrounds non-printing sequences with \[...\]
     if [ -n "$(git rev-parse --git-dir 2>/dev/null)" ] ; then
         git_repo=$(basename "$(dirname "$(readlink -f "$(git rev-parse --git-dir)")")")
         git_branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "?")
