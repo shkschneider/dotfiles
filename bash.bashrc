@@ -41,6 +41,11 @@ done
 
 # Prompt
 function __ps1() {
+    c0="\e[0m"
+    c1="\e[1;32m"
+    [ $(id -u) -eq 0 ] && c1="\e[1;31m"
+    c2="\e[1;34m"
+    c3="\e[1;33m"
     user=$(whoami)
     [ -z "$user" ] && user="johndoe"
     host=$(hostname)
@@ -49,8 +54,8 @@ function __ps1() {
     [ -n "$(echo $drive | egrep '^/dev/disk/by-uuid/')" ] && drive=$(readlink -f "/dev/disk/by-uuid/$(ls -l $drive | awk '{print $NF}')")
     path=$(readlink -f "." | sed "s#$HOME#~#")
 
-    # always surrounds non-printing sequences with \[...\]                                                                                                                                                                               
-    export PS1="\[\e[1;32m\][$user@$host] \[\e[1;34m\][$drive:$path]\n\[\e[0m\]\\$ "
+    # always surrounds non-printing sequences with \[...\]
+    export PS1="\[$c1\][$user@$host] \[$c2\][$drive:$path]\n\[$c0\]\\$ "
 }
 PROMPT_COMMAND=__ps1
 
