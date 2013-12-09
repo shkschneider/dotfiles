@@ -59,6 +59,11 @@ done
 
 # Prompt
 function __ps1() {
+    c0="\e[0m"
+    c1="\e[1;32m"
+    [ $(id -u) -eq 0 ] && c1="\e[1;31m"
+    c2="\e[1;34m"
+    c3="\e[1;33m"
     user=$(whoami)
     [ -z "$user" ] && user="johndoe"
     host=$(hostname)
@@ -73,9 +78,9 @@ function __ps1() {
         git_branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "?")
         [ $(git status --porcelain 2>/dev/null | wc -l || echo "0") -gt 0 ] && git_branch="$git_branch*"
         git_status=$(git rev-list HEAD --not --remotes 2>/dev/null | wc -l || echo "0")
-        export PS1="\[\e[1;32m\][$user@$host] \[\e[1;34m\][$drive:$path] \[\e[1;33m\][$git_repo:$git_branch +$git_status]\n\[\e[0m\]\\$ "
+        export PS1="\[$c1\][$user@$host] \[$c2\][$drive:$path] \[$c3\][$git_repo:$git_branch +$git_status]\n\[$c0\]\\$ "
     else
-        export PS1="\[\e[1;32m\][$user@$host] \[\e[1;34m\][$drive:$path]\n\[\e[0m\]\\$ "
+        export PS1="\[$c1\][$user@$host] \[$c2\][$drive:$path]\n\[$c0\]\\$ "
     fi
 }
 PROMPT_COMMAND=__ps1
