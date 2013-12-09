@@ -1,11 +1,14 @@
 #!/bin/sh
 
 rsync \
-    --exclude "$(basename $0)" \
     --exclude ".git" \
+    --exclude "[a-z]*" \
     --exclude "[A-Z]*" \
     -Wav --human-readable --progress "." "$HOME"
 
-cp bash.bashrc /etc/bash.bashrc
+rsync \
+    --exclude ".*" \
+    --exclude "dotfiles" \
+    -Wav --human-readable --progress "." "/"
 
 # EOF
