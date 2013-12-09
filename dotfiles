@@ -1,14 +1,18 @@
 #!/bin/sh
 
+[ -z "$(which rsync)" ] && echo "command not found" >&2 && exit 1
+
 rsync \
     --exclude ".git" \
     --exclude "[a-z]*" \
     --exclude "[A-Z]*" \
     -Wav --human-readable --progress "." "$HOME"
 
-rsync \
-    --exclude ".*" \
-    --exclude "dotfiles" \
-    -Wav --human-readable --progress "." "/"
+if [ $(id -u) -eq 0 ] ; then
+    rsync \
+        --exclude ".*" \
+        --exclude "dotfiles" \
+        -Wav --human-readable --progress "." "/"
+fi
 
 # EOF
