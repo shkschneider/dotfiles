@@ -39,7 +39,7 @@ function calc() {
 
 function psx() {
     if [ $# -eq 1 ] ; then
-        ps -aux | grep --color -- "$1" | grep -v 'grep' #| pr -TW$COLUMNS
+        ps aux | grep --color -- "$1" | grep -v 'grep' #| pr -TW$COLUMNS
     else
         return 1
     fi
