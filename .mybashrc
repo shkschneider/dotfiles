@@ -53,8 +53,14 @@ function mcd () {
     fi
 }
 
-function ip() {
-    curl --silent ifconfig.me/ip
+function ipx() {
+    if [ $# -eq 0 ] ; then
+        echo $(curl --silent 'ipecho.net/plain' 2>/dev/null)
+    else
+        for host in $@ ; do
+            echo "$host: "$(nslookup "$host" 2>/dev/null | grep -v '#' | egrep '^Address:' | awk '{print $NF}')
+        done
+   fi
 }
 
 function ports() {
