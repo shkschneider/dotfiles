@@ -9,10 +9,7 @@ rsync \
     -Wav --human-readable --progress "." "$HOME"
 
 if [ $(id -u) -eq 0 ] ; then
-    rsync \
-        --exclude ".*" \
-        --exclude "dotfiles" \
-        -Wav --human-readable --progress "." "/"
+    cp bash.bashrc /etc/
 fi
 
 # EOF
