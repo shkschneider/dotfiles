@@ -53,6 +53,7 @@ function __ps1() {
     drive=$(df "$(readlink -f . 2>/dev/null)" | tail -1 | awk '{ print $1 }')
     [ -n "$(echo $drive | egrep '^/dev/disk/by-uuid/')" ] && drive=$(readlink -f "/dev/disk/by-uuid/$(ls -l $drive | awk '{print $NF}')")
     path=$(readlink -f "." | sed "s#$HOME#~#")
+    #date=$(date +%G%m%d%H%M%S)
 
     # always surrounds non-printing sequences with \[...\]
     export PS1="\[$c1\][$user@$host] \[$c2\][$drive:$path]\n\[$c0\]\\$ "
