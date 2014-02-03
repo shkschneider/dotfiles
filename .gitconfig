@@ -34,7 +34,7 @@
 	rs = rebase --skip
 	ra = rebase --abort
 
-	st = status --short --branch --ignore-submodules=dirty
+	st = status --short --branch
 	sm = submodule
 
 	df = diff --patch-with-stat
