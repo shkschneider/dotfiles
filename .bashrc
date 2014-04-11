@@ -9,7 +9,7 @@ if [ -x "$(which stty)" ] ; then
     stty -ixoff
 fi
 umask 022
-set -o noclobber
+#set -o noclobber
 set -o emacs
 #set -o ignoreeof
 shopt -s autocd
