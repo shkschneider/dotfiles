@@ -1,9 +1,17 @@
 # /etc/bash.bashrc
 
 # If not running interactively, don't do anything
-[ -z "$PS1" ] && return
+[ -z "$PS1" ] && return 0
 
 # Options
+if [ -x "$(which stty)" ] ; then
+    stty -ixon
+    stty -ixoff
+fi
+umask 022
+#set -o noclobber
+set -o emacs
+#set -o ignoreeof
 shopt -s autocd
 shopt -s hostcomplete
 shopt -s cdspell
@@ -11,13 +19,23 @@ shopt -s histappend
 shopt -s checkwinsize
 shopt -s dotglob
 shopt -s checkhash
+if [ -n "$BASH_COMPLETION" ] ; then
+    complete -cf sudo
+    complete -cf man
+fi
+if [ -x "$(which xset)" ] ; then
+    xset -dpms
+    xset s off
+fi
 
 # Environment
-export HISTCONTROL=ignoredups
+export HISTCONTROL=ignoreboth #ignoredups,ignorespace
+export HISTIGNORE="&;cd:ls:pwd:exit:clear"
+export HISTTIMEFORMAT='%Y-%m-%d %H:%M:%S '
 export MYSQL_HISTFILE=/dev/null
-export EDITOR=nano
+[ -x "$(which nano)" ] && export EDITOR=nano
 export LESS='-R'
-[ -x "$(which most)" ] && export PAGER=most
+[ -x "$(which most)" ] && export PAGER=most || export PAGER=less
 [ -f "$HOME/.lessfilter" ] && export LESSOPEN='|~/.lessfilter %s'
 export LSCOLORS="cxfxbxdxbxegedabagacad"
 
