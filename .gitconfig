@@ -36,6 +36,7 @@
 
 	st = status --short --branch
 	sm = submodule
+	sf = show --name-status
 
 	df = diff --patch-with-stat
 	dc = diff --patch-with-stat --cached
