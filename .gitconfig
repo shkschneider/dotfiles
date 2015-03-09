@@ -45,7 +45,7 @@
 	dcw = diff --cached --word-diff
 
 	cl = clean -df
-	authors = "!git log --format='%aN' | sort -u"
+	authors = "!git log --format='%aN <%cE>' | sort -u"
         rank = "!git shortlog -s -n | awk '{print $1,$2}'"
 
 	re = reset --hard HEAD
