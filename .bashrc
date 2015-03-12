@@ -75,7 +75,7 @@ function __ps1() {
 
     # always surrounds non-printing sequences with \[...\]
     if [ -n "$(git rev-parse --git-dir 2>/dev/null)" ] ; then
-        git_repo=$(basename "$(dirname "$(readlink -f "$(git rev-parse --git-dir)")")")
+        git_repo=$(basename "$(git rev-parse --git-dir)")
         git_branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
         [ $(git status --porcelain 2>/dev/null | wc -l || echo "0") -gt 0 ] && git_branch="$git_branch*"
         git_status=$(git rev-list HEAD --not --remotes 2>/dev/null | wc -l || echo "0")
