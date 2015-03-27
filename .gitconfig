@@ -15,7 +15,7 @@
 	s = show
 	l = log
 	a = add -u
-	t = show-ref --tags
+	t = "git show-ref --tags | sort -r | awk '{split($2,t,\"/\"); print t[3],substr($1,1,7)}'"
 
 	log = log --decorate --abbrev-commit --date=relative
         la = shortlog --pretty=format:'%h [%ar] %s'
