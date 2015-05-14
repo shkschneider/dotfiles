@@ -16,7 +16,7 @@
 ;; CustomConf & Autoload
 
 (if (file-exists-p (expand-file-name "~/.myemacs")) (load-file (expand-file-name "~/.myemacs")))
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/"))
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp"))
 (require 'shebang nil 'noerror)
 (require 'templates nil 'noerror)
 (require 'shell-interactions nil 'noerror)
