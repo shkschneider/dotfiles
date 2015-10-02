@@ -5,8 +5,8 @@
 
 # Options
 if [ -x "$(which stty)" ] ; then
-    stty -ixon
-    stty -ixoff
+    stty -ixon 2>/dev/null
+    stty -ixoff 2>/dev/null
 fi
 umask 022
 #set -o noclobber
@@ -24,8 +24,8 @@ if [ -n "$BASH_COMPLETION" ] ; then
     complete -cf man
 fi
 if [ -x "$(which xset)" ] ; then
-    xset -dpms
-    xset s off
+    xset -dpms 2>/dev/null
+    xset s off 2>/dev/null
 fi
 
 # Environment
