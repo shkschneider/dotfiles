@@ -56,6 +56,7 @@
 	unrebase = reset --hard HEAD@{0}
 
 	tgz = "!git archive HEAD --prefix=`git rev-parse --short HEAD` --format=tar | gzip > ../`git rev-parse --short HEAD`.tar.gz"
+	# curl https://raw.githubusercontent.com/davidfokkema/git-rewrite-author/master/git-rewrite-author | python - -w "Old <>" "New <>"
 
 [apply]
 	whitespace = fix
