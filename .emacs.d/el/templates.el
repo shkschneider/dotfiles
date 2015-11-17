@@ -1,4 +1,4 @@
-;; ~/.emacs.d/templates.el
+;; ~/.emacs.d/el/templates.el
 
 ; From <http://repo.or.cz/w/emacs.git/blob_plain/HEAD:/lisp/autoinsert.el>
 (auto-insert-mode)

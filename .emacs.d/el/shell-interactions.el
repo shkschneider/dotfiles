@@ -1,4 +1,4 @@
-;; ~/.emacs.d/shell-interactions.el
+;; ~/.emacs.d/el/shell-interactions.el
 
 ; Thx <http://www.squidoo.com/emacs-command>
 

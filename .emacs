@@ -16,14 +16,14 @@
 ;; CustomConf & Autoload
 
 (if (file-exists-p (expand-file-name "~/.myemacs")) (load-file (expand-file-name "~/.myemacs")))
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp"))
-(require 'shebang nil 'noerror)
-(require 'templates nil 'noerror)
-(require 'shell-interactions nil 'noerror)
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/el"))
+;(require 'abbrevs nil 'noerror)
 (require 'bindkeys nil 'noerror)
-(require 'timestamp nil 'noerror)
 ;(require 'compile-init nil 'noerror)
-;(require 'abbrev)
+(require 'shebang nil 'noerror)
+(require 'shell-interactions nil 'noerror)
+(require 'templates nil 'noerror)
+(require 'timestamp nil 'noerror)
 
 ;; Language
 
@@ -67,6 +67,11 @@
 (setq scroll-step 1)
 (delete-selection-mode t)
 (setq mouse-yank-at-point t)
+(and
+ (require 'centered-cursor-mode)
+ (global-centered-cursor-mode +1))
+;(load "~/.emacs.d/centered-cursor-mode.el")
+(setq auto-window-vscroll nil)
 (setq backup-directory-alist '(("." . "/.emacs.d/tmp")))
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (setq next-line-add-newlines nil)

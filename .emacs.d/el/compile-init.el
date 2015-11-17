@@ -1,4 +1,4 @@
-;; ~/.emacs.d/compile.el
+;; ~/.emacs.d/el/compile.el
 
 (defun compile-init-file ()
   (let ((byte-compile-warnings '(unresolved)))

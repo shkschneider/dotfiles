@@ -1,4 +1,4 @@
-;; ~/.emacs.d/bindkeys
+;; ~/.emacs.d/el/bindkeys
 
 ;; Thx <http://www.cs.rutgers.edu/LCSR-Computing/some-docs/emacs-chart.html>
 

@@ -1,4 +1,4 @@
-;; ~/.emacs.d/shebang.el
+;; ~/.emacs.d/el/shebang.el
 
 (add-hook 'after-save-hook
 	  (lambda() (and
