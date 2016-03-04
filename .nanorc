@@ -1,0 +1,49 @@
+# ~/.nanorc
+
+# Use auto-indentation.
+set autoindent
+
+unset backup
+unset historylog
+
+# Use bold text instead of reverse video text.
+set boldtext
+
+set brackets string ""')>]}"
+set matchbrackets string "(<[{)>]}"
+set quotestr "^([ \\t]*[#:>\\|}])+"
+
+# Do case sensitive searches by default.
+set casesensitive
+
+# Constantly display the cursor position in the status bar.
+set const
+
+# Use cut to end of line by default.
+unset cut
+
+# Don't display the help lists at the bottom of the screen.
+#set nohelp
+
+# Make the Home key smarter.
+set smarthome
+
+#unset rebinddelete
+#unset rebindkeypad
+
+# Do extended regular expression searches by default.
+unset regexp
+
+# Use smooth scrolling by default.
+set smooth
+
+# Allow nano to be suspended.
+set suspend
+
+# Use a tab size of "n" columns. The default value is 8.
+set tabsize "4"
+
+# Convert typed tabs to spaces
+set tabstospaces
+
+# EOF
