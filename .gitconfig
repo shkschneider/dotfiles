@@ -14,8 +14,8 @@
 [alias]
 	s = show
 	l = log --tags --graph --color --pretty=format:"%C(yellow)%H%C(green)%d%C(reset)%n%x20%cd%n%x20%cn%x20(%ce)%n%x20%s%n"
-        a = add -u
-        t = "!git show-ref --tags | awk '{split($2,t,\"/\"); print t[3],substr($1,1,7)}' | sort -rV | awk '{print $2,$1}'"
+        a = add --update
+        t = "!git show-ref --tags | awk '{split($2,t,\"/\"); print t[3],substr($1,1,7)}' | sort --reverse --version-sort | awk '{print $2,$1}'"
 
 	ls = "!git l --stat"
         lg = log --decorate --graph --oneline
@@ -23,8 +23,8 @@
 
 	ci = commit --no-status
 	ca = "!git ci --all"
-	ar = "!git add -u && git ls-files --deleted -z | xargs -0 git rm 2>/dev/null"
-        reci = commit --amend
+	ar = "!git a && git ls-files --deleted -z | xargs -0 git rm 2>/dev/null"
+        reci = "!git ci --amend"
         cp = cherry-pick
 
 	co = checkout
@@ -43,9 +43,15 @@
 	dfw = diff --word-diff
 	dcw = "!git dfw --cached"
 
-	cl = clean -df
+        parent = "!git rev-parse --abbrev-ref @{u} 2>/dev/null"
+        track = "!f() { git branch -u $1/$2; }; f"
+        untrack = branch --unset-upstream
+        forget = "!f() { git push $1 --delete $2; }; f"
+
+        cl = clean -d --force
 	authors = "!git log --format='%aN <%cE>' | sort -u"
-        rank = "!git shortlog -s -n | awk '{print $1,$2}'"
+        rank = "!git shortlog --summary --numbered | awk '{print $1,$2}'"
+        info = "!cat `git rev-parse --git-dir`/config"
 
 	re = reset --hard HEAD
 	unadd = reset --mixed
@@ -54,7 +60,7 @@
 	unmerge = reset --hard HEAD@{0}
 	unrebase = reset --hard HEAD@{0}
 
-	tgz = "!git archive HEAD --prefix=`git rev-parse --short HEAD` --format=tar | gzip > ../`git rev-parse --short HEAD`.tar.gz"
+	tgz = "!git archive --format=tar --prefix=`git rev-parse --short HEAD 2>/dev/null`/ HEAD | gzip > `git rev-parse --short HEAD 2>/dev/null`.tar.gz"
 	# curl https://raw.githubusercontent.com/davidfokkema/git-rewrite-author/master/git-rewrite-author | python - -w "Old <>" "New <>"
 
 [apply]
