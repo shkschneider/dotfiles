@@ -13,20 +13,19 @@
 
 [alias]
 	s = show
-	l = log
-	a = add -u
-	t = "!git show-ref --tags | awk '{split($2,t,\"/\"); print t[3],\"\t\",substr($1,1,7)}' | sort -rV"
+	l = log --tags --graph --color --pretty=format:"%C(yellow)%H%C(green)%d%C(reset)%n%x20%cd%n%x20%cn%x20(%ce)%n%x20%s%n"
+        a = add -u
+        t = "!git show-ref --tags | awk '{split($2,t,\"/\"); print t[3],substr($1,1,7)}' | sort -rV | awk '{print $2,$1}'"
 
-	log = log --decorate --abbrev-commit --date=relative
-        la = shortlog --pretty=format:'%h [%ar] %s'
-        ls = log --pretty=format:'%h [%ar by %an] %s' --decorate
+	ls = "!git l --stat"
         lg = log --decorate --graph --oneline
-        lga = log --decorate --graph --oneline --all
+        lga = "!git lg --all"
 
 	ci = commit --no-status
-	ca = commit --no-status --all
+	ca = "!git ci --all"
 	ar = "!git add -u && git ls-files --deleted -z | xargs -0 git rm 2>/dev/null"
         reci = commit --amend
+        cp = cherry-pick
 
 	co = checkout
 	br = branch
@@ -39,10 +38,10 @@
 	sf = show --name-status
 
 	df = diff --patch-with-stat
-	dc = diff --patch-with-stat --cached
+	dc = "!git df --cached"
 	ds = diff --stat
 	dfw = diff --word-diff
-	dcw = diff --cached --word-diff
+	dcw = "!git dfw --cached"
 
 	cl = clean -df
 	authors = "!git log --format='%aN <%cE>' | sort -u"
@@ -79,17 +78,21 @@
         rebase = true
         autosetuprebase = always
 
-[branch "devel"]
+[branch "dev"]
 	remote = origin
-	merge = refs/heads/devel
+	merge = refs/heads/dev
         rebase = true
         autosetuprebase = always
 
 [advice]
 	pushNonFastForward = false
 	statusHints = false
-	
+
 [credential]
-	helper = cache --timeout=86400
+	helper = cache --timeout=43200 # 12h
+
+[i18n]
+        commitEncoding = utf8
+        logOutputEncoding = utf8
 
 # EOF
