@@ -2,6 +2,6 @@
 
 # Automatically normalize line endings for all text-based files
 [core]
-* text=auto
+* -crlf
 
 # EOF
