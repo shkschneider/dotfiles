@@ -53,7 +53,7 @@
         rank = "!git shortlog --summary --numbered | awk '{print $1,$2}'"
         info = "!cat `git rev-parse --git-dir`/config"
 
-	re = reset --hard HEAD
+	re = reset --hard
 	unadd = reset --mixed
 	uncommit = reset --soft HEAD^
 	unpull = reset --hard HEAD@{0}
