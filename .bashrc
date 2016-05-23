@@ -59,35 +59,33 @@ done
 
 # Prompt
 function __ps1() {
-    # always surround non-printable sequences with \[...\]
-    c0="\e[0m"
-    c1="\e[1;32m"
-    [ $(id -u) -eq 0 ] && c1="\e[1;31m"
-    c2="\e[1;34m"
-    c3="\e[1;33m"
-
-    #bash_version="${BASH_VERSINFO[0]}.${BASH_VERSINFO[1]}"
-    #bash_level=$SHLVL
+    c="$(tput bold)"
+    [ $(id -u) -eq 0 ] && c="$c$(tput setaf 1)" || c="$c$(tput setaf 2)"
 
     user=$(whoami)
     host=$(hostname)
     [ -n "$SSH_CLIENT$SSH2_CLIENT" ] && host="ssh:"$host
-    #date=$(date +%G%m%d%H%M%S)
-    _user="\[$c1\]⁅$user@$host⁆\[$c0\]"
-    unset user host date
+    _user="$c⁅$user@$host⁆$(tput sgr0)"
+    unset user host
 
-    #drive=$(df "$(readlink -f . 2>/dev/null)" | sed '1d' | awk '{print $1}')
-    #[ -n "$(echo $drive | egrep '^/dev/disk/by-uuid/')" ] && drive=$(readlink -f "/dev/disk/by-uuid/$(ls -l $drive | awk '{print $NF}')")
     path=$(readlink -f "." | sed "s#$HOME#~#")
-    _path="\[$c2\]⁅$path⁆\[$c0\]"
-    unset drive path
+    _path="$(tput bold)$(tput setaf 4)⁅$path⁆$(tput sgr0)"
+    unset path
 
-    [ $(id -u) -eq 0 ] && _prompt="\[$c0\]\\#" || _prompt="\[$c0\]\\$"
+    _prompt=""
+    j=$(jobs | wc -l)
+    [ $j -gt 0 ] && _prompt="$_prompt $(tput setaf 3)+$j$(tput sgr0)"
+    [ $SHLVL -gt 1 ] && _prompt="$_prompt $SHLVL"
+    _prompt="$_prompt\n"
+    [ $(id -u) -eq 0 ] && _prompt="$_prompt\\#" || _prompt="$_prompt\\$"
+    _prompt="$_prompt "
+    unset j
 
     # git
     git_dir=$(git rev-parse --git-dir 2>/dev/null)
     if [ -n "$git_dir" ] && [ $git_dir != "." ] ; then # exclude bare
-        _git="\[$c3\]⁅"
+        git_repo=$(readlink -f "$git_dir" 2>/dev/null | rev | cut -d'/' -f2 | rev)
+        _git="$(tput bold)$(tput setaf 3)⁅"$git_repo" "
         git_commit=$(git rev-parse --short HEAD 2>/dev/null)
         if [ -z "$(git branch -vv --no-color)" ] ; then # naked
             _git=$_git"…"
@@ -109,19 +107,18 @@ function __ps1() {
             unset git_branch git_remote
         fi
         unset git_commit
-        git_status=""
-        for c in M A D R C U ? ; do [ -n "$(git status --porcelain 2>/dev/null | cut -c1,2 | grep $c)" ] && git_status=$git_status"$c" ; done
+        git_status=$(git status --porcelain 2>/dev/null | cut -c1,2 | tr -d " " | tr -d "\n" | sed ':;s#\(.\)\(.*\)\1#\1\2#;t')
         [ -n "$git_status" ] && _git=$_git" "$git_status || _git=$_git" ✔"
         unset git_status
         git_stash=$(git stash list 2>/dev/null | wc -l)
         [ $git_stash -gt 0 ] && _git=$_git" ⚑"$git_stash
         unset git_stash
-        _git=$_git"⁆"
-        export PS1=$_user" "$_path" "$_git"\n"$_prompt" "
+        _git=$_git"⁆$(tput sgr0)"
+        export PS1=$_user" "$_path" "$_git""$_prompt
     else
-        export PS1=$_user" "$_path"\n"$_prompt" "
+        export PS1=$_user" "$_path""$_prompt
     fi
-    unset c0 c1 c2 c3 _user _path _prompt git_dir
+    unset c _user _path _prompt git_dir
 }
 PROMPT_COMMAND=__ps1
 
