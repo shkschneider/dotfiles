@@ -20,6 +20,7 @@
 	ls = "!git l --stat"
         lg = log --decorate --graph --oneline
         lga = "!git lg --all"
+        lgm = "!git lg --author=\"`git config user.name`\""
 
 	ci = commit --no-status
 	ca = "!git ci --all"
