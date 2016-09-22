@@ -87,6 +87,8 @@ function __ps1() {
         git_repo=$(readlink -f "$git_dir" 2>/dev/null | rev | cut -d'/' -f2 | rev)
         _git="$(tput bold)$(tput setaf 3)⁅"$git_repo" "
         git_commit=$(git rev-parse --short HEAD 2>/dev/null)
+        git_tag=$(git describe --contains HEAD 2>/dev/null)
+        [ -n "$git_tag" ] && git_commit="($git_tag)$git_commit"
         if [ -z "$(git branch -vv --no-color)" ] ; then # naked
             _git=$_git"…"
         elif [ -z "$(git symbolic-ref HEAD 2>/dev/null)" ] ; then # detached
@@ -106,7 +108,7 @@ function __ps1() {
             fi
             unset git_branch git_remote
         fi
-        unset git_commit
+        unset git_commit git_tag
         git_status=$(timeout 0.250s git status --porcelain 2>/dev/null)
         [ $? -eq 124 ] && {
             git_status="…"
