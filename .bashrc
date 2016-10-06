@@ -87,7 +87,7 @@ function __ps1() {
         git_repo=$(readlink -f "$git_dir" 2>/dev/null | rev | cut -d'/' -f2 | rev)
         _git="$(tput bold)$(tput setaf 3)⁅"$git_repo" "
         git_commit=$(git rev-parse --short HEAD 2>/dev/null)
-        git_tag=$(git describe --contains HEAD 2>/dev/null)
+        git_tag=$(git tag --contains HEAD 2>/dev/null | tail -1)
         [ -n "$git_tag" ] && git_commit="($git_tag)$git_commit"
         if [ -z "$(git branch -vv --no-color)" ] ; then # naked
             _git=$_git"…"
