@@ -26,7 +26,7 @@
 	ca = "!git ci --all"
 	ar = "!git a && git ls-files --deleted -z | xargs -0 git rm 2>/dev/null"
         reci = "!git ci --amend"
-        cp = cherry-pick
+        cp = cherry-pick --no-commit
 
 	co = checkout
 	br = branch
