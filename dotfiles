@@ -7,7 +7,7 @@ rsync \
     --exclude "dotfiles" \
     --exclude "LICENSE*" \
     --exclude "README*" \
-    -Wav --human-readable --progress "." "$HOME"
+    -Wav --human-readable --progress "." "$HOME" # --dry-run
 
 if [ $(id -u) -eq 0 ] ; then
     cp bash.bashrc /etc/

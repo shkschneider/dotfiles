@@ -28,9 +28,12 @@
         reci = "!git ci --amend"
         recia = "!git ci --amend --reset-author"
         cp = cherry-pick --no-commit
+        cpc = "!git cp --continue"
+        cpa = "!git cp --abort"
 
 	co = checkout
 	br = branch
+        brv = branch -vv
 	rc = rebase --continue
 	rs = rebase --skip
 	ra = rebase --abort
