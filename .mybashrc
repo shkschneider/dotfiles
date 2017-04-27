@@ -26,7 +26,7 @@ alias valgrind='valgrind --leak-check=full --show-reachable=yes'
 
 function calc() {
     if [ $# -eq 1 ] ; then
-        echo "$1" | bc -l | sed -r 's#0+$##';
+        echo "$1" | bc -l | sed '/\./ s;\.\{0,1\}0\{1,\}$;;';
     else
         return 1
     fi
