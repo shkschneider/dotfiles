@@ -8,6 +8,7 @@ export LANG=en_US.UTF-8
 
 alias ls='ls --color=auto -Fh --group-directories-first'
 alias ne='emacs -nw'
+alias na='nano -u'
 alias j='jobs'
 alias h='history'
 alias cp='cp -vr'
