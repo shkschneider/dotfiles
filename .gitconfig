@@ -12,7 +12,7 @@
 	#signkey = signkey
 
 [alias]
-	s = show --name-status
+	s = show #--name-status
 	l = log --tags --graph --color --pretty=format:"%C(yellow)%H%C(green)%d%C(reset)%n%x20%cd%n%x20%cn%x20(%ce)%n%x20%s%n"
         a = add --update
         t = "!git show-ref --tags | awk '{split($2,t,\"/\"); print t[3],substr($1,1,7)}' | sort --reverse --version-sort | awk '{print $2,$1}'"
