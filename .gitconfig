@@ -12,7 +12,7 @@
 	#signkey = signkey
 
 [alias]
-	s = show
+	s = show --name-status
 	l = log --tags --graph --color --pretty=format:"%C(yellow)%H%C(green)%d%C(reset)%n%x20%cd%n%x20%cn%x20(%ce)%n%x20%s%n"
         a = add --update
         t = "!git show-ref --tags | awk '{split($2,t,\"/\"); print t[3],substr($1,1,7)}' | sort --reverse --version-sort | awk '{print $2,$1}'"
@@ -49,6 +49,7 @@
         track = "!f() { git branch -u $1/$2; }; f"
         untrack = branch --unset-upstream
         forget = "!f() { git push $1 --delete $2; }; f"
+	squash = rebase -i HEAD~2
 
         cl = clean -d --force
 	authors = "!git log --format='%aN <%cE>' | sort -u"
