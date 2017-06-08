@@ -38,6 +38,7 @@
 	st = status --short --branch
 	sm = submodule
 	sf = show --name-status
+	cat = "!git show $1:$2"
 
 	df = diff --patch-with-stat
 	dc = "!git df --cached"
