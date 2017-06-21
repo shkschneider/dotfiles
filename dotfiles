@@ -1,11 +1,12 @@
 #!/bin/sh
 
-[ -z "$(which rsync)" ] && echo "command not found" >&2 && exit 1
+command -v "rsync" >/dev/null 2>&1 || { echo "E: rsync: command not found" >&2 ; exit 1 ; }
 
 rsync \
     --exclude ".git" \
-    --exclude "[a-z]*" \
-    --exclude "[A-Z]*" \
+    --exclude "dotfiles" \
+    --exclude "LICENSE*" \
+    --exclude "README*" \
     -Wav --human-readable --progress "." "$HOME"
 
 if [ $(id -u) -eq 0 ] ; then
