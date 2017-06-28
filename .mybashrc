@@ -7,6 +7,7 @@ export LANG=en_US.UTF-8
 # Aliases
 
 alias ls='ls --color=auto -Fh --group-directories-first'
+alias ll='ls -l'
 alias ne='emacs -nw'
 alias na='nano -u'
 alias j='jobs'
