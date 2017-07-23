@@ -54,6 +54,7 @@
 	squash = rebase -i HEAD~2
 
         cl = clean -d --force
+	#authors = shortlog -sne
 	authors = "!git log --format='%aN <%cE>' | sort -u"
         rank = "!git shortlog --summary --numbered | sed -r 's;^\\s+;;g' | tr '\t' ' '"
         info = "!cat `git rev-parse --git-dir`/config"
