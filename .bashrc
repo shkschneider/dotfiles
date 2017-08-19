@@ -113,7 +113,7 @@ function __ps1() {
         [ $? -eq 124 ] && {
             git_status="…"
         } || {
-            git_status=$(echo "$git_status" | cut -c1,2 | tr -d " " | tr -d "\n" | sed ':;s#\(.\)\(.*\)\1#\1\2#;t')
+            git_status=$(echo "$git_status" | cut -c1,2 | tr -d " " | fold -w1 | sort -u | tr -d "\n")
         }
         [ -n "$git_status" ] && _git=$_git" "$git_status || _git=$_git" ✔"
         unset git_status
