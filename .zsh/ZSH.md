@@ -1,3 +1,24 @@
+(Oh My) Zsh will not make you a 10x developer...but you might feel like one.
+============================================================================
+
+```
+> echo "${(j::)${(@Oa)${(s::):-hello}}}"
+olleh
+> echo hello | rev
+olleh
+```
+
+Exactly.
+--------
+
+type_exists:
+```
+type git_prompt_info &>/dev/null && echo "ok" || echo "ko"
+```
+path_to_script:
+```
+echo ${(%):-%N}
+```
 all_but_last:
 ```
 s='this-is-a.test' ; echo "${s%/*}"

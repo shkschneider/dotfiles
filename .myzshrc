@@ -1,7 +1,8 @@
-# ~/.myzshrc
+# @author shkschneider
+# .myzshrc
 
-(( $+commands[nano] )) && export EDITOR=nano
-(( $+commands[most] )) && export PAGER=most
+(( $+commands[nano] )) && export EDITOR='nano'
+(( $+commands[most] )) && export PAGER='most' || { export PAGER='less' ; export LESS='-R' }
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 
@@ -25,7 +26,7 @@ declare -A _aliases=(
     'rm' 'rm --verbose'
 )
 for _key in "${(@k)_aliases}"; do
-    alias "$key"="$_aliases[$key]"
+    alias "$_key"="$_aliases[$_key]"
 done
 unset _key _aliases
 

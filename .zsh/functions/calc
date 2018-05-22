@@ -1,5 +1,5 @@
 # @author shkschneider
-# $ZSH_CUSTOM/functions/calc
+# calc
 
 if [ $# -eq 1 ] ; then
     echo "$1" | bc -l | sed '/\./ s;\.\{0,1\}0\{1,\}$;;'

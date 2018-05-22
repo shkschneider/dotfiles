@@ -1,5 +1,5 @@
 # @author shkschneider
-# $ZSH_CUSTOM/functions/mkcd
+# mkcd
 
 if [ $# -eq 1 ] ; then
     mkdir "$@" && cd "${!#}"

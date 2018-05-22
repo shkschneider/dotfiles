@@ -1,33 +1,26 @@
 # @author shkschneider
-# $ZSH_CUSTOM/themes/shk.zsh-theme
-# ZSH_THEME="shk" >> $HOME/.zshrc
-
-[ ! -e "$HOME/.oh-my-zsh" ] && return
-
-source $ZSH_CUSTOM/plugins/git-prompt/git-prompt.plugin.zsh #>&/dev/null
+# shk.zsh-theme (oh-my-zsh compatible)
 
 # colors
 
 autoload -Uz colors && colors
 
-export LSCOLORS="Gxfxcxdxbxegedabagacab" # BSD
-export LS_COLORS='no=00:fi=00:di=01;34:ln=00;36:pi=40;33:so=01;35:do=01;35:bd=4\
-0;33;01:cd=40;33;01:or=41;33;01:ex=00;32:ow=0;41:*.cmd=00;32:*.exe=01;32:*.com=\
-01;32:*.bat=01;32:*.btm=01;32:*.dll=01;32:*.tar=00;31:*.tbz=00;31:*.tgz=00;31:*\
-.rpm=00;31:*.deb=00;31:*.arj=00;31:*.taz=00;31:*.lzh=00;31:*.lzma=00;31:*.zip=0\
-0;31:*.zoo=00;31:*.z=00;31:*.Z=00;31:*.gz=00;31:*.bz2=00;31:*.tb2=00;31:*.tz2=0\
-0;31:*.tbz2=00;31:*.avi=01;35:*.bmp=01;35:*.fli=01;35:*.gif=01;35:*.jpg=01;35:*\
-.jpeg=01;35:*.mng=01;35:*.mov=01;35:*.mpg=01;35:*.pcx=01;35:*.pbm=01;35:*.pgm=0\
-1;35:*.png=01;35:*.ppm=01;35:*.tga=01;35:*.tif=01;35:*.xbm=01;35:*.xpm=01;35:*.\
-dl=01;35:*.gl=01;35:*.wmv=01;35:*.aiff=00;32:*.au=00;32:*.mid=00;32:*.mp3=00;32\
-:*.ogg=00;32:*.voc=00;32:*.wav=00;32:*.patch=00;34:*.o=00;32:*.so=01;35:*.ko=01\
-;31:*.la=00;33' # Linux
-# zmodload zsh/complist # not needed with oh-my-zsh
-# export ZLS_COLORS=$LS_COLORS # not needed with oh-my-zsh
+export LSCOLORS='exfxcxdxbxegedabagacad' # BSD
+export LS_COLORS='di=34:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43' # Linux
+# zmodload zsh/complist
+export ZLS_COLORS=$LS_COLORS
+
+autoload -Uz compinit && compinit -i
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}" # completion colors
 
 # prompts
 
 autoload -Uz promptinit && promptinit
+
+set -o prompt_subst # the prompt string is first subjected to parameter expansion, command substitution and arithmetic expansion
+set -o prompt_percent # certain escape sequences that start with '%' are expanded
+export ZLE_RPROMPT_INDENT=1 # used to give the indentation between the right hand side of the right prompt in the line editor
+                            # -- if not set, the value 1 is used
 
 ZSH_THEME_PROMPT_PREFIX="" #"%{⁅%G%}"
 ZSH_THEME_PROMPT_SPACER="%{ %G%}"
@@ -76,6 +69,9 @@ _prompt() {
     echo -n "$PROMPT%{$reset_color%}"
 }
 
+source "$ZSH/plugins/git-prompt/git-prompt.plugin.zsh" &>/dev/null
+type git_prompt_info &>/dev/null && ZSH_THEME_RPROMPT_GIT="true" || XSH_THEME_RPROMPT_GIT="false"
+
 _rprompt() {
     local RPROMPT=''
     RPROMPT+='%B'
@@ -84,20 +80,24 @@ _rprompt() {
     fi
     RPROMPT+="%F{red}%(1?.%?$ZSH_THEME_PROMPT_SPACER.)%f"
     RPROMPT+="%F{magenta}%(1j.%j$ZSH_THEME_PROMPT_SPACER.)%f"
-    _git_prompt_info="$(git_prompt_info)"
-    if [ -n "$_git_prompt_info" ] ; then
-        RPROMPT+='%F{yellow}'"$ZSH_THEME_PROMPT_PREFIX"
-        RPROMPT+="$_git_prompt_info"
-        RPROMPT+="$ZSH_THEME_PROMPT_SUFFIX"'%f'
+    if [ "$ZSH_THEME_RPROMPT_GIT" = "true" ] ; then
+        local _git_prompt_info="$(git_prompt_info)"
+        if [ -n "$_git_prompt_info" ] ; then
+            RPROMPT+='%F{yellow}'"$ZSH_THEME_PROMPT_PREFIX"
+            RPROMPT+="$_git_prompt_info"
+            RPROMPT+="$ZSH_THEME_PROMPT_SUFFIX"'%f'
+        fi
+    else
+        RPROMPT+='%F{red}?!%f'
     fi
     RPROMPT+='%b'
-    # echo -n "$RPROMPT%{$reset_color%}"
+    #echo -n "$RPROMPT%{$reset_color%}"
     echo -n %{$'\e[1A'%}"$RPROMPT"%{$'\e[1B'%}"%{$reset_color%}"
 }
 
 # user@machine /p/a/t/h                              exit_status jobs vcs:status
 # $
-set -o prompt_subst
+
 PROMPT='$(_prompt)'
 RPROMPT='$(_rprompt)'
 

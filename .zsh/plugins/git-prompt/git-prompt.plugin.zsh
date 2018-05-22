@@ -1,6 +1,5 @@
 # @author shkschneider
-# $ZSH_CUSTOM/plugins/git-prompt/git-prompt.plugin.zsh
-# Overrides $ZSH/plugins/git-prompt/git-prompt.plugin.zsh
+# git-prompt.plugin.zsh (oh-my-zsh compatible)
 
 ZSH_THEME_GIT_PROMPT_PREFIX=""
 ZSH_THEME_GIT_PROMPT_SUFFIX=""

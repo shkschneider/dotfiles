@@ -1,48 +1,27 @@
 # @author shkschneider
-# $ZSH_CUSTOM/my.zsh
-# -> $HOME/.myzshrc
-
-[ ! -e "$HOME/.oh-my-zsh" ] && return
-
-ZSH_THEME="shk"
-CASE_SENSITIVE="true"
-ENABLE_CORRECTION="false"
-COMPLETION_WAITING_DOTS="false"
+# .zshrc
 
 # compatibility
 
 [[ $- == *i* ]] || return
 [ -z "${(@)TERM:#dumb}" ] && return
 
-local minimal_version='4.3.17'
-if autoload -Uz is-at-least && ! is-at-least "${minimal_version}" ; then
-    echo "warning: version $ZSH_VERSION < ${minimal_version}" >&2
-    return
-fi
-unset minimal_version
-
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 
+ZSH="${ZSH:-$HOME/.zsh}"
+export ZSH
+
+ZSH_THEME="shk"
+CASE_SENSITIVE="true"
+ENABLE_CORRECTION="false"
+COMPLETION_WAITING_DOTS="false"
+
 # functions
 
-unfunction take &>/dev/null
-unfunction uninstall_oh_my_zsh &>/dev/null
-if [ -f "$ZSH/tools/uninstall.sh" ] ; then
-    function omz_uninstall() {
-        env ZSH=$ZSH sh "$ZSH/tools/uninstall.sh"
-    }
-fi
-unfunction upgrade_oh_my_zsh &>/dev/null
-if [ -f "$ZSH/tools/upgrade.sh" ] ; then
-    function omz_upgrade() {
-        env ZSH="$ZSH" sh "$ZSH/tools/upgrade.sh"
-    }
-fi
-
-fpath+=( "$ZSH_CUSTOM/functions" )
+fpath+=( "$ZSH/functions" )
 export FPATH
-for _function in $(find $ZSH_CUSTOM/functions/* -maxdepth 1 -type f 2>/dev/null) ; do
+for _function in $(find "$ZSH/functions/" -maxdepth 1 -type f 2>/dev/null) ; do
     autoload -Uz $(basename -- $_function)
 done
 unset _function
@@ -58,6 +37,7 @@ compctl -C -c + -K _rehash + -c # rehash upon command-not-found
 
 # aliases
 
+#alias please='sudo'
 declare -A _aliases=(
     'ls' 'ls --color'
     'grep' 'grep --color'
@@ -67,12 +47,12 @@ declare -A _aliases=(
     'L' 'echo $SHLVL'
 )
 for _key in "${(@k)_aliases}"; do
-    alias "$key"="$_aliases[$key]"
+    alias "$_key"="$_aliases[$_key]"
 done
 unset _key _aliases
 
 # options
-# setopt shows all options whose settings are changed from the default
+# (setopt shows all options whose settings are changed from the default)
 
 set -o auto_cd # if a command is issued that can't be executed, and the command is the name of a directory, perform the cd command to that directory
 set -o auto_pushd # make cd push the old directory onto the directory stack
@@ -110,14 +90,14 @@ zstyle ':completion:*:warnings' format '%B-- nothing%b' # no completion matches
 zstyle ':completion:*' completer _complete # completers (- _expand _ignored _approximate)
 zstyle ':completion:*:functions' ignored-patterns '(_*|pre(cmd|exec))' # ignore internal commands
 # matcher-list matchers are evaluated in order one by one, and stops at the first matcher having candidates
-zstyle ':completion:*' matcher-list 'r:|=*' # standard completion based on the start of the word
+#zstyle ':completion:*' matcher-list 'r:|=*' # standard completion based on the start of the word
 #zstyle ':completion:*' matcher-list 'r:|=*' 'l:|=* r:|=*' # completion right first then left or right
 zstyle ':completion:*' special-dirs true # includes . and ..
 zstyle ':completion:*' group-name '' # groups (1/2)
 zstyle ':completion:*' list-dirs-first true # groups (2/2) splits directories from files (directories first)
-zstyle ':completion:*' insert-tab true # will not complete if pasting (or with empty command line
+zstyle ':completion:*' insert-tab true # will not complete if pasting (or with empty command line)
 zstyle ':completion::complete:*' use-cache off # cache
-#zstyle ':completion::complete:*' cache-path $ZSH_CACHE_DIR
+#zstyle ':completion::complete:*' cache-path "$ZSH/cache"
 
 # keybindings
 
@@ -128,8 +108,17 @@ _insert-last-command-output() {
 zle -N _insert-last-command-output
 bindkey '^ ' _insert-last-command-output # ctrl-space
 
+# prompt
+
+PROMPT='%n@%m%(!.#.$) '
+RPROMPT='%~'
+
 # $HOME/.myzshrc
 
 [ -f "$HOME/.myzshrc" ] && source "$HOME/.myzshrc"
+
+# theme
+
+[ -n "$ZSH_THEME" ] && source "$ZSH/themes/$ZSH_THEME.zsh-theme"
 
 # EOF
