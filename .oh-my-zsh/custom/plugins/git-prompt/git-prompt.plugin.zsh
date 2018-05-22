@@ -1,4 +1,4 @@
-# shkschneider
+# @author shkschneider
 # $ZSH_CUSTOM/plugins/git-prompt/git-prompt.plugin.zsh
 # Overrides $ZSH/plugins/git-prompt/git-prompt.plugin.zsh
 
@@ -43,7 +43,7 @@ function git_prompt_info() {
         }
         [ -n "$git_status" ] && echo -n $git_status || echo -n $ZSH_THEME_GIT_PROMPT_CLEAN
     fi
-    echo $ZSH_THEME_GIT_PROMPT_SUFFIX
+    echo -n $ZSH_THEME_GIT_PROMPT_SUFFIX
 }
 
 # EOF

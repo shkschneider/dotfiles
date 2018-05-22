@@ -1,4 +1,5 @@
-# clean
+# @author shkschneider
+# $ZSH_CUSTOM/functions/clean
 
 find "${1:-.}" \( -name "*~" -print \
      -or -name ".*~" -print \

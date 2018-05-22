@@ -1,4 +1,4 @@
-# colors.zsh
+# _colors.zsh
 
 spectrum_ls
 

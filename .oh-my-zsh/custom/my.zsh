@@ -1,41 +1,48 @@
-# shkschneider
+# @author shkschneider
 # $ZSH_CUSTOM/my.zsh
 # -> $HOME/.myzshrc
+
+[ ! -e "$HOME/.oh-my-zsh" ] && return
 
 ZSH_THEME="shk"
 CASE_SENSITIVE="true"
 ENABLE_CORRECTION="false"
 COMPLETION_WAITING_DOTS="false"
 
-unfunction take >&/dev/null
-unfunction uninstall_oh_my_zsh >&/dev/null
-function omz_uninstall() {
-  env ZSH=$ZSH sh $ZSH/tools/uninstall.sh
-}
-unfunction upgrade_oh_my_zsh >&/dev/null
-function omz_upgrade() {
-  env ZSH=$ZSH sh $ZSH/tools/upgrade.sh
-}
-unfunction omz_history >&/dev/null
-
 # compatibility
 
 [[ $- == *i* ]] || return
-[[ "$TERM" == 'dumb' ]] && return # FIXME double-check if necessary or even working
+[ -z "${(@)TERM:#dumb}" ] && return
+
 local minimal_version='4.3.17'
 if autoload -Uz is-at-least && ! is-at-least "${minimal_version}" ; then
-    print "warning: version $ZSH_VERSION < ${minimal_version}" >&2
+    echo "warning: version $ZSH_VERSION < ${minimal_version}" >&2
     return
 fi
 unset minimal_version
-
-# misc
 
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 
 # functions
 
+unfunction take &>/dev/null
+unfunction uninstall_oh_my_zsh &>/dev/null
+if [ -f "$ZSH/tools/uninstall.sh" ] ; then
+    function omz_uninstall() {
+        env ZSH=$ZSH sh "$ZSH/tools/uninstall.sh"
+    }
+fi
+unfunction upgrade_oh_my_zsh &>/dev/null
+if [ -f "$ZSH/tools/upgrade.sh" ] ; then
+    function omz_upgrade() {
+        env ZSH="$ZSH" sh "$ZSH/tools/upgrade.sh"
+    }
+fi
+unfunction omz_history >&/dev/null
+
+fpath+=( "$ZSH_CUSTOM/functions" )
+export FPATH
 for _function in $(find $ZSH_CUSTOM/functions/* -maxdepth 1 -type f 2>/dev/null) ; do
     autoload -Uz $(basename -- $_function)
 done
@@ -47,13 +54,15 @@ unset _function
 [ -d "$HOME/sbin" ] && path+=( "$HOME/sbin" )
 export PATH
 
+function _rehash { rehash; reply=() }
+compctl -C -c + -K _rehash + -c # rehash upon command-not-found
+
 # aliases
 
 declare -A _aliases=(
     'ls' 'ls --color'
     'grep' 'grep --color'
     'egrep' 'egrep --color'
-    'rm' 'rm --verbose'
     'H' 'history'
     'J' 'jobs'
     'L' 'echo $SHLVL'
@@ -64,6 +73,7 @@ done
 unset _key _aliases
 
 # options
+# setopt shows all options whose settings are changed from the default
 
 set -o auto_cd # if a command is issued that can't be executed, and the command is the name of a directory, perform the cd command to that directory
 set -o auto_pushd # make cd push the old directory onto the directory stack
@@ -71,7 +81,7 @@ set -o NO_chase_links # resolve symbolic links to their true values when changin
 set -o always_to_end # if a completion is performed with the cursor within a word, the cursor is moved to the end of the word
 set -o NO_auto_name_dirs # any parameter that is set to the absolute name of a directory immediately becomes a name for that directory
 set -o complete_in_word # if unset, the cursor is set to the end of the word if completion is started
-#set -o list_ambiguous # if there is an unambiguous prefix to insert on the command line, that is done without a completion list being displayed
+set -o NO_list_ambiguous # if there is an unambiguous prefix to insert on the command line, that is done without a completion list being displayed
 set -o NO_menu_complete # on an ambiguous completion, instead of listing possibilities or beeping, insert the first match immediately
 set -o NO_rec_exact # if the string on the command line exactly matches one of the possible completions, it is accepted, even if there is another completion
 set -o NO_null_glob # if a pattern for filename generation has no matches, delete the pattern from the argument list instead of reporting an error
@@ -94,13 +104,16 @@ set -o always_last_prompt # after listing a completion, the cursor is taken back
 # completion
 
 autoload -Uz compinit && compinit -i
-#zstyle ':completion:*' verbose yes # verbose lists
+
 zstyle ':completion:*' format '%B-- %d%b' # group description format
 zstyle ':completion:*:warnings' format '%B-- nothing%b' # no completion matches
 zstyle ':completion:*' completer _expand _complete # completers (- _ignored _approximate)
-zstyle ':completion:*:functions' ignored-patterns '(_*|pre(cmd|exec))' # ignore certrain commands
-zstyle ':completion:*' list-dirs-first true # splits directories from files (directories first)
+zstyle ':completion:*:functions' ignored-patterns '(_*|pre(cmd|exec))' # ignore internal commands
+zstyle ':completion:*' matcher-list 'r:|=*' # standard completion based on the start of the word
+#zstyle ':completion:*' matcher-list 'r:|=*' 'l:|=* r:|=*' # completion based anywhere in the word
+zstyle ':completion:*' special-dirs true # includes . and ..
 zstyle ':completion:*' group-name '' # groups
+zstyle ':completion:*' list-dirs-first true # splits directories from files (directories first)
 zstyle ':completion::complete:*' use-cache off # cache
 zstyle ':completion:*' insert-tab pending # pasting with tabs doesn't perform completion
 
@@ -112,11 +125,6 @@ _insert-last-command-output() {
 }
 zle -N _insert-last-command-output
 bindkey '^ ' _insert-last-command-output # ctrl-space
-
-# command-not-found
-
-function _rehash { rehash; reply=() }
-compctl -C -c + -K _rehash + -c # rehash upon command-not-found
 
 # $HOME/.myzshrc
 

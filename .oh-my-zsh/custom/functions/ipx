@@ -1,4 +1,5 @@
-# ipx
+# @author shkschneider
+# $ZSH_CUSTOM/functions/ipx
 
 if [ $# -eq 0 ] ; then
     echo $(curl --silent 'ipecho.net/plain' 2>/dev/null)

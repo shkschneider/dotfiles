@@ -1,4 +1,5 @@
-# shell
+# @author shkschneider
+# $ZSH_CUSTOM/functions/shell
 
 echo $(basename -- ${$(ps h --pid=$$)[-1]})
 
