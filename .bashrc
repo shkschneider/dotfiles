@@ -77,7 +77,7 @@ function __ps1() {
     [ $j -gt 0 ] && _prompt="$_prompt $(tput setaf 3)+$j$(tput sgr0)"
     [ $SHLVL -gt 1 ] && _prompt="$_prompt $SHLVL"
     _prompt="$_prompt\n"
-    [ $(id -u) -eq 0 ] && _prompt="$_prompt\\#" || _prompt="$_prompt\\$"
+    [ $(id -u) -eq 0 ] && _prompt="$_prompt""#" || _prompt="$_prompt""$"
     _prompt="$_prompt "
     unset j
 

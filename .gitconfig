@@ -15,7 +15,8 @@
 	s = show #--name-status
 	l = log --tags --graph --color --pretty=format:"%C(yellow)%H%C(green)%d%C(reset)%n%x20%cd%n%x20%cn%x20(%ce)%n%x20%s%n"
         a = add --update
-        t = "!git show-ref --tags | awk '{split($2,t,\"/\"); print t[3],substr($1,1,7)}' | sort --reverse --version-sort | awk '{print $2,$1}'"
+        t = "!git show-ref --tags | cut -c1-7,41,52-"
+	f = fetch --tags
 
 	ls = "!git l --stat"
         lg = log --decorate --graph --oneline
@@ -63,6 +64,7 @@
         info = "!cat `git rev-parse --git-dir`/config"
 
 	re = reset --hard
+	undo = reset --hard HEAD@{1}
 	unadd = reset --mixed
 	uncommit = reset --soft HEAD^
 	unpull = reset --hard HEAD@{0}
