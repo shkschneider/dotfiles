@@ -92,6 +92,7 @@ set -o NO_share_history
 set -o clobber # allows '>' redirection to truncate existing files -- otherwise '>!' must be used to truncate a file
 set -o NO_ignore_eof # do not exit on end-of-file -- require the use of exit or logout instead
 set -o NO_correct # try to correct the spelling of commands
+set -o NO_correct_all # try to correct the spelling of all arguments in a line
 set -o NO_print_exit_value # print the exit value of programs with non-zero exit status
 set -o NO_rm_star_silent # do not query the user before executing ‘rm *’ or ‘rm path/*’
 set -o check_jobs # report the status of background and suspended jobs before exiting a shell with job control
