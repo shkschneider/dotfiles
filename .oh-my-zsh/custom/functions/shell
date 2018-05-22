@@ -1,0 +1,5 @@
+# shell
+
+echo $(basename -- ${$(ps h --pid=$$)[-1]})
+
+# EOF

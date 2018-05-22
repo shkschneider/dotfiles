@@ -1,0 +1,8 @@
+ls colors
+
+#$ sudo apt install figler
+#$ figler<tab>
+#$ _figler <command not found>
+
+functions/shell.zsh
+$ shell

@@ -1,0 +1,9 @@
+# clean
+
+find "${1:-.}" \( -name "*~" -print \
+     -or -name ".*~" -print \
+     -or -name "#*" -print \
+     -or -name ".#*" -print \\
+) -exec echo rm -rf "{}" \;
+
+# EOF

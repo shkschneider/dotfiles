@@ -1,0 +1,9 @@
+# mkcd
+
+if [ $# -eq 1 ] ; then
+    mkdir "$@" && cd "${!#}"
+else
+    return 1
+fi
+
+# EOF
