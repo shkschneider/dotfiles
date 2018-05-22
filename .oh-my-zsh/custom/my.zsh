@@ -1,52 +1,59 @@
-# my.zsh
+# shkschneider
+# $ZSH_CUSTOM/my.zsh
+# -> $HOME/.myzshrc
 
-ZSH_THEME=shk
-CASE_SENSITIVE=true
-ENABLE_CORRECTION=false
-COMPLETION_WAITING_DOTS=false
-DISABLE_UPDATE_PROMPT=false
-DISABLE_AUTO_UPDATE=true
+ZSH_THEME="shk"
+CASE_SENSITIVE="true"
+ENABLE_CORRECTION="false"
+COMPLETION_WAITING_DOTS="false"
 
-function _rehash { rehash; reply=() }
-compctl -C -c + -K _rehash + -c
-#zstyle ':completion:*' rehash true
+unfunction take >&/dev/null
+unfunction uninstall_oh_my_zsh >&/dev/null
+function omz_uninstall() {
+  env ZSH=$ZSH sh $ZSH/tools/uninstall.sh
+}
+unfunction upgrade_oh_my_zsh >&/dev/null
+function omz_upgrade() {
+  env ZSH=$ZSH sh $ZSH/tools/upgrade.sh
+}
+unfunction omz_history >&/dev/null
 
-# autoloads $ZSH_CUSTOM/functions/*
+# compatibility
+
+[[ $- == *i* ]] || return
+[[ "$TERM" == 'dumb' ]] && return # FIXME double-check if necessary or even working
+local minimal_version='4.3.17'
+if autoload -Uz is-at-least && ! is-at-least "${minimal_version}" ; then
+    print "warning: version $ZSH_VERSION < ${minimal_version}" >&2
+    return
+fi
+unset minimal_version
+
+# misc
+
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+
+# functions
+
 for _function in $(find $ZSH_CUSTOM/functions/* -maxdepth 1 -type f 2>/dev/null) ; do
     autoload -Uz $(basename -- $_function)
 done
 unset _function
 
-(( $+commands[nano] )) && export EDITOR=nano
-(( $+commands[most] )) && export PAGER=most || { export PAGER=less ; export LESS='--RAW-CONTROL-CHARS' }
-#[ -f "$HOME/.lessfilter" ] && export LESSOPEN='|~/.lessfilter %s'
-autoload -Uz colors && colors
-export LSCOLORS="Gxfxcxdxbxegedabagacab" # BSD
-export LS_COLORS='no=00:fi=00:di=01;34:ln=00;36:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=41;33;01:ex=00;32:ow=0;41:*.cmd=00;32:*.exe=01;32:*.com=01;32:*.bat=01;32:*.btm=01;32:*.dll=01;32:*.tar=00;31:*.tbz=00;31:*.tgz=00;31:*.rpm=00;31:*.deb=00;31:*.arj=00;31:*.taz=00;31:*.lzh=00;31:*.lzma=00;31:*.zip=00;31:*.zoo=00;31:*.z=00;31:*.Z=00;31:*.gz=00;31:*.bz2=00;31:*.tb2=00;31:*.tz2=00;31:*.tbz2=00;31:*.avi=01;35:*.bmp=01;35:*.fli=01;35:*.gif=01;35:*.jpg=01;35:*.jpeg=01;35:*.mng=01;35:*.mov=01;35:*.mpg=01;35:*.pcx=01;35:*.pbm=01;35:*.pgm=01;35:*.png=01;35:*.ppm=01;35:*.tga=01;35:*.tif=01;35:*.xbm=01;35:*.xpm=01;35:*.dl=01;35:*.gl=01;35:*.wmv=01;35:*.aiff=00;32:*.au=00;32:*.mid=00;32:*.mp3=00;32:*.ogg=00;32:*.voc=00;32:*.wav=00;32:*.patch=00;34:*.o=00;32:*.so=01;35:*.ko=01;31:*.la=00;33' # Linux
-zmodload zsh/complist
-export ZLS_COLORS=$LS_COLORS
-zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+# PATH
 
-export LC_ALL=en_US.UTF-8
-export LANG=en_US.UTF-8
+[ -d "$HOME/bin" ] && path+=( "$HOME/bin" )
+[ -d "$HOME/sbin" ] && path+=( "$HOME/sbin" )
+export PATH
 
-# Aliases
+# aliases
 
 declare -A _aliases=(
-    'ls' 'ls --classify --human-readable --group-directories-first --color'
-    'll' 'ls -l'
-    'ne' 'emacs -nw'
-    'na' 'nano --unix'
-    'cp' 'cp --recursive --verbose'
-    'mkdir' 'mkdir --parents --verbose'
-    'scp' 'scp -r'
-    'wget' 'wget --quiet --no-check-certificate'
-    'curl' 'curl --silent --insecure'
-    'grep' 'grep --no-messages --color'
-    'egrep' 'egrep --no-messages --color'
-    'bc' 'bc --quiet'
+    'ls' 'ls --color'
+    'grep' 'grep --color'
+    'egrep' 'egrep --color'
     'rm' 'rm --verbose'
-
     'H' 'history'
     'J' 'jobs'
     'L' 'echo $SHLVL'
@@ -56,12 +63,63 @@ for _key in "${(@k)_aliases}"; do
 done
 unset _key _aliases
 
-# PATH
+# options
 
-export ANDROID_HOME="/opt/android-sdk"
-[ -d "$ANDROID_HOME" ] && path+=( "$ANDROID_HOME/tools" "$ANDROID_HOME/platform-tools" )
-[ -d "$HOME/bin" ] && path+=( "$HOME/bin" )
-[ -d "$HOME/sbin" ] && path+=( "$HOME/sbin" )
-export PATH
+set -o auto_cd # if a command is issued that can't be executed, and the command is the name of a directory, perform the cd command to that directory
+set -o auto_pushd # make cd push the old directory onto the directory stack
+set -o NO_chase_links # resolve symbolic links to their true values when changing directory
+set -o always_to_end # if a completion is performed with the cursor within a word, the cursor is moved to the end of the word
+set -o NO_auto_name_dirs # any parameter that is set to the absolute name of a directory immediately becomes a name for that directory
+set -o complete_in_word # if unset, the cursor is set to the end of the word if completion is started
+#set -o list_ambiguous # if there is an unambiguous prefix to insert on the command line, that is done without a completion list being displayed
+set -o NO_menu_complete # on an ambiguous completion, instead of listing possibilities or beeping, insert the first match immediately
+set -o NO_rec_exact # if the string on the command line exactly matches one of the possible completions, it is accepted, even if there is another completion
+set -o NO_null_glob # if a pattern for filename generation has no matches, delete the pattern from the argument list instead of reporting an error
+set -o hist_ignore_dups # do not enter command lines into the history list if they are duplicates of the previous event
+set -o hist_ignore_space # remove command lines from the history list when the first character on the line is a space
+set -o hist_no_store # remove the history command from the history list when invoked
+set -o hist_reduce_blanks # remove superfluous blanks from each command line being added to the history list
+set -o NO_share_history
+set -o clobber # allows '>' redirection to truncate existing files -- otherwise '>!' must be used to truncate a file
+set -o NO_ignore_eof # do not exit on end-of-file -- require the use of exit or logout instead
+set -o NO_correct # try to correct the spelling of commands
+set -o NO_print_exit_value # print the exit value of programs with non-zero exit status
+set -o NO_rm_star_silent # do not query the user before executing ‘rm *’ or ‘rm path/*’
+set -o check_jobs # report the status of background and suspended jobs before exiting a shell with job control
+                  # -- a second attempt to exit the shell will succeed
+set -o hup # send the HUP signal to running jobs when the shell exits
+set -o NO_beep NO_list_beep NO_hist_beep # stfu
+set -o always_last_prompt # after listing a completion, the cursor is taken back to the line it was on before, instead of reprinting it underneath
+
+# completion
+
+autoload -Uz compinit && compinit -i
+#zstyle ':completion:*' verbose yes # verbose lists
+zstyle ':completion:*' format '%B-- %d%b' # group description format
+zstyle ':completion:*:warnings' format '%B-- nothing%b' # no completion matches
+zstyle ':completion:*' completer _expand _complete # completers (- _ignored _approximate)
+zstyle ':completion:*:functions' ignored-patterns '(_*|pre(cmd|exec))' # ignore certrain commands
+zstyle ':completion:*' list-dirs-first true # splits directories from files (directories first)
+zstyle ':completion:*' group-name '' # groups
+zstyle ':completion::complete:*' use-cache off # cache
+zstyle ':completion:*' insert-tab pending # pasting with tabs doesn't perform completion
+
+# keybindings
+
+bindkey -e # emacs
+_insert-last-command-output() {
+    LBUFFER+="$(eval $history[$((HISTCMD-1))])"
+}
+zle -N _insert-last-command-output
+bindkey '^ ' _insert-last-command-output # ctrl-space
+
+# command-not-found
+
+function _rehash { rehash; reply=() }
+compctl -C -c + -K _rehash + -c # rehash upon command-not-found
+
+# $HOME/.myzshrc
+
+[ -f "$HOME/.myzshrc" ] && source "$HOME/.myzshrc"
 
 # EOF

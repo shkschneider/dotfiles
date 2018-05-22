@@ -1,4 +1,4 @@
-# colors.zsh
+# colors.sh
 # https://askubuntu.com/a/466203
 
 local _text=$(uname -a)

@@ -1,73 +1,91 @@
 # shkschneider
 # $ZSH_CUSTOM/themes/shk.zsh-theme
 
-[ "$(basename $SHELL)" != "zsh" ] && return
+source $ZSH_CUSTOM/plugins/git-prompt/git-prompt.plugin.zsh &>/dev/null
+
+# colors
 
 autoload -Uz colors && colors
-source $ZSH_CUSTOM/plugins/git-prompt/git-prompt.plugin.zsh &>/dev/null
-#source $ZSH/plugins/shrink-path/shrink-path.plugin.zsh &>/dev/null
-source $ZSH_CUSTOM/plugins/shrink-path/shrink-path.plugin.zsh &>/dev/null
+export LSCOLORS="Gxfxcxdxbxegedabagacab" # BSD
+export LS_COLORS='no=00:fi=00:di=01;34:ln=00;36:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=41;33;01:ex=00;32:ow=0;41:*.cmd=00;32:*.exe=01;32:*.com=01;32:*.bat=01;32:*.btm=01;32:*.dll=01;32:*.tar=00;31:*.tbz=00;31:*.tgz=00;31:*.rpm=00;31:*.deb=00;31:*.arj=00;31:*.taz=00;31:*.lzh=00;31:*.lzma=00;31:*.zip=00;31:*.zoo=00;31:*.z=00;31:*.Z=00;31:*.gz=00;31:*.bz2=00;31:*.tb2=00;31:*.tz2=00;31:*.tbz2=00;31:*.avi=01;35:*.bmp=01;35:*.fli=01;35:*.gif=01;35:*.jpg=01;35:*.jpeg=01;35:*.mng=01;35:*.mov=01;35:*.mpg=01;35:*.pcx=01;35:*.pbm=01;35:*.pgm=01;35:*.png=01;35:*.ppm=01;35:*.tga=01;35:*.tif=01;35:*.xbm=01;35:*.xpm=01;35:*.dl=01;35:*.gl=01;35:*.wmv=01;35:*.aiff=00;32:*.au=00;32:*.mid=00;32:*.mp3=00;32:*.ogg=00;32:*.voc=00;32:*.wav=00;32:*.patch=00;34:*.o=00;32:*.so=01;35:*.ko=01;31:*.la=00;33' # Linux
+zmodload zsh/complist
+export ZLS_COLORS=$LS_COLORS
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 
-# user@machine /p/a/t/h                               exit_status jobs vcs:status
+# prompts
+#
+# user@machine /p/a/t/h                              exit_status jobs vcs:status
 # $
 
-ZSH_THEME_PROMPT_CHAR="%{»%G%}"
+ZSH_THEME_PROMPT_PREFIX="" #"%{⁅%G%}"
+ZSH_THEME_PROMPT_SPACER="%{ %G%}"
+ZSH_THEME_PROMPT_SUFFIX="" #"%{⁆%G%}"
+ZSH_THEME_PROMPT_CHAR="%{»%G%} "
 ZSH_THEME_PROMPT_DOTS="%{…%G%}"
 
-#function precmd() {}
-#function preexec() {}
-
 set -o prompt_subst
-shk_prompt() {
-    PROMPT=''
+_prompt() {
+    local PROMPT=''
 
-    PROMPT+='%B%F{green}'
-    _user=''
-    [ "$USER" != "$LOGNAME" ] && _user=$USER
-    _host=''
-    [ -n "$SSH_TTY$SSH_CONNECTION" ] && _host=$(hostname)
-    PROMPT+="$_user"
-    [ -n "$_host" ] && PROMPT+='@'
-    PROMPT+="$_host"
-    PROMPT+="%{$reset_color%}"
-    [ -n "$_user$_host" ] && PROMPT+=" "
-    unset _user _host
-
-    PROMPT+='%B%F{blue}'
-    _pwd=${PWD/#$HOME/'~'}
-    if [ ${#_pwd} -gt 80 ] ; then
-        # (dev?:)/first/.../last
-        #PROMPT+="%b$(echo ${$(df "$PWD" | sed -n '2p')[1]})"
-        PROMPT+="%B$(shrink_path --fish)"
-    else
-        PROMPT+=$_pwd
+    local _user=''
+    [ "$USER" != "$LOGNAME" ] && _user='%n'
+    local _host=''
+    [ -n "$SSH_TTY$SSH_CONNECTION$SSH_CLIENT" ] && _host="%m"
+    if [ -n "$_user$_host" ] ; then
+        PROMPT+='%B%F{green}'"$ZSH_THEME_PROMPT_PREFIX"
+        PROMPT+="$_user"
+        [ -n "$_host" ] && PROMPT+='@'"$_host" || PROMPT+="$_host"
+        PROMPT+="$ZSH_THEME_PROMPT_SUFFIX%f%b$ZSH_THEME_PROMPT_SPACER"
     fi
-    unset _pwd
-    PROMPT+="%{$reset_color%}"
+
+    PROMPT+='%B%F{blue}'"$ZSH_THEME_PROMPT_PREFIX"
+    local _pwd="${PWD/#$HOME/~}"
+    if [ ${#_pwd} -gt 80 ] ; then
+        local _device="$(echo ${$(df "$PWD" | sed -n '2p')[1]})"
+        PROMPT+="$_device:"
+        PROMPT+="$ZSH_THEME_PROMPT_DOTS/"'%c'
+    else
+        PROMPT+="$_pwd"
+    fi
+    PROMPT+="$ZSH_THEME_PROMPT_SUFFIX%f%b"
 
     PROMPT+="\n"
 
-    PROMPT+='%B'
-    if [ $(id -u) -eq 0 ] ; then
-        PROMPT+='%F{red}#'
+    [[ $(id -u) = 0 ]] && local _poweruser=true || local _poweruser=false
+    $_poweruser && local _color="red" || local _color="white"
+    PROMPT+="%B%F{$color}"
+    if [ -n "$ZSH_THEME_PROMPT_CHAR" ] ; then
+        PROMPT+="$ZSH_THEME_PROMPT_CHAR"
+        [[ "$ZSH_THEME_PROMPT_CHAR[-1]" != ' ' ]] && PROMPT+=' '
     else
-        PROMPT+='%F{white}$'
+        $_poweruser && PROMPT+='#' || PROMPT+='$'
     fi
+    PROMPT+='%f%b'
+
     PROMPT+="%{$reset_color%}"
-
-    echo -n "$PROMPT "
-}
-shk_rprompt() {
-    echo "%F{red}%(1?.%? .)%f"
+    echo -n "$PROMPT"
 }
 
-PROMPT='$(shk_prompt)'
-RPROMPT='$(shk_rprompt)'
+_rprompt() {
+    local RPROMPT=''
+    RPROMPT+='%B'
+    # [[ $SHLVL -gt 1 ]] && RPROMPT+='%F{black}'"+$((SHLVL - 1))$ZSH_THEME_PROMPT_SPACER"'%f'
+    RPROMPT+="%F{red}%(1?.%?$ZSH_THEME_PROMPT_SPACER.)%f"
+    RPROMPT+="%F{magenta}%(1j.%j$ZSH_THEME_PROMPT_SPACER.)%f"
+    _git_prompt_info="$(git_prompt_info)"
+    if [ -n "$_git_prompt_info" ] ; then
+        RPROMPT+='%F{yellow}'"$ZSH_THEME_PROMPT_PREFIX"
+        RPROMPT+="$_git_prompt_info"
+        RPROMPT+="$ZSH_THEME_PROMPT_SUFFIX"'%f'
+    fi
+    RPROMPT+='%b'
+    echo -n %{$'\e[1A'%}"$RPROMPT"%{$'\e[1B'%}
+}
 
-#PROMPT='%B%F{green}%n@%m%f %F{blue}%~%f%b
-#%B%(!,%F{red}#,%F{white}$)%f%b '
-#local L=$(($SHLVL - 1)) #%(2L.+$L.)
-RPROMPT=%{$'\e[1A'%}'%B%F{red}%(1?.%? .)%f%F{magenta}%(1j.%j .)%f%F{yellow}$(git_prompt_info 2>&1)%f%b'%{$'\e[1B'%}
+PROMPT='$(_prompt)'
+RPROMPT='$(_rprompt)'
+
+# command line
 
 ZSH_THEME_HIGHLIGHT="fg=white,bold"
 zle_highlight=(
@@ -77,5 +95,17 @@ zle_highlight=(
     special:$ZSH_THEME_HIGHLIGHT
     suffix:$ZSH_THEME_HIGHLIGHT
 )
+
+# completion dots
+
+if [[ "$COMPLETION_WAITING_DOTS" = "true" ]] ; then
+    _expand-or-complete-with-dots() {
+        print -Pn "%{…%G%}" # replaces dots
+        zle expand-or-complete
+        zle redisplay
+    }
+    zle -N _expand-or-complete-with-dots
+    bindkey '^I' _expand-or-complete-with-dots
+fi
 
 # EOF
