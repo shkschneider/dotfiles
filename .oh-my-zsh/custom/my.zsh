@@ -109,8 +109,9 @@ zstyle ':completion:*' format '%B-- %d%b' # group description format
 zstyle ':completion:*:warnings' format '%B-- nothing%b' # no completion matches
 zstyle ':completion:*' completer _expand _complete # completers (- _ignored _approximate)
 zstyle ':completion:*:functions' ignored-patterns '(_*|pre(cmd|exec))' # ignore internal commands
+# matcher-list matchers are evaluated in order one by one, and stops at the first matcher having candidates
 zstyle ':completion:*' matcher-list 'r:|=*' # standard completion based on the start of the word
-#zstyle ':completion:*' matcher-list 'r:|=*' 'l:|=* r:|=*' # completion based anywhere in the word
+#zstyle ':completion:*' matcher-list 'r:|=*' 'l:|=* r:|=*' # completion right first then left or right
 zstyle ':completion:*' special-dirs true # includes . and ..
 zstyle ':completion:*' group-name '' # groups
 zstyle ':completion:*' list-dirs-first true # splits directories from files (directories first)
