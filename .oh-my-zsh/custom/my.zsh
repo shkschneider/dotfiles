@@ -39,7 +39,6 @@ if [ -f "$ZSH/tools/upgrade.sh" ] ; then
         env ZSH="$ZSH" sh "$ZSH/tools/upgrade.sh"
     }
 fi
-unfunction omz_history >&/dev/null
 
 fpath+=( "$ZSH_CUSTOM/functions" )
 export FPATH
