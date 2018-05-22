@@ -1,0 +1,33 @@
+# @author shkschneider
+# .myzshrc
+
+(( $+commands[nano] )) && export EDITOR='nano'
+(( $+commands[most] )) && export PAGER='most' || { export PAGER='less' ; export LESS='-R' }
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+
+export ANDROID_HOME="/opt/android-sdk"
+[ -d "$ANDROID_HOME" ] && path+=( "$ANDROID_HOME/tools" "$ANDROID_HOME/platform-tools" )
+export PATH
+
+declare -A _aliases=(
+    'ls' 'ls --classify --human-readable --group-directories-first --color'
+    'll' 'ls -l'
+    'ne' 'emacs -nw'
+    'na' 'nano --unix'
+    'cp' 'cp --recursive --verbose'
+    'mkdir' 'mkdir --parents --verbose'
+    'scp' 'scp -r'
+    'wget' 'wget --quiet --no-check-certificate'
+    'curl' 'curl --silent --insecure'
+    'grep' 'grep --no-messages --color'
+    'egrep' 'egrep --no-messages --color'
+    'bc' 'bc --quiet'
+    'rm' 'rm --verbose'
+)
+for _key in "${(@k)_aliases}"; do
+    alias "$_key"="$_aliases[$_key]"
+done
+unset _key _aliases
+
+# EOF

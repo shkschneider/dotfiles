@@ -22,55 +22,6 @@ alias egrep="egrep --no-messages --color"
 alias bc="bc -q"
 alias rm='rm -v'
 alias ..="cd .."
-alias valgrind='valgrind --leak-check=full --show-reachable=yes'
 
-# Functions
-
-function calc() {
-    if [ $# -eq 1 ] ; then
-        echo "$1" | bc -l | sed '/\./ s;\.\{0,1\}0\{1,\}$;;';
-    else
-        return 1
-    fi
-}
-
-function psx() {
-    if [ $# -eq 1 ] ; then
-        ps aux | grep --color -- "$1" | grep -v 'grep' #| pr -TW$COLUMNS
-    else
-        return 1
-    fi
-}
-
-function mcd () {
-    if [ $# -eq 1 ] ; then
-        mkdir "$@" && cd "${!#}"
-    else
-        return 1
-    fi
-}
-
-function ipx() {
-    if [ $# -eq 0 ] ; then
-        echo $(curl --silent 'ipecho.net/plain' 2>/dev/null)
-    else
-        for host in $@ ; do
-            echo "$host: "$(nslookup "$host" 2>/dev/null | grep -v '#' | egrep '^Address:' | awk '{print $NF}')
-        done
-   fi
-}
-
-function ports() {
-    netstat -nape --inet 2>/dev/null | egrep '[0-9]+:[0-9]+'
-}
-
-function clean() {
-    if [ -n "$1" ] ; then
-        SEARCH="$1"
-    else
-        SEARCH="."
-    fi
-    find "$SEARCH" \( -name "*~" -print -or -name ".*~" -print -or -name "#*" -print -or -name ".#*" -print \) -exec rm -fr {} \;
-}
 
 # EOF

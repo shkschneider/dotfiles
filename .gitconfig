@@ -65,7 +65,7 @@
 
 	re = reset --hard
 	undo = reset --hard HEAD@{1}
-	unadd = reset --mixed
+	unadd = reset
 	uncommit = reset --soft HEAD^
 	unpull = reset --hard HEAD@{0}
 	unmerge = reset --hard HEAD@{0}
