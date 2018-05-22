@@ -22,8 +22,8 @@ export LS_COLORS='no=00:fi=00:di=01;34:ln=00;36:pi=40;33:so=01;35:do=01;35:bd=4\
 dl=01;35:*.gl=01;35:*.wmv=01;35:*.aiff=00;32:*.au=00;32:*.mid=00;32:*.mp3=00;32\
 :*.ogg=00;32:*.voc=00;32:*.wav=00;32:*.patch=00;34:*.o=00;32:*.so=01;35:*.ko=01\
 ;31:*.la=00;33' # Linux
-export ZLS_COLORS=$LS_COLORS
-zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+# zmodload zsh/complist # not needed with oh-my-zsh
+# export ZLS_COLORS=$LS_COLORS # not needed with oh-my-zsh
 
 # prompts
 
@@ -91,6 +91,7 @@ _rprompt() {
         RPROMPT+="$ZSH_THEME_PROMPT_SUFFIX"'%f'
     fi
     RPROMPT+='%b'
+    # echo -n "$RPROMPT%{$reset_color%}"
     echo -n %{$'\e[1A'%}"$RPROMPT"%{$'\e[1B'%}"%{$reset_color%}"
 }
 
