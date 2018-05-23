@@ -11,6 +11,8 @@ export LANG=en_US.UTF-8
 
 ZSH="${ZSH:-$HOME/.zsh}"
 export ZSH
+ZSHRC="${(%):-%N}"
+export ZSHRC
 
 ZSH_THEME="shk"
 CASE_SENSITIVE="true"
@@ -19,12 +21,14 @@ COMPLETION_WAITING_DOTS="false"
 
 # functions
 
-fpath+=( "$ZSH/functions" )
-export FPATH
-for _function in $(find "$ZSH/functions/" -maxdepth 1 -type f 2>/dev/null) ; do
-    autoload -Uz $(basename -- $_function)
-done
-unset _function
+if [ -d "$ZSH/functions" ] ; then
+    fpath+=( "$ZSH/functions" )
+    export FPATH
+    for _function in $(find "$ZSH/functions/" -maxdepth 1 -type f 2>/dev/null) ; do
+        autoload -Uz $(basename -- $_function)
+    done
+    unset _function
+fi
 
 # PATH
 
@@ -37,7 +41,9 @@ compctl -C -c + -K _rehash + -c # rehash upon command-not-found
 
 # aliases
 
+[ -n "$EDITOR" ] && alias zshrc="$EDITOR $ZSHRC"
 #alias please='sudo'
+
 declare -A _aliases=(
     'ls' 'ls --color'
     'grep' 'grep --color'
@@ -90,7 +96,7 @@ zstyle ':completion:*:warnings' format '%B-- nothing%b' # no completion matches
 zstyle ':completion:*' completer _complete # completers (- _expand _ignored _approximate)
 zstyle ':completion:*:functions' ignored-patterns '(_*|pre(cmd|exec))' # ignore internal commands
 # matcher-list matchers are evaluated in order one by one, and stops at the first matcher having candidates
-#zstyle ':completion:*' matcher-list 'r:|=*' # standard completion based on the start of the word
+zstyle ':completion:*' matcher-list 'r:|=*' # standard completion based on the start of the word
 #zstyle ':completion:*' matcher-list 'r:|=*' 'l:|=* r:|=*' # completion right first then left or right
 zstyle ':completion:*' special-dirs true # includes . and ..
 zstyle ':completion:*' group-name '' # groups (1/2)

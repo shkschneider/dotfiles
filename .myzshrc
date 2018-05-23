@@ -10,6 +10,7 @@ export ANDROID_HOME="/opt/android-sdk"
 [ -d "$ANDROID_HOME" ] && path+=( "$ANDROID_HOME/tools" "$ANDROID_HOME/platform-tools" )
 export PATH
 
+[ -n "$EDITOR" ] && alias zshrc="$EDITOR $ZSHRC"
 declare -A _aliases=(
     'ls' 'ls --classify --human-readable --group-directories-first --color'
     'll' 'ls -l'
