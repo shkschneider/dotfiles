@@ -2,17 +2,18 @@
 
 command -v "rsync" &>/dev/null || { echo "E: rsync: command not found" >&2 ; exit 1 ; }
 
-command -v "npm" &>dev/null && sh -c "npm install --user diff-so-fancy"
+command -v "npm" &>dev/null && npm install --user diff-so-fancy
 
 rsync \
     --exclude ".git" \
     --exclude "dotfiles" \
     --exclude "LICENSE*" \
     --exclude "README*" \
+    --exclude "etc" \
     -Wav --human-readable --progress "." "$HOME" # --dry-run
 
 if [ $(id -u) -eq 0 ] ; then
-    cp bash.bashrc /etc/
+    cp -r ./etc/ /
 fi
 
 # EOF

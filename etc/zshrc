@@ -1,0 +1,18 @@
+# /etc/zshrc
+
+[[ $- == *i* ]] || return
+[ -z "${(@)TERM:#dumb}" ] && return
+
+#ZSH_THEME=""
+#ZSH_THEME_RANDOM_CANDICATES=()
+PROMPT='%n@%m %# '
+RPROMPT='%~'
+
+[ -z "$EDITOR" -a $+commands[nano] ] && export EDITOR='nano'
+(( $+commands[most] )) && export PAGER='most' || { export PAGER='less' ; export LESS='-R' }
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+
+bindkey -e # emacs
+
+# EOF

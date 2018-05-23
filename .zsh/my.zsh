@@ -2,7 +2,7 @@
 # my.zsh (oh-my-zsh compatible)
 # -> $HOME/.myzshrc
 
-ZSH="${ZSH:-$(dirname -- ${(%):-%N})}"
+ZSH="${ZSH:-$(print -l ${(%):-%N}(:h))}"
 [ -n "$ZSH_CUSTOM" ] && ZSH="$ZSH_CUSTOM"
 
 # user very specific (ZSH_THEME, PATH, aliases...)
@@ -34,9 +34,8 @@ if [ "$ZSH_CUSTOM" != "$ZSH" ] ; then
             export ZSH_THEME="random"
             if [ "${#ZSH_THEME_RANDOM_CANDIDATES[@]}" -eq 0 ] ; then
                 ZSH_THEME_RANDOM_CANDIDATES=()
-                ZSH_THEME_RANDOM_CANDIDATES+=( $(printf '%s\n' $(prompt -l 2>/dev/null | sed '1d')) )
-                ZSH_THEME_RANDOM_CANDIDATES+=( $(find "$ZSH/themes/" -maxdepth 1 -type f -name "*.zsh-theme" \
-                                                      -exec basename -- {} \; 2>/dev/null | sed 's;.zsh-theme;;g') )
+                ZSH_THEME_RANDOM_CANDIDATES+=( $(print -l $(prompt -l 2>/dev/null | sed '1d')) )
+                ZSH_THEME_RANDOM_CANDIDATES+=( $(print -l $ZSH/themes/*(:t:r)) )
                 ZSH_THEME_RANDOM_CANDIDATES=(${(u)ZSH_THEME_RANDOM_CANDIDATES[@]})
             fi
             N=${#ZSH_THEME_RANDOM_CANDIDATES[@]}

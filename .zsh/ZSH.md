@@ -11,6 +11,36 @@ olleh
 Exactly.
 --------
 
+```
+% setopt extendedglob
+% rm ../debianpackage(.)   # remove files only
+% ls -d *(/)               # list directories only
+% ls /etc/*(@)             # list symlinks only
+% ls -l *.(png|jpg|gif)    # list pictures only
+% ls *(*)                  # list executables only
+% ls /etc/**/zsh           # which directories contain 'zsh'?
+% ls **/*(-@)              # list dangling symlinks ('**' recurses down directory trees)
+% ls foo*~*bar*            # match everything that starts with foo but doesn't contain bar
+```
+
+```
+# A plain old glob
+print -l zsh_demo/data/europe/poland/*.txt
+# Return the file name (t stands for tail)
+print -l zsh_demo/data/europe/poland/*.txt(:t)
+# Return the file name without the extension (r stands for remove_extension, I think)
+print -l zsh_demo/data/europe/poland/*.txt(:t:r)
+# Return the extension
+print -l zsh_demo/data/europe/poland/*.txt(:e)
+# Return the parent folder of the file (h stands for head)
+print -l zsh_demo/data/europe/poland/*.txt(:h)
+# Return the parent folder of the parent
+print -l zsh_demo/data/europe/poland/*.txt(:h:h)
+# Return the parent folder of the first file
+print -l zsh_demo/data/europe/poland/*.txt([1]:h)
+# Remember you can combine qualifiers and modifiers.
+```
+
 type_exists:
 ```
 type git_prompt_info &>/dev/null && echo "ok" || echo "ko"
@@ -71,3 +101,6 @@ default_var:
 ```
 FOO=${VARIABLE:=default}
 ```
+
+http://reasoniamhere.com/2014/01/11/outrageously-useful-tips-to-master-your-z-shell/
+http://www.strcat.de/zsh/
