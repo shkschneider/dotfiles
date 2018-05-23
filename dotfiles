@@ -2,11 +2,7 @@
 
 command -v "rsync" &>/dev/null || { echo "E: rsync: command not found" >&2 ; exit 1 ; }
 
-command -v "zsh" &>/dev/null && {
-#    command -v "curl" &>/dev/null && sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
-    command -v "wget" &>/dev/null && sh -c "$(wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
-#    rsync -r .oh-my-zsh/custom/ ~/.oh-my-zsh/custom
-}
+command -v "npm" &>dev/null && sh -c "npm install --user diff-so-fancy"
 
 rsync \
     --exclude ".git" \

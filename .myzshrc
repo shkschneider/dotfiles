@@ -1,16 +1,17 @@
 # @author shkschneider
 # .myzshrc
 
-(( $+commands[nano] )) && export EDITOR='nano'
-(( $+commands[most] )) && export PAGER='most' || { export PAGER='less' ; export LESS='-R' }
-export LC_ALL=en_US.UTF-8
-export LANG=en_US.UTF-8
+ZSH_THEME="shk"
+#ZSH_THEME_RANDOM_CANDIDATES=()
+
+MYZSHRC="${(%):-%N}"
+export MYZSHRC
 
 export ANDROID_HOME="/opt/android-sdk"
 [ -d "$ANDROID_HOME" ] && path+=( "$ANDROID_HOME/tools" "$ANDROID_HOME/platform-tools" )
 export PATH
 
-[ -n "$EDITOR" ] && alias zshrc="$EDITOR $ZSHRC"
+[ -n "$EDITOR" ] && alias myzshrc="$EDITOR $MYZSHRC"
 declare -A _aliases=(
     'ls' 'ls --classify --human-readable --group-directories-first --color'
     'll' 'ls -l'
