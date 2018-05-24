@@ -3,6 +3,8 @@
 
 ZSH_THEME="shk"
 #ZSH_THEME_RANDOM_CANDIDATES=()
+#ZSH_THEME_PROMPT_*
+#ZSH_THEME_HIGHLIGHT="fg=white,bold"
 
 MYZSHRC="${(%):-%N}"
 export MYZSHRC

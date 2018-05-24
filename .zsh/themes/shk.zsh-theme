@@ -26,14 +26,18 @@ fi
 
 # command line
 
-ZSH_THEME_HIGHLIGHT="fg=white,bold"
-zle_highlight=(
-    default:$ZSH_THEME_HIGHLIGHT
-    isearch:$ZSH_THEME_HIGHLIGHT,underline
-    region:$ZSH_THEME_HIGHLIGHT
-    special:$ZSH_THEME_HIGHLIGHT
-    suffix:$ZSH_THEME_HIGHLIGHT
-)
+if [ -f "$ZSH/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" -a -z "$ZSH_THEME_HIGHLIGHT" ] ; then
+    source "$ZSH/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+else
+    ZSH_THEME_HIGHLIGHT=${ZSH_THEME_HIGHLIGHT:-"fg=white,bold"}
+    zle_highlight=(
+        default:$ZSH_THEME_HIGHLIGHT
+        isearch:$ZSH_THEME_HIGHLIGHT,underline # FIXME
+        region:$ZSH_THEME_HIGHLIGHT
+        special:$ZSH_THEME_HIGHLIGHT
+        suffix:$ZSH_THEME_HIGHLIGHT
+    )
+fi
 
 # completion dots
 

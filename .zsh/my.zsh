@@ -26,7 +26,7 @@ if [ -d "$ZSH/prompts" ] ; then
     fpath=( "$ZSH/prompts" $fpath )
 fi
 
-# probably running out of oh-my-zsh or similar
+# oh-my-zsh loads themes by itself
 if [ "$ZSH_CUSTOM" != "$ZSH" ] ; then
     autoload -Uz promptinit && promptinit
     type prompt &>/dev/null && {
