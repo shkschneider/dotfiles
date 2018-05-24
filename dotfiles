@@ -1,19 +1,49 @@
 #!/bin/sh
 
-command -v "rsync" &>/dev/null || { echo "E: rsync: command not found" >&2 ; exit 1 ; }
+cd $(readlink -f -- $(dirname -- $0))
 
-command -v "npm" &>dev/null && npm install --user diff-so-fancy
+dotfiles() {
+    base="$1"
+    from="$2"
+    to="$3"
+    bak="$4"
+    echo "$base: $from -> $to ($bak)"
+    if [ -e "$to" ] ; then
+        cp --dereference --recursive "$to" "$bak/$base" >/dev/null
+    fi
+    if [ -L "$to" ] ; then
+        unlink "$to" >/dev/null
+    else
+        rm -rf "$to" >/dev/null
+    fi
+    cp --recursive "$from" "$to" >/dev/null
+    #ln --symbolic "$from" "$to" >/dev/null
+}
 
-rsync \
-    --exclude ".git" \
-    --exclude "dotfiles" \
-    --exclude "LICENSE*" \
-    --exclude "README*" \
-    --exclude "etc" \
-    -Wav --human-readable --progress "." "$HOME" # --dry-run
+bak=$(mktemp --directory)
+for p in $(find ./ -maxdepth 1 ! -path ./ -name '.*' ! -name '.git' ! -name '.gitignore') ; do
+    dotfiles "$(basename -- "$p")" "$(readlink -f -- "$p")" "$HOME/$(basename -- "$p")" "$bak"
+done
 
 if [ $(id -u) -eq 0 ] ; then
-    cp -r ./etc/ /
+    bak=$(mktemp --directory)
+    for d in $(find ./ -maxdepth 1 -type d ! -path './' ! -name '.*') ; do
+        for p in $(find $d -maxdepth 1 ! -path ./etc/ 2>/dev/null) ; do
+            dotfiles "$(basename -- "$p")" "$(readlink -f -- "$p")" "/etc/$(basename -- "$p")" "$bak"
+        done
+    done
+    command -v "npm" 2>/dev/null && {
+        echo "npm: diff-so-fancy"
+        npm install --global diff-so-fancy >/dev/null
+    }
 fi
+
+git config --global color.ui auto
+command -v "diff-so-fancy" 2>/dev/null && {
+    echo "diff-so-fancy"
+    git config --global core.pager "diff-so-fancy | less --tabs=4 -RFX"
+}
+
+exit 0
 
 # EOF
