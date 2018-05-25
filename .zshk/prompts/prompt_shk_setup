@@ -20,7 +20,7 @@ _prompt() {
     local PROMPT=''
 
     local _user=''
-    [ "$USER" != "$LOGNAME" ] && _user='%n'
+    [ "$USER" != "$(logname)" ] && _user='%n'
     local _host=''
     [ -n "$SSH_TTY$SSH_CONNECTION$SSH_CLIENT" ] && _host="%m"
     if [ -n "$_user$_host" ] ; then
