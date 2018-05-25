@@ -29,7 +29,7 @@ export HISTIGNORE="&;cd:ls:pwd:exit:clear"
 export HISTTIMEFORMAT='%Y-%m-%d %H:%M:%S '
 export MYSQL_HISTFILE=/dev/null
 [ -x "$(which nano)" ] && export EDITOR=nano
-[ -x "$(which most)" ] && export PAGER=most || { export PAGER=less ; export LESS='--RAW-CONTROL-CHARS' }
+[ -x "$(which most)" ] && export PAGER=most || { export PAGER=less ; export LESS='--RAW-CONTROL-CHARS' ; }
 [ -f "$HOME/.lessfilter" ] && export LESSOPEN='|~/.lessfilter %s'
 export LSCOLORS="cxfxbxdxbxegedabagacad"
 
