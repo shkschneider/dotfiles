@@ -1,8 +1,7 @@
 # @author shkschneider
 # my.zsh (oh-my-zsh compatible)
 
-ZSH=${ZSH:-$HOME/.zsh}
-ZSH_CUSTOM=${ZSH_CUSTOM:-$(print -l ${(%):-%N}(:h))}
+ZSHK=${ZSHK:-$(print -l ${(%):-%N}(:h))}
 
 ZSH_THEME=${ZSH_THEME:-}
 ZSH_THEME_RANDOM_CANDIDATES=()
@@ -12,26 +11,29 @@ COMPLETION_WAITING_DOTS=${COMPLETION_WAITING_DOTS:-"false"}
 #ZSH_THEME_HIGHLIGHT=${ZSH_THEME_HIGHLIGHT:-"fg=white,bold"}
 
 # functions
-if [ -d "$ZSH_CUSTOM/functions" ] ; then
-    fpath=( "$ZSH_CUSTOM/functions" $fpath )
-    for _function in $(find "$ZSH_CUSTOM/functions/" -maxdepth 1 -type f 2>/dev/null) ; do
+
+if [ -d "$ZSHK/functions" ] ; then
+    fpath=( "$ZSHK/functions" $fpath )
+    for _function in $(find "$ZSHK/functions/" -maxdepth 1 -type f 2>/dev/null) ; do
         autoload -Uz $(basename -- "$_function")
-    done
-    unset _function
+    done ; unset _function
     export FPATH
 fi
+
 # plugins
-if [ -d "$ZSH_CUSTOM/plugins" ] ; then
-    fpath=( "$ZSH_CUSTOM/plugins" $fpath )
+
+if [ -d "$ZSHK/plugins" ] ; then
+    fpath=( "$ZSHK/plugins" $fpath )
     export FPATH
-    for _plugin in $(find "$ZSH_CUSTOM/plugins/" -maxdepth 1 -type f -name "*.zsh" 2>/dev/null | sort) ; do
+    for _plugin in $(find "$ZSHK/plugins/" -maxdepth 1 -type f -name "*.zsh" 2>/dev/null | sort) ; do
         source $_plugin
-    done
-    unset _plugin
+    done ; unset _plugin
 fi
+
 # prompts
-if [ -d "$ZSH_CUSTOM/prompts" ] ; then
-    fpath=( "$ZSH_CUSTOM/prompts" $fpath )
+
+if [ -d "$ZSHK/prompts" ] ; then
+    fpath=( "$ZSHK/prompts" $fpath )
     export FPATH
 fi
 
@@ -81,12 +83,13 @@ zstyle ':completion:*' group-name '' # groups (1/2)
 zstyle ':completion:*' list-dirs-first true # groups (2/2) splits directories from files (directories first)
 zstyle ':completion:*' insert-tab true # will not complete if pasting (or with empty command line)
 zstyle ':completion::complete:*' use-cache off # cache
-#zstyle ':completion::complete:*' cache-path "$ZSH_CUSTOM/cache"
+#zstyle ':completion::complete:*' cache-path "$ZSHK/cache"
 
 # PATH
 
-[ -d "$HOME/bin" ] && path+=( "$HOME/bin" )
-[ -d "$HOME/sbin" ] && path+=( "$HOME/sbin" )
+for _path in bin sbin ; do
+    [ -d "$HOME/$_path" ] && path=( "$HOME/$_path" $path )
+done ; unset _path
 export PATH
 
 function _rehash { rehash; reply=() }
@@ -104,8 +107,8 @@ declare -A _aliases=(
 )
 for _key in "${(@k)_aliases}"; do
     alias "$_key"="$_aliases[$_key]"
-done
-unset _key _aliases
+done ; unset _key
+unset _aliases
 
 # keybindings
 
@@ -117,6 +120,8 @@ zle -N _insert-last-command-output
 bindkey '^[x' _insert-last-command-output # alt-x
 
 # user very specific (ZSH_THEME, PATH, aliases...)
+
+export HISTFILE="$ZSHK/history"
 [ -z "$MYZSHRC" -a -f "$HOME/.myzshrc" ] && source "$HOME/.myzshrc"
 
 # EOF

@@ -1,37 +1,50 @@
 # @author shkschneider
 # .zshrc (vanilla zsh)
 
+# you should not have to edit this file
+# use $HOME/.zshkrc
+
 [[ $- == *i* ]] || return
 [ -z "${(@)TERM:#dumb}" ] && return
+
+ZSHK=${ZSH:-$HOME/.zshk}
+#[ ! -d "$ZSHK" ] && mkdir "$ZSHK" &>/dev/null
+export ZSHK
+ZSHRC="${(%):-%N}"
+export ZSHRC
+
+# default prompts
 
 PROMPT='%n@%m %# '
 RPROMPT='%~'
 
-ZSH=${ZSH:-$HOME/.zsh}
-[ ! -d "$ZSH" ] && mkdir "$ZSH" &>/dev/null
-export ZSH
-ZSHRC="${(%):-%N}"
-export ZSHRC
+# environment
 
-export HISTFILE="$ZSH/history"
-
-[ -z "$EDITOR" -a $+commands[nano] ] && export EDITOR='nano'
+for _editor in emacs nano ; do
+    (( $+commands[$_editor] )) && export EDITOR=$_editor && break
+done ; unset _editor
 [ -n "$EDITOR" ] && alias zshrc="$EDITOR $ZSHRC"
-(( $+commands[most] )) && export PAGER='most' || { export PAGER='less' ; export LESS='-R' }
+for _pager in most less more ; do
+    (( $+commands[$_pager] )) && export PAGER=$_pager && break
+done ; unset _pager
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 
+# keybindings
+
 bindkey -e # emacs
 
-for _conf in $(find "$ZSH/" -maxdepth 1 -type f -name "*.zsh" 2>/dev/null | sort) ; do
-    source $_conf
-done
-unset _conf
+# custom configurations
 
-#
+if [ -d "$ZSHK/" ] ; then
+    for _conf in $(find "$ZSHK/" -maxdepth 1 -type f -name "*.zsh" 2>/dev/null | sort) ; do
+        source $_conf
+    done ; unset _conf
+elif [ -f "$HOME/.myzshrc" ] ; then
+    source "$HOME/.myzshrc"
+fi
+
 # do not edit below this line
-# use $HOME/.myzshrc
-#
 
 autoload -Uz promptinit && promptinit
 type prompt &>/dev/null && {
@@ -40,22 +53,22 @@ type prompt &>/dev/null && {
         if [ "${#ZSH_THEME_RANDOM_CANDIDATES[@]}" -eq 0 ] ; then
             ZSH_THEME_RANDOM_CANDIDATES=()
             ZSH_THEME_RANDOM_CANDIDATES+=( $(print -l $(prompt -l 2>/dev/null | sed '1d')) )
-            ZSH_THEME_RANDOM_CANDIDATES+=( $(print -l $ZSH/themes/*(:t:r)) )
+            [ -d "$ZSHK/themes" ] && ZSH_THEME_RANDOM_CANDIDATES+=( $(print -l .zsh/themes/*(:t:r)) )
             ZSH_THEME_RANDOM_CANDIDATES=(${(u)ZSH_THEME_RANDOM_CANDIDATES[@]})
         fi
         N=${#ZSH_THEME_RANDOM_CANDIDATES[@]}
         ((N=(RANDOM%N)+1))
         export RANDOM_THEME=${ZSH_THEME_RANDOM_CANDIDATES[$N]}
-        echo "zshrc: random theme: '$RANDOM_THEME'" >&2
+        echo "zshk: random theme: '$RANDOM_THEME'" >&2
         prompt $RANDOM_THEME &>/dev/null
-        [ $(prompt -c | sed '1d' | wc -l) -ne 1 ] && echo "zshrc: failed to load prompt '$RANDOM_THEME'" >&2
-    elif [ -f "$ZSH/themes/$ZSH_THEME.zsh-theme" ] ; then
-        source "$ZSH/themes/$ZSH_THEME.zsh-theme"
+        [ $(prompt -c | sed '1d' | wc -l) -ne 1 ] && echo "zshk: failed to load prompt '$RANDOM_THEME'" >&2
+    elif [ -f "$ZSHK/themes/$ZSH_THEME.zsh-theme" ] ; then
+        source "$ZSHK/themes/$ZSH_THEME.zsh-theme"
     else
         prompt $ZSH_THEME &>/dev/null
-        [ $(prompt -c | sed '1d' | wc -l) -ne 1 ] && echo "zshrc: failed to load prompt '$ZSH_THEME'" >&2
+        [ $(prompt -c | sed '1d' | wc -l) -ne 1 ] && echo "zshk: failed to load prompt '$ZSH_THEME'" >&2
     fi
     return $ZSH_THEME
-} || echo "zshrc: failed to load prompt" >&2
+} || echo "zshk: failed to load prompt" >&2
 
 # EOF

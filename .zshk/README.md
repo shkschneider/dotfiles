@@ -8,8 +8,31 @@ olleh
 olleh
 ```
 
-Exactly.
---------
+> Exactly.
+
+Configuration framework explained
+---------------------------------
+
+* /etc/zshrc: sets default prompts, default global environment variables, basic path
+* $HOME/.zshrc: sets default prompts, default environement variables,
+then loads $HOME/.zsh/*.zsh scripts and finally loads the theme
+* $HOME/.zsh/my.zsh: random theme, loads functions, plugins, prompts, sets options, zstyle, base path and aliases, default bindkeys
+then loads $HOME/.myzshrc for overrides
+* $HOME/.myzshrc: user-centric configuration and overrides
+
+Vanilla ZSH:
+
+In vanilla ZSH, without $HOME/.zsh/, loading goes: /etc/zshrc, $HOME/.zshrc, $HOME/.myzshrc. (Theme loaded last from $HOME/.zshrc.)
+In vanilla ZSH, with this $HOME/.zsh/, loading goes: /etc/zshrc, $HOME/.zshrc, $HOME/.zsh/init.zsh (...), $HOME/.myzshrc. (Theme loaded last from $HOME/.zshrc.)
+
+Oh-My-Zsh: Use .zshk as ZSH_CUSTOM
+
+With oh-my-zsh, you would set ZSH_CUSTOM to this .zsh/; loading goes: /etc/zshrc, $HOME/.zshrc (oh-my-zsh's), $ZSH_CUSTOM/init.zsh (...), $HOME/.myzshrc. (Theme loaded by oh-my-zsh, yet $HOME/.myzshrc is sourced before and can override anything.)
+
+Prezto: I guees you could use .zshk as a module 'zshk' and load it from $HOME/.zpreztorc
+
+Tips and tricks
+---------------
 
 ```
 % setopt extendedglob

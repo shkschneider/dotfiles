@@ -1,8 +1,8 @@
 # @author shkschneider
-# .myzshrc
+# .zshkrc
 
 MYZSHRC="${(%):-%N}"
-export MYZSHRC
+export MYSHRC
 
 # theme
 
@@ -12,7 +12,7 @@ ZSH_THEME_RANDOM_CANDIDATES=()
 CASE_SENSITIVE="true"
 ENABLE_CORRECTION="false"
 COMPLETION_WAITING_DOTS="false"
-[ ! -f "$ZSH_CUSTOM/plugins/zsh-syntax-highlight.zsh" ] && ZSH_THEME_HIGHLIGHT="fg=white,bold"
+[ ! -f "$ZSHK/plugins/zsh-syntax-highlight.zsh" ] && ZSH_THEME_HIGHLIGHT="fg=white,bold"
 
 # path
 
@@ -22,7 +22,6 @@ export PATH
 
 # aliases
 
-[ -n "$EDITOR" ] && alias myzshrc="$EDITOR $MYZSHRC"
 declare -A _aliases=(
     'ls' 'ls --classify --human-readable --group-directories-first --color'
     'll' 'ls -l'
@@ -40,7 +39,7 @@ declare -A _aliases=(
 )
 for _key in "${(@k)_aliases}"; do
     alias "$_key"="$_aliases[$_key]"
-done
-unset _key _aliases
+done ; unset _key
+unset _aliases
 
 # EOF

@@ -8,7 +8,10 @@ if [ -x "$(which stty)" ] ; then
     stty -ixon 2>/dev/null
     stty -ixoff 2>/dev/null
 fi
-umask 022
+if [ -x "$(which xset)" ] ; then
+    xset -dpms 2>/dev/null
+    xset s off 2>/dev/null
+fi
 #set -o noclobber
 set -o emacs
 #set -o ignoreeof
@@ -19,14 +22,6 @@ shopt -s histappend
 shopt -s checkwinsize
 shopt -s dotglob
 shopt -s checkhash
-if [ -n "$BASH_COMPLETION" ] ; then
-    complete -cf sudo
-    complete -cf man
-fi
-if [ -x "$(which xset)" ] ; then
-    xset -dpms 2>/dev/null
-    xset s off 2>/dev/null
-fi
 
 # Environment
 export HISTCONTROL=ignoreboth #ignoredups,ignorespace
@@ -34,8 +29,7 @@ export HISTIGNORE="&;cd:ls:pwd:exit:clear"
 export HISTTIMEFORMAT='%Y-%m-%d %H:%M:%S '
 export MYSQL_HISTFILE=/dev/null
 [ -x "$(which nano)" ] && export EDITOR=nano
-export LESS='-R'
-[ -x "$(which most)" ] && export PAGER=most || export PAGER=less
+[ -x "$(which most)" ] && export PAGER=most || { export PAGER=less ; export LESS='--RAW-CONTROL-CHARS' }
 [ -f "$HOME/.lessfilter" ] && export LESSOPEN='|~/.lessfilter %s'
 export LSCOLORS="cxfxbxdxbxegedabagacad"
 
@@ -48,6 +42,10 @@ umask 022
 
 # Completion
 [ -f /etc/bash_completion ] && ! shopt -oq posix && source /etc/bash_completion
+if [ -n "$BASH_COMPLETION" ] ; then
+    complete -cf sudo
+    complete -cf man
+fi
 
 # Command not found
 command_not_found_handle() { echo "bash: $1: command not found"; }

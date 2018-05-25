@@ -3,16 +3,41 @@
 [[ $- == *i* ]] || return
 [ -z "${(@)TERM:#dumb}" ] && return
 
-#ZSH_THEME=""
-#ZSH_THEME_RANDOM_CANDICATES=()
+ZSH=${ZSH:-$HOME/.zsh}
+[ ! -d "$ZSH" ] && mkdir "$ZSH" &>/dev/null
+export ZSH
+ZSHRC="${(%):-%N}"
+export ZSHRC
+
+# default prompts
+
 PROMPT='%n@%m %# '
 RPROMPT='%~'
 
-[ -z "$EDITOR" -a $+commands[nano] ] && export EDITOR='nano'
-(( $+commands[most] )) && export PAGER='most' || { export PAGER='less' ; export LESS='-R' }
+# environment
+
+for _editor in emacs nano ; do
+    (( $+commands[$_editor] )) && export EDITOR=$_editor && break
+done ; unset _editor
+for _pager in most less more ; do
+    (( $+commands[$_pager] )) && export PAGER=$_pager && break
+done ; unset _pager
+[ "$PAGER" = "less" ] && {
+    export LESS='--RAW-CONTROL-CHARS'
+    [ -f "$HOME/.lessfilter" ] && export LESSOPEN='|~/.lessfilter %s'
+}
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 
+# keybindings
+
 bindkey -e # emacs
+
+# path
+
+for _path in bin sbin ; do
+    [ -d "$HOME/$_path" ] && path=( "$HOME/$_path" $path )
+done ; unset _path
+export PATH
 
 # EOF
