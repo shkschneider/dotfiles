@@ -1,0 +1,10 @@
+# mcornella <https://github.com/robbyrussell/oh-my-zsh/issues/5068#issuecomment-218780098>
+# fpwd
+
+if [ "$PWD" = "$HOME" ] ; then
+    echo "~"
+else
+    echo ${${:-/${(j:/:)${(M)${(s:/:)${(D)PWD:h}}#(|.)[^.]}}/${PWD:t}}//\/~/\~}
+fi
+
+# EOF
