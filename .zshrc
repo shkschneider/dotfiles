@@ -5,7 +5,7 @@
 # use $HOME/.zshkrc
 
 [[ $- == *i* ]] || return
-[ -z "${(@)TERM:#dumb}" ] && return
+[ -z "$TERM" ] && return
 
 ZSHK=${ZSH:-$HOME/.zshk}
 #[ ! -d "$ZSHK" ] && mkdir "$ZSHK" &>/dev/null

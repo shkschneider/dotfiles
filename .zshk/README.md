@@ -10,6 +10,26 @@ olleh
 
 > Exactly.
 
+ZSH default configurations loading
+----------------------------------
+
++---------------+-------------+-------------+--------+
+|               | interactive | interactive | script |
+|               | login       | non-login   |        |
++---------------+-------------+-------------+--------+
+| /etc/zshenv   | 1           | 1           | 1      |
+| ~/.zshenv     |  2          |  2          |  2     |
+| /etc/zprofile |   3         +-------------+--------+
+| ~/.zprofile   |    4        +-------------+--------+
+| /etc/zshrc    |     5       |   3         |
+| ~/.zshrc      |      6      |    4        |
+| /etc/zlogin   |       7     +-------------+
+| ~/.zlogin     |        8    |
++---------------+-------------+
+| ~/.zlogout    |         9   |
+| /etc/zlogout  |          10 |
++---------------+-------------+
+
 Configuration framework explained
 ---------------------------------
 
@@ -29,7 +49,7 @@ Oh-My-Zsh: Use .zshk as ZSH_CUSTOM
 
 With oh-my-zsh, you would set ZSH_CUSTOM to this .zsh/; loading goes: /etc/zshrc, $HOME/.zshrc (oh-my-zsh's), $ZSH_CUSTOM/init.zsh (...), $HOME/.myzshrc. (Theme loaded by oh-my-zsh, yet $HOME/.myzshrc is sourced before and can override anything.)
 
-Prezto: I guees you could use .zshk as a module 'zshk' and load it from $HOME/.zpreztorc
+Prezto: I guees you could use .zshk as a module using "zstyle ':prezto:load' pmodule-dirs $HOME/.zshk" in $HOME/.zpreztorc.
 
 Tips and tricks
 ---------------

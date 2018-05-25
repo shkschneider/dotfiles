@@ -3,9 +3,11 @@
 
 autoload -Uz promptinit || return
 
+set -o prompt_percent # certain escape sequences that start with '%' are expanded
 set -o prompt_subst # the prompt string is first subjected to parameter expansion, command substitution and arithmetic expansion
 export ZLE_RPROMPT_INDENT=0 # used to give the indentation between the right hand side of the right prompt in the line editor
-                            # -- if not set, the value 1 is used
+#                             -- if not set, the value 1 is used
+ZSH_THEME_RPROMPT_POSITION_PROMPT=${ZSH_THEME_RPROMPT_POSITION_PROMPT:-"true"}
 
 # user@machine /p/a/t/h                              exit_status jobs vcs:status
 # $
@@ -16,8 +18,16 @@ ZSH_THEME_PROMPT_SUFFIX=${ZSH_THEME_PROMPT_SUFFIX:-""} #"%{⁆%G%}"
 ZSH_THEME_PROMPT_CHAR=${ZSH_THEME_PROMPT_CHAR:-"%{»%G%} "}
 ZSH_THEME_PROMPT_DOTS=${ZSH_THEME_PROMPT_DOTS:-"%{…%G%}"}
 
+_title() {
+    if [[ "$TERM" == "xterm*" ]] ; then
+        print -Pn "\e]2;"
+        print -Pn '%n@%m:%c'
+        print -Pn "\a"
+    fi
+}
+
 _prompt() {
-    local PROMPT=''
+    PROMPT=''
 
     local _user=''
     [ "$USER" != "$(logname)" ] && _user='%n'
@@ -31,17 +41,15 @@ _prompt() {
     fi
 
     PROMPT+='%B%F{blue}'"$ZSH_THEME_PROMPT_PREFIX"
-    local _pwd="${PWD/#$HOME/~}"
-    if [ ${#_pwd} -gt 80 ] ; then
-        local _device="$(echo ${$(df "$PWD" | sed -n '2p')[1]})"
-        PROMPT+="$_device:"
-        PROMPT+="$ZSH_THEME_PROMPT_DOTS/"'%c'
+    if [ ${#PWD} -gt 80 ] ; then
+        # mcornella <https://github.com/robbyrussell/oh-my-zsh/issues/5068#issuecomment-218780098>
+        PROMPT+=${${:-/${(j:/:)${(M)${(s:/:)${(D)PWD:h}}#(|.)[^.]}}/${PWD:t}}//\/~/\~}
     else
-        PROMPT+="$_pwd"
+        PROMPT+='%~'
     fi
     PROMPT+="$ZSH_THEME_PROMPT_SUFFIX%f%b"
 
-    PROMPT+="\n"
+    PROMPT+=$'\n'
 
     [[ $(id -u) = 0 ]] && local _poweruser=true || local _poweruser=false
     $_poweruser && local _color="red" || local _color="white"
@@ -54,35 +62,40 @@ _prompt() {
     fi
     PROMPT+='%f%b'
 
-    echo -n "$PROMPT%{$reset_color%}"
+    PROMPT+="%{$reset_color%}"
+    export PROMPT
 }
 
-source "$ZSH/plugins/git-prompt/git-prompt.plugin.zsh" &>/dev/null
+source "${ZSHK:=$ZSH}/plugins/git-prompt/git-prompt.plugin.zsh" &>/dev/null
 type git_prompt_info &>/dev/null && ZSH_THEME_RPROMPT_GIT="true" || XSH_THEME_RPROMPT_GIT="false"
 
 _rprompt() {
-    local RPROMPT=''
+    RPROMPT=''
+    [ "$ZSH_THEME_RPROMPT_POSITION_PROMPT" = "true" ] && RPROMPT+=%{$'\e[1A'%} # one line up
     RPROMPT+='%B'
     if [[ $SHLVL -gt 1 ]] ; then
-        RPROMPT+='%F{black}'"+$((SHLVL - 1))$ZSH_THEME_PROMPT_SPACER"'%f'
+        RPROMPT+='%F{black}'"$ZSH_THEME_PROMPT_SPACER+$((SHLVL - 1))"'%f'
     fi
-    RPROMPT+="%F{red}%(1?.%?$ZSH_THEME_PROMPT_SPACER.)%f"
-    RPROMPT+="%F{magenta}%(1j.%j.)%f"
+    RPROMPT+="%F{red}%(1?.$ZSH_THEME_PROMPT_SPACER%?.)%f"
+    RPROMPT+="%F{magenta}%(1j.$ZSH_THEME_PROMPT_SPACER%j.)%f"
     if [ "$ZSH_THEME_RPROMPT_GIT" = "true" ] ; then
-        RPROMPT+="$ZSH_THEME_PROMPT_SPACER"
         local _git_prompt_info="$(git_prompt_info)"
         if [ -n "$_git_prompt_info" ] ; then
+            RPROMPT+="$ZSH_THEME_PROMPT_SPACER"
             RPROMPT+='%F{yellow}'"$ZSH_THEME_PROMPT_PREFIX"
             RPROMPT+="$_git_prompt_info"
             RPROMPT+="$ZSH_THEME_PROMPT_SUFFIX"'%f'
         fi
     fi
-    RPROMPT+='%b'
-    #echo -n "$RPROMPT%{$reset_color%}"
-    echo -n %{$'\e[1A'%}"$RPROMPT"%{$'\e[1B'%}"%{$reset_color%}"
+    [ "$ZSH_THEME_RPROMPT_POSITION_PROMPT" = "true" ] && RPROMPT+=%{$'\e[1B'%} # one line down
+    RPROMPT+='%b'"%{$reset_color%}"
+    export RPROMPT
 }
 
-PROMPT=$(_prompt)
-RPROMPT=$(_rprompt)
+precmd() {
+    _title
+    _prompt
+    _rprompt
+}
 
 # EOF

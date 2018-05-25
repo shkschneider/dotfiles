@@ -1,0 +1,8 @@
+# @author shkschneider
+# manuel
+
+man -P "less -p \"$2\"" $1
+
+echo "manuel: searched for '$2' in '$1'"
+
+# EOF

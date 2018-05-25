@@ -1,6 +1,9 @@
 # @author shkschneider
 # my.zsh (oh-my-zsh compatible)
 
+[[ $- == *i* ]] || return
+[ -z "$TERM" ] && return
+
 ZSHK=${ZSHK:-$(print -l ${(%):-%N}(:h))}
 
 ZSH_THEME=${ZSH_THEME:-}
@@ -66,6 +69,7 @@ set -o check_jobs # report the status of background and suspended jobs before ex
 set -o hup # send the HUP signal to running jobs when the shell exits
 set -o NO_beep NO_list_beep NO_hist_beep # stfu
 set -o always_last_prompt # after listing a completion, the cursor is taken back to the line it was on before, instead of reprinting it underneath
+[ "$TERM" = "dumb" ] && set -o NO_zle # use the zsh line editor ('dumb' is emacs)
 
 # completion
 
