@@ -24,6 +24,7 @@
 (require 'shell-interactions nil 'noerror)
 (require 'templates nil 'noerror)
 (require 'timestamp nil 'noerror)
+(require 'auto-modes nil 'noerror)
 
 ;; Language
 
