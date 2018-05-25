@@ -1,3 +1,4 @@
+# @author shkschneider
 # /etc/bash.bashrc
 
 # If not running interactively, don't do anything

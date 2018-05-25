@@ -1,3 +1,4 @@
+# @author shkchneider
 # /etc/zshrc
 
 [[ $- == *i* ]] || return

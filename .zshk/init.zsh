@@ -89,16 +89,6 @@ zstyle ':completion:*' insert-tab true # will not complete if pasting (or with e
 zstyle ':completion::complete:*' use-cache off # cache
 #zstyle ':completion::complete:*' cache-path "$ZSHK/cache"
 
-# PATH
-
-for _path in bin sbin ; do
-    [ -d "$HOME/$_path" ] && path=( "$HOME/$_path" $path )
-done ; unset _path
-export PATH
-
-function _rehash { rehash; reply=() }
-compctl -C -c + -K _rehash + -c # rehash upon command-not-found
-
 # aliases
 
 declare -A _aliases=(
