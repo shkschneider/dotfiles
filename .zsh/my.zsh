@@ -1,96 +1,39 @@
 # @author shkschneider
 # my.zsh (oh-my-zsh compatible)
-# -> $HOME/.myzshrc
 
-ZSH="${ZSH:-$(print -l ${(%):-%N}(:h))}"
-[ -n "$ZSH_CUSTOM" ] && ZSH="$ZSH_CUSTOM"
+ZSH=${ZSH:-$HOME/.zsh}
+ZSH_CUSTOM=${ZSH_CUSTOM:-$(print -l ${(%):-%N}(:h))}
 
-# user very specific (ZSH_THEME, PATH, aliases...)
-[ -f "$HOME/.myzshrc" ] && source "$HOME/.myzshrc"
-
-ZSH_THEME=${ZSH_THEME:-""}
-ZSH_THEME_RANDOM_CANDIDATES=${ZSH_THEME_RANDOM_CANDIDATES:-}
+ZSH_THEME=${ZSH_THEME:-}
+ZSH_THEME_RANDOM_CANDIDATES=()
 CASE_SENSITIVE=${CASE_SENSITIVE:-"true"}
 ENABLE_CORRECTION=${ENABLE_CORRECTION:-"false"}
 COMPLETION_WAITING_DOTS=${COMPLETION_WAITING_DOTS:-"false"}
-
-# plugins
-
-if [ -d "$ZSH/plugins" ] ; then
-    fpath=( "$ZSH/plugins" $fpath )
-fi
-
-# prompt/theme
-
-if [ -d "$ZSH/prompts" ] ; then
-    fpath=( "$ZSH/prompts" $fpath )
-fi
-
-# oh-my-zsh loads themes by itself
-if [ "$ZSH_CUSTOM" != "$ZSH" ] ; then
-    autoload -Uz promptinit && promptinit
-    type prompt &>/dev/null && {
-        if [ -z "$ZSH_THEME" ] ; then
-            export ZSH_THEME="random"
-            if [ "${#ZSH_THEME_RANDOM_CANDIDATES[@]}" -eq 0 ] ; then
-                ZSH_THEME_RANDOM_CANDIDATES=()
-                ZSH_THEME_RANDOM_CANDIDATES+=( $(print -l $(prompt -l 2>/dev/null | sed '1d')) )
-                ZSH_THEME_RANDOM_CANDIDATES+=( $(print -l $ZSH/themes/*(:t:r)) )
-                ZSH_THEME_RANDOM_CANDIDATES=(${(u)ZSH_THEME_RANDOM_CANDIDATES[@]})
-            fi
-            N=${#ZSH_THEME_RANDOM_CANDIDATES[@]}
-            ((N=(RANDOM%N)+1))
-            export RANDOM_THEME=${ZSH_THEME_RANDOM_CANDIDATES[$N]}
-            echo "zshrc: random theme: '$RANDOM_THEME'" >&2
-            prompt $RANDOM_THEME &>/dev/null
-            [ $(prompt -c | sed '1d' | wc -l) -ne 1 ] && echo "zshrc: failed to load prompt '$RANDOM_THEME'" >&2
-        elif [ -f "$ZSH/themes/$ZSH_THEME.zsh-theme" ] ; then
-            source "$ZSH/themes/$ZSH_THEME.zsh-theme"
-        else
-            prompt $ZSH_THEME &>/dev/null
-            [ $(prompt -c | sed '1d' | wc -l) -ne 1 ] && echo "zshrc: failed to load prompt '$ZSH_THEME'" >&2
-        fi
-        return $ZSH_THEME
-    } || echo "zshrc: failed to load prompt" >&2
-fi
+#ZSH_THEME_HIGHLIGHT=${ZSH_THEME_HIGHLIGHT:-"fg=white,bold"}
 
 # functions
-
-if [ -d "$ZSH/functions" ] ; then
-    fpath=( "$ZSH/functions" $fpath )
-    for _function in $(find "$ZSH/functions/" -maxdepth 1 -type f 2>/dev/null) ; do
+if [ -d "$ZSH_CUSTOM/functions" ] ; then
+    fpath=( "$ZSH_CUSTOM/functions" $fpath )
+    for _function in $(find "$ZSH_CUSTOM/functions/" -maxdepth 1 -type f 2>/dev/null) ; do
         autoload -Uz $(basename -- "$_function")
     done
     unset _function
+    export FPATH
 fi
-
-# PATH
-
-[ -d "$HOME/bin" ] && path+=( "$HOME/bin" )
-[ -d "$HOME/sbin" ] && path+=( "$HOME/sbin" )
-path=${(u)path[@]}
-export PATH
-
-function _rehash { rehash; reply=() }
-compctl -C -c + -K _rehash + -c # rehash upon command-not-found
-
-fpath=${(u)fpath[@])
-export FPATH
-
-# aliases
-
-declare -A _aliases=(
-    'ls' 'ls --color'
-    'grep' 'grep --color'
-    'egrep' 'egrep --color'
-    'H' 'history'
-    'J' 'jobs'
-    'L' 'echo $SHLVL'
-)
-for _key in "${(@k)_aliases}"; do
-    alias "$_key"="$_aliases[$_key]"
-done
-unset _key _aliases
+# plugins
+if [ -d "$ZSH_CUSTOM/plugins" ] ; then
+    fpath=( "$ZSH_CUSTOM/plugins" $fpath )
+    export FPATH
+    for _plugin in $(find "$ZSH_CUSTOM/plugins/" -maxdepth 1 -type f -name "*.zsh" 2>/dev/null | sort) ; do
+        source $_plugin
+    done
+    unset _plugin
+fi
+# prompts
+if [ -d "$ZSH_CUSTOM/prompts" ] ; then
+    fpath=( "$ZSH_CUSTOM/prompts" $fpath )
+    export FPATH
+fi
 
 # options
 # (setopt shows all options whose settings are changed from the default)
@@ -138,7 +81,31 @@ zstyle ':completion:*' group-name '' # groups (1/2)
 zstyle ':completion:*' list-dirs-first true # groups (2/2) splits directories from files (directories first)
 zstyle ':completion:*' insert-tab true # will not complete if pasting (or with empty command line)
 zstyle ':completion::complete:*' use-cache off # cache
-#zstyle ':completion::complete:*' cache-path "$ZSH/cache"
+#zstyle ':completion::complete:*' cache-path "$ZSH_CUSTOM/cache"
+
+# PATH
+
+[ -d "$HOME/bin" ] && path+=( "$HOME/bin" )
+[ -d "$HOME/sbin" ] && path+=( "$HOME/sbin" )
+export PATH
+
+function _rehash { rehash; reply=() }
+compctl -C -c + -K _rehash + -c # rehash upon command-not-found
+
+# aliases
+
+declare -A _aliases=(
+    'ls' 'ls --color'
+    'grep' 'grep --color'
+    'egrep' 'egrep --color'
+    'H' 'history'
+    'J' 'jobs'
+    'L' 'echo $SHLVL'
+)
+for _key in "${(@k)_aliases}"; do
+    alias "$_key"="$_aliases[$_key]"
+done
+unset _key _aliases
 
 # keybindings
 
@@ -147,6 +114,9 @@ _insert-last-command-output() {
     LBUFFER+="$(eval $history[$((HISTCMD-1))])"
 }
 zle -N _insert-last-command-output
-bindkey '^ ' _insert-last-command-output # ctrl-space
+bindkey '^[x' _insert-last-command-output # alt-x
+
+# user very specific (ZSH_THEME, PATH, aliases...)
+[ -z "$MYZSHRC" -a -f "$HOME/.myzshrc" ] && source "$HOME/.myzshrc"
 
 # EOF

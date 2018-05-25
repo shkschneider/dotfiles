@@ -1,17 +1,26 @@
 # @author shkschneider
 # .myzshrc
 
-ZSH_THEME="shk"
-#ZSH_THEME_RANDOM_CANDIDATES=()
-#ZSH_THEME_PROMPT_*
-#ZSH_THEME_HIGHLIGHT="fg=white,bold"
-
 MYZSHRC="${(%):-%N}"
 export MYZSHRC
+
+# theme
+
+ZSH_THEME="shk"
+#ZSH_THEME_PROMPT_*
+ZSH_THEME_RANDOM_CANDIDATES=()
+CASE_SENSITIVE="true"
+ENABLE_CORRECTION="false"
+COMPLETION_WAITING_DOTS="false"
+[ ! -f "$ZSH_CUSTOM/plugins/zsh-syntax-highlight.zsh" ] && ZSH_THEME_HIGHLIGHT="fg=white,bold"
+
+# path
 
 export ANDROID_HOME="/opt/android-sdk"
 [ -d "$ANDROID_HOME" ] && path+=( "$ANDROID_HOME/tools" "$ANDROID_HOME/platform-tools" )
 export PATH
+
+# aliases
 
 [ -n "$EDITOR" ] && alias myzshrc="$EDITOR $MYZSHRC"
 declare -A _aliases=(

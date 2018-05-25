@@ -2,6 +2,7 @@
 # shk.zsh-theme (oh-my-zsh compatible)
 
 ZSH_THEME=${ZSH_THEME:-${$(basename -- "${(%):-%N}")%.*}}
+ZSH_THEME_HIGHLIGHT=${ZSH_THEME_HIGHLIGHT:-}
 
 # colors
 
@@ -24,15 +25,12 @@ if [ $(prompt -c | wc -l) -le 1 ] ; then
     echo "zshrc: failed to load prompt '$ZSH_THEME'" >&2
 fi
 
-# command line
+# command-line
 
-if [ -f "$ZSH/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" -a -z "$ZSH_THEME_HIGHLIGHT" ] ; then
-    source "$ZSH/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-else
-    ZSH_THEME_HIGHLIGHT=${ZSH_THEME_HIGHLIGHT:-"fg=white,bold"}
+if [ -n "$ZSH_THEME_HIGHLIGHT" ] ; then
     zle_highlight=(
         default:$ZSH_THEME_HIGHLIGHT
-        isearch:$ZSH_THEME_HIGHLIGHT,underline # FIXME
+        isearch:$ZSH_THEME_HIGHLIGHT,underline
         region:$ZSH_THEME_HIGHLIGHT
         special:$ZSH_THEME_HIGHLIGHT
         suffix:$ZSH_THEME_HIGHLIGHT
