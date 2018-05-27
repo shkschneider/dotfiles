@@ -1,6 +1,8 @@
 # @author shkschneider
 # /etc/zshenv
 
+export LC_ALL=C
+
 for _path in bin sbin ; do
     [ -d "$HOME/$_path" ] && path=( "$HOME/$_path" $path )
 done ; unset _path
