@@ -106,7 +106,14 @@ unset _aliases
 
 # keybindings
 
+# <ctrl>-v + key
 bindkey -e # emacs
+
+bindkey ${terminfo[kcuu1]} history-beginning-search-backward # up
+bindkey ${terminfo[kcud1]} history-beginning-search-forward # down
+
+bindkey -r '^T' # ctrl-t (was 'transpose-chars')
+
 _insert-last-command-output() {
     LBUFFER+="$(eval $history[$((HISTCMD-1))])"
 }
