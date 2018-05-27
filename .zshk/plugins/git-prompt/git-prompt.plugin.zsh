@@ -18,7 +18,8 @@ function git_prompt_info() {
         if [ -z "$(git branch -vv --no-color 2>/dev/null)" ] ; then # naked
             echo -n $ZSH_THEME_GIT_PROMPT_UNTRACKED
         elif [ -z "$(git symbolic-ref HEAD 2>/dev/null)" ] ; then # detached
-            echo -n $ZSH_THEME_GIT_PROMPT_DIRTY
+            git_branch=$(git describe --all --contains HEAD | cut -d'~' -f1)
+            echo -n $git_branch$ZSH_THEME_GIT_PROMPT_DIRTY
             # [ -d "$git_dir/rebase-apply" ] || [ -d "$git_dir/rebase-merge" ] # rebasing
         else
             git_branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
@@ -38,7 +39,8 @@ function git_prompt_info() {
         [ $? -eq 124 ] && {
             git_status=$ZSH_THEME_GIT_PROMPT_UNTRACKED
         } || {
-            git_status=$(echo "$git_status" | cut -c1,2 | tr -d '[:space:]' | tr -s 'MADRCU?!')
+            # ACDMRTUX?!
+            git_status=$(echo "$git_status" | cut -c1,2 | tr -d '[:space:]' | fold -w1 | sort -ur | tr -d '[:space:]')
         }
         [ -n "$git_status" ] && echo -n $git_status || echo -n $ZSH_THEME_GIT_PROMPT_CLEAN
     fi
