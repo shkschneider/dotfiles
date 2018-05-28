@@ -33,8 +33,6 @@ command -v "git" 2>/dev/null && {
     git clone https://github.com/zsh-users/zsh-autosuggestions $HOME/.zshk/plugins/zsh-autosuggestions
     git clone https://github.com/zsh-users/zsh-syntax-highlighting $HOME/.zshk/plugins/zsh-syntax-highlighting
     git clone https://github.com/zsh-users/zsh-completions $HOME/.zshk/plugins/zsh-completions
-    #git clone https://github.com/git/git $HOME/.zshk/plugins/git
-
 }
 
 bak=$(mktemp --directory)

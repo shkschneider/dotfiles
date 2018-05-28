@@ -17,18 +17,19 @@ COMPLETION_WAITING_DOTS=${COMPLETION_WAITING_DOTS:-"false"}
 
 if [ -d "$ZSHK/functions" ] ; then
     fpath=( "$ZSHK/functions" $fpath )
+    export FPATH
     for _function in $(find "$ZSHK/functions/" -maxdepth 1 -type f 2>/dev/null) ; do
         autoload -Uz $(basename -- "$_function")
     done ; unset _function
-    export FPATH
 fi
 
 # plugins
 
 if [ -d "$ZSHK/plugins" ] ; then
-    fpath=( "$ZSHK/plugins" $fpath )
-    export FPATH
+    #fpath=( "$ZSHK/plugins" $fpath )
+    #export FPATH
     for _plugin in $(find "$ZSHK/plugins/" -maxdepth 1 -type f -name "*.zsh" 2>/dev/null | sort) ; do
+        echo $_plugin
         source $_plugin
     done ; unset _plugin
 fi

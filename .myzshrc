@@ -13,7 +13,7 @@ ZSH_THEME_RANDOM_CANDIDATES=()
 CASE_SENSITIVE="true"
 ENABLE_CORRECTION="false"
 COMPLETION_WAITING_DOTS="false"
-[ ! -f "$ZSHK/plugins/zsh-syntax-highlight.zsh" ] && ZSH_THEME_HIGHLIGHT="fg=white,bold"
+[ ! -f "$ZSHK/plugins/zsh-syntax-highlighting.zsh" ] && ZSH_THEME_HIGHLIGHT="fg=white,bold"
 
 # path
 
