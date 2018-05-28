@@ -29,7 +29,6 @@ if [ -d "$ZSHK/plugins" ] ; then
     #fpath=( "$ZSHK/plugins" $fpath )
     #export FPATH
     for _plugin in $(find "$ZSHK/plugins/" -maxdepth 1 -type f -name "*.zsh" 2>/dev/null | sort) ; do
-        echo $_plugin
         source $_plugin
     done ; unset _plugin
 fi
