@@ -47,6 +47,11 @@ if [ $(id -u) -eq 0 ] ; then
     }
 fi
 
+#git clone https://github.com/zsh-users/zsh-autosuggestions $HOME/.zshk/plugins/zsh-autosuggestions
+#git clone https://github.com/zsh-users/zsh-syntax-highlighting $HOME/.zshk/plugins/zsh-syntax-highlighting
+#git clone https://github.com/zsh-users/zsh-completions $HOME/.zshk/plugins/zsh-completions
+#git clone https://github.com/git/git $HOME/.zshk/plugins/git
+
 git config --global color.ui auto
 command -v "diff-so-fancy" 2>/dev/null && {
     echo "diff-so-fancy"

@@ -149,5 +149,7 @@ default_var:
 FOO=${VARIABLE:=default}
 ```
 
+PS: fizsh is a nice alternative for an out-of-the-box zsh shell.
+
 http://reasoniamhere.com/2014/01/11/outrageously-useful-tips-to-master-your-z-shell/
 http://www.strcat.de/zsh/#tipps

@@ -4,6 +4,8 @@
 *~
 \#*\#
 
+.ssh/known_hosts
+.ssh/id_*
 .zsh/plugins/*/
 
 # EOF
