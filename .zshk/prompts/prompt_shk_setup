@@ -19,10 +19,10 @@ ZSH_THEME_PROMPT_CHAR=${ZSH_THEME_PROMPT_CHAR:-"%{»%G%} "}
 ZSH_THEME_PROMPT_DOTS=${ZSH_THEME_PROMPT_DOTS:-"%{…%G%}"}
 
 _title() {
-    if [[ "$TERM" == "xterm*" ]] ; then
-        print -Pn "\e]2;"
+    if [[ $TERM =~ xterm* ]] ; then
+        print -Pn '\e]2;'
         print -Pn '%n@%m:%c'
-        print -Pn "\a"
+        print -Pn '\a'
     fi
 }
 
