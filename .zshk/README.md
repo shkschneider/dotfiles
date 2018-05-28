@@ -84,6 +84,10 @@ print -l zsh_demo/data/europe/poland/*.txt([1]:h)
 # Remember you can combine qualifiers and modifiers.
 ```
 
+is_numeric:
+```
+s=42 ; [[ $s == <-> ]] && echo "ok" || echo "ko"
+```
 type_exists:
 ```
 type git_prompt_info &>/dev/null && echo "ok" || echo "ko"
@@ -146,4 +150,4 @@ FOO=${VARIABLE:=default}
 ```
 
 http://reasoniamhere.com/2014/01/11/outrageously-useful-tips-to-master-your-z-shell/
-http://www.strcat.de/zsh/
+http://www.strcat.de/zsh/#tipps
