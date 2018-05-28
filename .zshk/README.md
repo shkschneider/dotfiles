@@ -10,46 +10,41 @@ olleh
 
 > Exactly.
 
-ZSH default configurations loading
-----------------------------------
+Configurations loading
+----------------------
 
-+---------------+-------------+-------------+--------+
-|               | interactive | interactive | script |
-|               | login       | non-login   |        |
-+---------------+-------------+-------------+--------+
-| /etc/zshenv   | 1           | 1           | 1      |
-| ~/.zshenv     |  2          |  2          |  2     |
-| /etc/zprofile |   3         +-------------+--------+
-| ~/.zprofile   |    4        +-------------+--------+
-| /etc/zshrc    |     5       |   3         |
-| ~/.zshrc      |      6      |    4        |
-| /etc/zlogin   |       7     +-------------+
-| ~/.zlogin     |        8    |
-+---------------+-------------+
-| ~/.zlogout    |         9   |
-| /etc/zlogout  |          10 |
-+---------------+-------------+
+```
++---------------------+-------------+-------------+--------+
+|                     | interactive | interactive | script |
+|                     | login       | non-login   |        |
++---------------------+-------------+-------------+--------+
+| /etc/zshenv         | 1           | 1           | 1      |
+| ~/.zshenv           |  2          |  2          |  2     |
+| /etc/zprofile       |   3         +-------------+--------+
+| ~/.zprofile         |    4        +-------------+--------+
+| /etc/zshrc          |     5       |   3         |
+| ~/.zshrc            |      6      |    4        |
+| /etc/zlogin         |       7     +-------------+
+| ~/.zlogin           |        8    |
++---------------------+-------------+
+| ~/.zshrc            | A           |
+| ~/.zshk/init.zsh    |  B          |
+| ~/.zshk/functions/* |   C         |
+| ~/.zshk/plugins/*   |    D        |
+| ~/.zshk/prompts/*   |     E       |
+| ~/.myzshrc          |      F      |
++---------------------+-------------+
+| ~/.zlogout          |         9   |
+| /etc/zlogout        |          10 |
++---------------------+-------------+
+```
 
-Configuration framework explained
----------------------------------
+Oh-My-Zsh
+---------
 
-* /etc/zshrc: sets default prompts, default global environment variables, basic path
-* $HOME/.zshrc: sets default prompts, default environement variables,
-then loads $HOME/.zsh/*.zsh scripts and finally loads the theme
-* $HOME/.zsh/my.zsh: random theme, loads functions, plugins, prompts, sets options, zstyle, base path and aliases, default bindkeys
-then loads $HOME/.myzshrc for overrides
-* $HOME/.myzshrc: user-centric configuration and overrides
+This configuration could very well work with oh-my-zsh.
 
-Vanilla ZSH:
-
-In vanilla ZSH, without $HOME/.zsh/, loading goes: /etc/zshrc, $HOME/.zshrc, $HOME/.myzshrc. (Theme loaded last from $HOME/.zshrc.)
-In vanilla ZSH, with this $HOME/.zsh/, loading goes: /etc/zshrc, $HOME/.zshrc, $HOME/.zsh/init.zsh (...), $HOME/.myzshrc. (Theme loaded last from $HOME/.zshrc.)
-
-Oh-My-Zsh: Use .zshk as ZSH_CUSTOM
-
-With oh-my-zsh, you would set ZSH_CUSTOM to this .zsh/; loading goes: /etc/zshrc, $HOME/.zshrc (oh-my-zsh's), $ZSH_CUSTOM/init.zsh (...), $HOME/.myzshrc. (Theme loaded by oh-my-zsh, yet $HOME/.myzshrc is sourced before and can override anything.)
-
-Prezto: I guees you could use .zshk as a module using "zstyle ':prezto:load' pmodule-dirs $HOME/.zshk" in $HOME/.zpreztorc.
+Simple clone this and point ZSH_CUSTOM to it.
 
 Tips and tricks
 ---------------
@@ -149,7 +144,13 @@ default_var:
 FOO=${VARIABLE:=default}
 ```
 
-PS: fizsh is a nice alternative for an out-of-the-box zsh shell.
+Resources
+---------
 
-http://reasoniamhere.com/2014/01/11/outrageously-useful-tips-to-master-your-z-shell/
-http://www.strcat.de/zsh/#tipps
+* http://reasoniamhere.com/2014/01/11/outrageously-useful-tips-to-master-your-z-shell/
+* http://www.strcat.de/zsh/#tipps
+
+PS
+--
+
+fizsh(1) is a nice alternative for an out-of-the-box zsh shell.

@@ -1,5 +1,5 @@
 # @author shkschneider
-# .zshkrc
+# .myzshrc
 
 MYZSHRC="${(%):-%N}"
 export MYSHRC

@@ -8,7 +8,6 @@
 [ -z "$TERM" ] && return
 
 ZSHK=${ZSH:-$HOME/.zshk}
-#[ ! -d "$ZSHK" ] && mkdir "$ZSHK" &>/dev/null
 export ZSHK
 ZSHRC="${(%):-%N}"
 export ZSHRC
