@@ -1,5 +1,11 @@
 #!/bin/sh
 
+method=""
+
+method=${method:-"cp"}
+echo -n "This will use $(echo $method | tr '[a-z]' '[A-Z]') method. Continue (Ctrl-C to abort)? "
+read x
+
 cd $(readlink -f -- $(dirname -- $0))
 
 dotfiles() {
@@ -16,8 +22,11 @@ dotfiles() {
     else
         rm -rf "$to" >/dev/null
     fi
-    cp --recursive "$from" "$to" >/dev/null
-    #ln --symbolic "$from" "$to" >/dev/null
+    if [ "$method" = "cp" ] ; then
+        cp --recursive "$from" "$to" >/dev/null
+    elif ["$method" = "ln" ] ; then
+        ln --symbolic "$from" "$to" >/dev/null
+    fi
 }
 
 bak=$(mktemp --directory)
@@ -44,6 +53,7 @@ command -v "diff-so-fancy" 2>/dev/null && {
     git config --global core.pager "diff-so-fancy | less --tabs=4 -RFX"
 }
 
+unset method
 exit 0
 
 # EOF
