@@ -5,7 +5,7 @@ autoload -Uz promptinit || return
 
 set -o prompt_percent # certain escape sequences that start with '%' are expanded
 set -o prompt_subst # the prompt string is first subjected to parameter expansion, command substitution and arithmetic expansion
-export ZLE_RPROMPT_INDENT=0 # used to give the indentation between the right hand side of the right prompt in the line editor
+export ZLE_RPROMPT_INDENT=1 # used to give the indentation between the right hand side of the right prompt in the line editor
 #                             -- if not set, the value 1 is used
 ZSH_THEME_RPROMPT_POSITION_PROMPT=${ZSH_THEME_RPROMPT_POSITION_PROMPT:-"true"}
 
