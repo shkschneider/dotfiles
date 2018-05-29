@@ -1,5 +1,5 @@
 # @author shkschneider
-# plugins.zsh
+# plugins/zshk.zsh
 
 ZSHK=${${ZSHK:=$ZSH_CUSTOM}:=$ZSH}
 

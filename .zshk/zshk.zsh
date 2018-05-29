@@ -1,8 +1,7 @@
 # @author shkschneider
-# my.zsh (oh-my-zsh compatible)
+# .zshk/zshk.zsh (oh-my-zsh compatible)
 
-[[ $- == *i* ]] || return
-[ -z "$TERM" ] && return
+[[ -o interactive ]] || return
 
 ZSHK=${ZSHK:-$(print -l ${(%):-%N}(:h))}
 
@@ -123,7 +122,6 @@ bindkey '^[x' _insert-last-command-output # alt-x
 
 # user very specific (ZSH_THEME, PATH, aliases...)
 
-export HISTFILE="$ZSHK/history"
 [ -z "$MYZSHRC" -a -f "$HOME/.myzshrc" ] && source "$HOME/.myzshrc"
 
 # EOF

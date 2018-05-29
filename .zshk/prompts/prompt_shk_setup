@@ -1,5 +1,5 @@
 # @author shkschneider
-# prompt_shk_setup (vanilla zsh compatible)
+# prompts/prompt_shk_setup (vanilla zsh compatible)
 
 autoload -Uz promptinit || return
 
@@ -8,6 +8,7 @@ set -o prompt_subst # the prompt string is first subjected to parameter expansio
 export ZLE_RPROMPT_INDENT=1 # used to give the indentation between the right hand side of the right prompt in the line editor
 #                             -- if not set, the value 1 is used
 ZSH_THEME_RPROMPT_POSITION_PROMPT=${ZSH_THEME_RPROMPT_POSITION_PROMPT:-"true"}
+ZSH_THEME_NEWLINE=${ZSH_THEME_NEWLINE:-"false"}
 
 # user@machine /p/a/t/h                              exit_status jobs vcs:status
 # $
@@ -28,6 +29,7 @@ _title() {
 
 _prompt() {
     PROMPT=''
+    [ "$ZSH_THEME_NEWLINE" = "true" ] && PROMPT=$'\n'
 
     local _user=''
     [ "$USER" != "$(logname)" ] && _user='%n'

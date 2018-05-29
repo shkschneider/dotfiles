@@ -8,12 +8,13 @@ export MYSHRC
 
 ZSH_THEME="shk"
 ZSH_THEME_RPROMPT_POSITION_PROMPT="true"
+ZSH_THEME_NEWLINE="false"
 
 ZSH_THEME_RANDOM_CANDIDATES=()
 CASE_SENSITIVE="true"
 ENABLE_CORRECTION="false"
 COMPLETION_WAITING_DOTS="false"
-[ ! -f "$ZSHK/plugins/zsh-syntax-highlighting.zsh" ] && ZSH_THEME_HIGHLIGHT="fg=white,bold"
+#ZSH_THEME_HIGHLIGHT="fg=white,bold" # might be conflicting with syntax highlighting plugins
 
 # path
 

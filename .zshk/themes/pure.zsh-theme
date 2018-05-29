@@ -1,6 +1,6 @@
 # @author sindresorhus <https://github.com/sindresorhus/pure>
 # @author shkschneider
-# pure.zsh-theme (oh-my-zsh compatible)
+# themes/pure.zsh-theme (oh-my-zsh compatible)
 
 ZSHK=${${ZSHK:=$ZSH_CUSTOM}:=$ZSH}
 ZSH_THEME=${ZSH_THEME:-${$(basename -- "${(%):-%N}")%.*}}

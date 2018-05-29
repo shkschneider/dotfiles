@@ -1,6 +1,6 @@
 # @author shkschneider
 # @author mcornella <https://github.com/robbyrussell/oh-my-zsh/issues/5068#issuecomment-218780098>
-# fpwd
+# plugins/fpwd/fpwd
 
 function fpwd() {
     local _home="false"
