@@ -29,7 +29,7 @@ if [ -z "$PAGER" ] ; then
         (( $+commands[$_pager] )) && export PAGER=$_pager && break
     done ; unset _pager
 fi
-[ -z "$LC_ALL"] && export LC_ALL=en_US.UTF-8
+[ -z "$LC_ALL" ] && export LC_ALL=en_US.UTF-8
 [ -z "$LANG" ] && export LANG=en_US.UTF-8
 
 # keybindings

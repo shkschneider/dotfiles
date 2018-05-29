@@ -42,8 +42,12 @@ _prompt() {
 
     PROMPT+='%B%F{blue}'"$ZSH_THEME_PROMPT_PREFIX"
     if [ ${#PWD} -gt 80 ] ; then
-        # mcornella <https://github.com/robbyrussell/oh-my-zsh/issues/5068#issuecomment-218780098>
-        PROMPT+=${${:-/${(j:/:)${(M)${(s:/:)${(D)PWD:h}}#(|.)[^.]}}/${PWD:t}}//\/~/\~}
+        type fpwd &>/dev/null && {
+            PROMPT+=$(fpwd -f -h)
+        } || {
+            # mcornella <https://github.com/robbyrussell/oh-my-zsh/issues/5068#issuecomment-218780098>
+            PROMPT+=${${:-/${(j:/:)${(M)${(s:/:)${(D)PWD:h}}#(|.)[^.]}}/${PWD:t}}//\/~/\~}
+        }
     else
         PROMPT+='%~'
     fi

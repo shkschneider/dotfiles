@@ -1,6 +1,7 @@
 # @author shkschneider
 # shk.zsh-theme (oh-my-zsh compatible)
 
+ZSHK=${${ZSHK:=$ZSH_CUSTOM}:=$ZSH}
 ZSH_THEME=${ZSH_THEME:-${$(basename -- "${(%):-%N}")%.*}}
 ZSH_THEME_HIGHLIGHT=${ZSH_THEME_HIGHLIGHT:-}
 

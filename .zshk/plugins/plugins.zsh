@@ -20,4 +20,8 @@ if [ -f "$ZSHK/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ] ; 
     source "$ZSHK/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 fi
 
+if [ -f "$ZSHK/plugins/fpwd/fpwd.plugin.zsh" ] ; then
+    source "$ZSHK/plugins/fpwd/fpwd.plugin.zsh"
+fi
+
 # EOF
