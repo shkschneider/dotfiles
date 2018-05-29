@@ -1,14 +1,7 @@
 # @author shkchneider
 # /etc/zshrc
 
-[[ $- == *i* ]] || return
-[ -z "${(@)TERM:#dumb}" ] && return
-
-ZSH=${ZSH:-$HOME/.zsh}
-[ ! -d "$ZSH" ] && mkdir "$ZSH" &>/dev/null
-export ZSH
-ZSHRC="${(%):-%N}"
-export ZSHRC
+[[ -o interactive ]] || return
 
 # default prompts
 
@@ -17,18 +10,23 @@ RPROMPT='%~'
 
 # environment
 
-for _editor in emacs nano ; do
-    (( $+commands[$_editor] )) && export EDITOR=$_editor && break
-done ; unset _editor
-for _pager in most less more ; do
-    (( $+commands[$_pager] )) && export PAGER=$_pager && break
-done ; unset _pager
-[ "$PAGER" = "less" ] && {
-    export LESS='--RAW-CONTROL-CHARS'
-    [ -f "$HOME/.lessfilter" ] && export LESSOPEN='|~/.lessfilter %s'
-}
-export LC_ALL=en_US.UTF-8
-export LANG=en_US.UTF-8
+if [ -z "$EDITOR" ] ; then
+    for _editor in emacs nano ; do
+        (( $+commands[$_editor] )) && export EDITOR=$_editor && break
+    done ; unset _editor
+fi
+if [ -z "$PAGER" ] ; then
+    for _pager in most less more ; do
+        (( $+commands[$_pager] )) && export PAGER=$_pager && break
+    done ; unset _pager
+    [ "$PAGER" = "less" ] && {
+        export LESS='--RAW-CONTROL-CHARS'
+        [ -f "$HOME/.lessfilter" ] && export LESSOPEN='|~/.lessfilter %s'
+    }
+fi
+if [ -z "$LANG" ] ; then
+    eval "$(locale)"
+fi
 
 # keybindings
 

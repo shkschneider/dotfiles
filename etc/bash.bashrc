@@ -33,11 +33,10 @@ export MYSQL_HISTFILE=/dev/null
 [ -x "$(which most)" ] && export PAGER=most || { export PAGER=less ; export LESS='--RAW-CONTROL-CHARS' ; }
 [ -f "$HOME/.lessfilter" ] && export LESSOPEN='|~/.lessfilter %s'
 export LSCOLORS="cxfxbxdxbxegedabagacad"
-export LC_ALL=C
 
-# Aliases
-alias setenv=export
-alias unsetenv=unset
+if [ -z "$LANG" ] ; then
+    eval "$(locale)"
+fi
 
 # umask
 umask 022

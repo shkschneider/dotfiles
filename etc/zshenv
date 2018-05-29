@@ -1,7 +1,9 @@
 # @author shkschneider
 # /etc/zshenv
 
-export LC_ALL=C
+if [ -z "$LANG" ] ; then
+    eval "$(locale)"
+fi
 
 for _path in bin sbin ; do
     [ -d "$HOME/$_path" ] && path=( "$HOME/$_path" $path )
