@@ -26,8 +26,8 @@ fi
 # plugins
 
 if [ -d "$ZSHK/plugins" ] ; then
-    if [ -f "$ZSHK/plugins/plugins.zsh" ] ; then
-        source "$ZSHK/plugins/plugins.zsh"
+    if [ -f "$ZSHK/plugins/zshk.zsh" ] ; then
+        source "$ZSHK/plugins/zshk.zsh"
     else
         fpath=( "$ZSHK/plugins" $fpath )
         export FPATH

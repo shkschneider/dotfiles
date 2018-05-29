@@ -15,6 +15,7 @@ if [ -f "$ZSHK/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh" ] ; then
     bindkey '^ ' autosuggest-accept # ctrl-space
 fi
 
+# make sure to load zsh-syntax-highlighting AFTER zsh-autosuggestions
 if [ -f "$ZSHK/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ] ; then
     zle_highlight=()
     source "$ZSHK/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
