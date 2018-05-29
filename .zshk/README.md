@@ -24,15 +24,16 @@ Configurations loading
 | ~/.zprofile         |    4        +-------------+--------+
 | /etc/zshrc          |     5       |   3         |
 | ~/.zshrc            |      6      |    4        |
-| /etc/zlogin         |       7     +-------------+
++---------------------+-------------+-------------+
+| ~/.zshk/zshk.zsh    |           A               |
+| ~/.zshk/functions/* |            B              |
+| ~/.zshk/plugins/*   |             C             |
+| ~/.zshk/prompts/*   |              D            |
+| ~/.myzshrc          |               E           |
++---------------------+-------------+-------------+
+| /etc/zlogin         |       7     |
 | ~/.zlogin           |        8    |
 +---------------------+-------------+
-| ~/.zshrc            | A           |
-| ~/.zshk/init.zsh    |  B          |
-| ~/.zshk/functions/* |   C         |
-| ~/.zshk/plugins/*   |    D        |
-| ~/.zshk/prompts/*   |     E       |
-| ~/.myzshrc          |      F      |
 +---------------------+-------------+
 | ~/.zlogout          |         9   |
 | /etc/zlogout        |          10 |
