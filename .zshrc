@@ -4,8 +4,7 @@
 # you should not have to edit this file
 # use $HOME/.zshkrc
 
-[[ $- == *i* ]] || return
-[ -z "$TERM" ] && return
+[[ -o interactive ]] || return
 
 ZSHK=${ZSH:-$HOME/.zshk}
 export ZSHK
@@ -19,15 +18,19 @@ RPROMPT='%~'
 
 # environment
 
-for _editor in emacs nano ; do
-    (( $+commands[$_editor] )) && export EDITOR=$_editor && break
-done ; unset _editor
+if [ -z "$EDITOR" ] ; then
+    for _editor in emacs nano ; do
+        (( $+commands[$_editor] )) && export EDITOR=$_editor && break
+    done ; unset _editor
+fi
 [ -n "$EDITOR" ] && alias zshrc="$EDITOR $ZSHRC"
-for _pager in most less more ; do
-    (( $+commands[$_pager] )) && export PAGER=$_pager && break
-done ; unset _pager
-export LC_ALL=en_US.UTF-8
-export LANG=en_US.UTF-8
+if [ -z "$PAGER" ] ; then
+    for _pager in most less more ; do
+        (( $+commands[$_pager] )) && export PAGER=$_pager && break
+    done ; unset _pager
+fi
+[ -z "$LC_ALL"] && export LC_ALL=en_US.UTF-8
+[ -z "$LANG" ] && export LANG=en_US.UTF-8
 
 # keybindings
 
@@ -36,9 +39,13 @@ bindkey -e # emacs
 # custom configurations
 
 if [ -d "$ZSHK/" ] ; then
-    for _conf in $(find "$ZSHK/" -maxdepth 1 -type f -name "*.zsh" 2>/dev/null | sort) ; do
-        source $_conf
-    done ; unset _conf
+    if [ -f "$ZSHK/zshk.zsh" ]; then
+        source "$ZSHK/zshk.zsh"
+    else
+        for _conf in $(find "$ZSHK/" -maxdepth 1 -type f -name "*.zsh" 2>/dev/null | sort) ; do
+            source $_conf
+        done ; unset _conf
+    fi
 elif [ -f "$HOME/.myzshrc" ] ; then
     source "$HOME/.myzshrc"
 fi
