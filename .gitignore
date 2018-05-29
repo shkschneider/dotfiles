@@ -8,5 +8,7 @@
 .ssh/known_hosts
 .ssh/id_*
 .zshk/plugins/*/
+.zshk/themes/*/
+.zshk/prompts/prompt_pure_setup
 
 # EOF

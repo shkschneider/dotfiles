@@ -23,7 +23,7 @@ zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}" # completion colors
 autoload -Uz promptinit && promptinit
 prompt $ZSH_THEME &>/dev/null
 if [ $(prompt -c | wc -l) -le 1 ] ; then
-    echo "zshrc: failed to load prompt '$ZSH_THEME'" >&2
+    echo "zshk: failed to load prompt '$ZSH_THEME'" >&2
 fi
 
 # command-line

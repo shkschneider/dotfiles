@@ -60,9 +60,10 @@ type prompt &>/dev/null && {
         if [ "${#ZSH_THEME_RANDOM_CANDIDATES[@]}" -eq 0 ] ; then
             ZSH_THEME_RANDOM_CANDIDATES=()
             ZSH_THEME_RANDOM_CANDIDATES+=( $(print -l $(prompt -l 2>/dev/null | sed '1d')) )
-            [ -d "$ZSHK/themes" ] && ZSH_THEME_RANDOM_CANDIDATES+=( $(print -l $ZSHK/themes/*(:t:r)) )
+            [ -d "$ZSHK/prompts" ] && ZSH_THEME_RANDOM_CANDIDATES+=( $(print -l $(print -l "$ZSHK"/prompts/*(:t:r) | cut -d'_' -f2)) )
             ZSH_THEME_RANDOM_CANDIDATES=(${(u)ZSH_THEME_RANDOM_CANDIDATES[@]})
         fi
+        echo RANDOM=$ZSH_THEME_RANDOM_CANDIDATES
         export RANDOM_THEME=$ZSH_THEME_RANDOM_CANDIDATES[$RANDOM%$#ZSH_THEME_RANDOM_CANDIDATES+1]
         echo "zshk: random theme: '$RANDOM_THEME'" >&2
         prompt $RANDOM_THEME &>/dev/null
