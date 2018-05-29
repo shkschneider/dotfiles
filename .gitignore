@@ -7,6 +7,6 @@
 .emacs.d/auto-save-list/
 .ssh/known_hosts
 .ssh/id_*
-.zsh/plugins/*/
+.zshk/plugins/*/
 
 # EOF
