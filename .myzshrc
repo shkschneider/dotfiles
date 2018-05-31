@@ -1,5 +1,6 @@
+# shkschneider/zshk
 # @author shkschneider
-# .myzshrc
+# $HOME/.myzshrc
 
 MYZSHRC="${(%):-%N}"
 export MYSHRC
@@ -7,20 +8,32 @@ export MYSHRC
 # theme
 
 ZSH_THEME="shk"
-ZSH_THEME_RPROMPT_POSITION_PROMPT="true"
-ZSH_THEME_NEWLINE="false"
-
+if [ "$ZSH_THEME" = "shk" ] ; then
+    ZSH_THEME_RPROMPT_POSITION_PROMPT="true"
+    ZSH_THEME_NEWLINE="false"
+fi
 ZSH_THEME_RANDOM_CANDIDATES=()
 CASE_SENSITIVE="true"
 ENABLE_CORRECTION="false"
 COMPLETION_WAITING_DOTS="false"
 #ZSH_THEME_HIGHLIGHT="fg=white,bold" # might be conflicting with syntax highlighting plugins
 
+# plugins
+
+#enable: plugins+=( plugin-to-enable )
+plugins+=(
+    fpwd
+    command-not-found
+)
+#disable: plugins=( ${plugins#plugin-to-disable} )
+
 # path
 
-export ANDROID_HOME="/opt/android-sdk"
-[ -d "$ANDROID_HOME" ] && path+=( "$ANDROID_HOME/tools" "$ANDROID_HOME/platform-tools" )
-export PATH
+if [ -d "/opt/android-sdk" ] ; then
+    export ANDROID_HOME="/opt/android-sdk"
+    [ -d "$ANDROID_HOME" ] && path+=( "$ANDROID_HOME/tools" "$ANDROID_HOME/platform-tools" )
+    export PATH
+fi
 
 # aliases
 
