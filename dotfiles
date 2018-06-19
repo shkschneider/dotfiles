@@ -24,7 +24,7 @@ dotfiles() {
     fi
     if [ "$method" = "cp" ] ; then
         cp --recursive "$from" "$to" >/dev/null
-    elif ["$method" = "ln" ] ; then
+    elif [ "$method" = "ln" ] ; then
         ln --symbolic "$from" "$to" >/dev/null
     fi
 }
