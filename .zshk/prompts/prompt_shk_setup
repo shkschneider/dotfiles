@@ -1,5 +1,5 @@
 # @author shkschneider
-# prompts/prompt_shk_setup (vanilla zsh compatible)
+# prompts/prompt_shk_setup
 
 autoload -Uz promptinit || return
 
@@ -7,11 +7,12 @@ set -o prompt_percent # certain escape sequences that start with '%' are expande
 set -o prompt_subst # the prompt string is first subjected to parameter expansion, command substitution and arithmetic expansion
 export ZLE_RPROMPT_INDENT=1 # used to give the indentation between the right hand side of the right prompt in the line editor
 #                             -- if not set, the value 1 is used
+export PROMPT_EOL_MARK='' # can be used to customize how the end of partial lines are shown
 ZSH_THEME_RPROMPT_POSITION_PROMPT=${ZSH_THEME_RPROMPT_POSITION_PROMPT:-"true"}
 ZSH_THEME_NEWLINE=${ZSH_THEME_NEWLINE:-"false"}
 
 # user@machine /p/a/t/h                              exit_status jobs vcs:status
-# $
+# >
 
 ZSH_THEME_PROMPT_PREFIX=${ZSH_THEME_PROMPT_PREFIX:-""} #"%{⁅%G%}"
 ZSH_THEME_PROMPT_SPACER=${ZSH_THEME_PROMPT_SPACER:-"%{ %G%}"}
@@ -29,7 +30,7 @@ _title() {
 
 _prompt() {
     PROMPT=''
-    [ "$ZSH_THEME_NEWLINE" = "true" ] && PROMPT=$'\n'
+    [ "$ZSH_THEME_NEWLINE" = "true" ] && PROMPT=$'\n%{\r%}'
 
     local _user=''
     [ "$USER" != "$(logname)" ] && _user='%n'
@@ -55,11 +56,11 @@ _prompt() {
     fi
     PROMPT+="$ZSH_THEME_PROMPT_SUFFIX%f%b"
 
-    PROMPT+=$'\n'
+    PROMPT+=$'\n%{\r%}'
 
     [[ $(id -u) = 0 ]] && local _poweruser=true || local _poweruser=false
     $_poweruser && local _color="red" || local _color="white"
-    PROMPT+="%B%F{$color}"
+    PROMPT+="%B%F{$_color}"
     if [ -n "$ZSH_THEME_PROMPT_CHAR" ] ; then
         PROMPT+="$ZSH_THEME_PROMPT_CHAR"
         [[ "$ZSH_THEME_PROMPT_CHAR[-1]" != ' ' ]] && PROMPT+=' '
@@ -72,7 +73,7 @@ _prompt() {
     export PROMPT
 }
 
-source "${ZSHK:=$ZSH}/plugins/git-prompt/git-prompt.plugin.zsh" &>/dev/null
+[ -f "$ZSHK/plugins/git-prompt/git-prompt.plugin.zsh" ] && source "$ZSHK/plugins/git-prompt/git-prompt.plugin.zsh"
 type git_prompt_info &>/dev/null && ZSH_THEME_RPROMPT_GIT="true" || XSH_THEME_RPROMPT_GIT="false"
 
 _rprompt() {
