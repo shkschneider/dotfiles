@@ -102,7 +102,7 @@ s='this-is-a-.test' ; echo ${s##*.}
 ```
 remove_from_string:
 ```
-s='this-is-a-test'; r='test'; ${(@)s:#r}
+s='this-is-a-test'; echo ${s/test/}
 ```
 first_char:
 ```

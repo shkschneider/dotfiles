@@ -1,12 +1,12 @@
 # @author shkschneider
-# .zshrc (vanilla zsh)
+# $HOME/.zshrc
 
 # you should not have to edit this file
 # use $HOME/.zshkrc
 
 [[ -o interactive ]] || return
 
-ZSHK=${ZSH:-$HOME/.zshk}
+ZSHK="$HOME/.zshk"
 export ZSHK
 ZSHRC="${(%):-%N}"
 export ZSHRC
@@ -63,7 +63,6 @@ type prompt &>/dev/null && {
             [ -d "$ZSHK/prompts" ] && ZSH_THEME_RANDOM_CANDIDATES+=( $(print -l $(print -l "$ZSHK"/prompts/*(:t:r) | cut -d'_' -f2)) )
             ZSH_THEME_RANDOM_CANDIDATES=(${(u)ZSH_THEME_RANDOM_CANDIDATES[@]})
         fi
-        echo RANDOM=$ZSH_THEME_RANDOM_CANDIDATES
         export RANDOM_THEME=$ZSH_THEME_RANDOM_CANDIDATES[$RANDOM%$#ZSH_THEME_RANDOM_CANDIDATES+1]
         echo "zshk: random theme: '$RANDOM_THEME'" >&2
         prompt $RANDOM_THEME &>/dev/null

@@ -1,7 +1,10 @@
 #!/bin/sh
 
-method=""
+echo "+-----------------------+"
+echo "| shkschneider/dotfiles |"
+echo "+-----------------------+"
 
+method=""
 method=${method:-"cp"}
 echo -n "This will use $(echo $method | tr '[a-z]' '[A-Z]') method. Continue (Ctrl-C to abort)? "
 read x
@@ -29,10 +32,16 @@ dotfiles() {
     fi
 }
 
-command -v "git" 2>/dev/null && {
-    git clone https://github.com/zsh-users/zsh-autosuggestions $HOME/.zshk/plugins/zsh-autosuggestions
-    git clone https://github.com/zsh-users/zsh-syntax-highlighting $HOME/.zshk/plugins/zsh-syntax-highlighting
-    git clone https://github.com/zsh-users/zsh-completions $HOME/.zshk/plugins/zsh-completions
+command -v "git" >/dev/null 2>&1 && {
+    git clone --quiet https://github.com/Zearin/zsh-pure $HOME/.zshk/themes/pure
+    [ -L "$HOME/.zshk/prompts/prompt_pure_setup" ] && unlink $HOME/.zshk/prompts/prompt_pure_setup
+    [ ! -e "$HOME/.zshk/prompts/prompt_pure_setup" ] && ln --symbolic $HOME/.zshk/themes/pure/pure.zsh $HOME/.zshk/prompts/prompt_pure_setup
+    git clone --quiet https://github.com/zsh-users/zsh-autosuggestions $HOME/.zshk/plugins/zsh-autosuggestions
+    git clone --quiet https://github.com/zsh-users/zsh-syntax-highlighting $HOME/.zshk/plugins/zsh-syntax-highlighting
+    git clone --quiet https://github.com/zsh-users/zsh-completions $HOME/.zshk/plugins/zsh-completions
+    # mkdir -p "$ZSHK/plugins/command-not-found/"
+    # wget --quiet https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/plugins/command-not-found/command-not-found.plugin.zsh \
+    #      -O "$ZSHK/plugins/command-not-found/command-not-found.zsh" || exit 1
 }
 
 bak=$(mktemp --directory)
@@ -60,6 +69,11 @@ command -v "diff-so-fancy" 2>/dev/null && {
 }
 
 unset method
+
+echo "+---------------------------------------+"
+echo "| So Long, and Thanks for All the Fish. |"
+echo "+---------------------------------------+"
+
 exit 0
 
 # EOF

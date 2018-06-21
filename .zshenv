@@ -1,5 +1,5 @@
 # @author shkschneider
-# .zshenv
+# $HOME/.zshenv
 
 for _path in bin sbin ; do
     [ -d "$HOME/$_path" ] && path=( "$HOME/$_path" $path )

@@ -1,5 +1,5 @@
 # @author shkschneider
-# .zshk/zshk.zsh (oh-my-zsh compatible)
+# .zshk/zshk.zsh
 
 [[ -o interactive ]] || return
 
