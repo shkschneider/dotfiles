@@ -9,8 +9,6 @@ curl https://raw.github.com/shkschneider/dotfiles/master/dotfiles --output - | s
 
 ```
 git clone https://github.com/shkschneider/dotfiles.git
-# here you can edit 'dotfiles'
-# and modify the strategy from 'cp --recursive' to 'ln --symbolic'
 ./dotfiles
 ```
 
