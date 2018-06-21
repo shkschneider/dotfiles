@@ -4,11 +4,6 @@ echo "+-----------------------+"
 echo "| shkschneider/dotfiles |"
 echo "+-----------------------+"
 
-method=""
-method=${method:-"cp"}
-echo -n "This will use $(echo $method | tr '[a-z]' '[A-Z]') method. Continue (Ctrl-C to abort)? "
-read x
-
 cd $(readlink -f -- $(dirname -- $0))
 
 dotfiles() {
@@ -22,13 +17,9 @@ dotfiles() {
     fi
     if [ -L "$to" ] ; then
         unlink "$to" >/dev/null
-    else
-        rm -rf "$to" >/dev/null
-    fi
-    if [ "$method" = "cp" ] ; then
-        cp --recursive "$from" "$to" >/dev/null
-    elif [ "$method" = "ln" ] ; then
         ln --symbolic "$from" "$to" >/dev/null
+    else
+        cp --recursive "$from" "$to" >/dev/null
     fi
 }
 
@@ -67,8 +58,6 @@ command -v "diff-so-fancy" 2>/dev/null && {
     echo "diff-so-fancy"
     git config --global core.pager "diff-so-fancy | less --tabs=4 -RFX"
 }
-
-unset method
 
 echo "+---------------------------------------+"
 echo "| So Long, and Thanks for All the Fish. |"
