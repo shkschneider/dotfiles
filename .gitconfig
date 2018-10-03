@@ -92,7 +92,7 @@
 [push]
 	default = tracking
 
-[remote "origin"]
+[fetch]
 	prune = true
  
 [branch "master"]
