@@ -92,6 +92,9 @@
 [push]
 	default = tracking
 
+[remote "origin"]
+	prune = true
+ 
 [branch "master"]
 	remote = origin
 	merge = refs/heads/master
