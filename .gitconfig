@@ -18,6 +18,7 @@
 	a = add --update
 	t = "!git show-ref --tags | cut -c1-7,41,52-"
 	f = fetch --tags --prune
+	pr = pull --rebase
 
 	ls = "!git l --stat"
 	lg = log --decorate --graph --oneline
