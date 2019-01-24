@@ -3,9 +3,8 @@
 [core]
 	excludesfiles = ~/.gitignore
 	attributesfile = ~/.gitattributes
-	pager = diff-so-fancy | less --tabs=4 -RFX
-	#pager = most
-	#editor = nano
+	pager = most #diff-so-fancy | less --tabs=4 -RFX
+	editor = nano #emacs
 
 [user]
 	#name = User Name
@@ -64,6 +63,7 @@
 	authors = "!git log --format='%aN <%cE>' | sort -u"
 	rank = "!git shortlog --summary --numbered | sed -r 's;^\\s+;;g' | tr '\t' ' '"
 	info = "!cat `git rev-parse --git-dir`/config"
+	ancestor = "!f() { git merge-base $1 $2; }; f"
 
 	re = reset --hard
 	undo = reset --hard HEAD@{1}
