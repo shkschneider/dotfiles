@@ -62,8 +62,11 @@
 	#authors = shortlog -sne
 	authors = "!git log --format='%aN <%cE>' | sort -u"
 	rank = "!git shortlog --summary --numbered | sed -r 's;^\\s+;;g' | tr '\t' ' '"
+        born = rev-list --max-parents=0 HEAD
+	root = git rev-parse --show-toplevel
 	info = "!cat `git rev-parse --git-dir`/config"
 	ancestor = "!f() { git merge-base $1 $2; }; f"
+	separator = commit --allow-empty --no-verify -m '----------'
 
 	re = reset --hard
 	undo = reset --hard HEAD@{1}
