@@ -121,5 +121,8 @@
 [i18n]
 	commitEncoding = utf8
 	logOutputEncoding = utf8
+	
+[rerere]
+	enabled = true
 
 # EOF
