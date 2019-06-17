@@ -67,6 +67,7 @@
 	info = "!cat `git rev-parse --git-dir`/config"
 	ancestor = "!f() { git merge-base $1 $2; }; f"
 	separator = commit --allow-empty --no-verify -m '----------'
+	review = "!git review -y `git rev-parse --abbrev-ref HEAD`"
 
 	re = reset --hard
 	undo = reset --hard HEAD@{1}
@@ -75,6 +76,7 @@
 	unpull = reset --hard HEAD@{0}
 	unmerge = reset --hard HEAD@{0}
 	unrebase = reset --hard HEAD@{0}
+	conflicts = "!git status --short | grep '^UU'"
 
 	tgz = "!git archive --format=tar --prefix=`git rev-parse --short HEAD 2>/dev/null`/ HEAD | gzip > `git rev-parse --short HEAD 2>/dev/null`.tar.gz"
 	# curl https://raw.githubusercontent.com/davidfokkema/git-rewrite-author/master/git-rewrite-author | python - -w "Old <>" "New <>"
