@@ -76,7 +76,7 @@
 	unpull = reset --hard HEAD@{0}
 	unmerge = reset --hard HEAD@{0}
 	unrebase = reset --hard HEAD@{0}
-	conflicts = "!git status --short | grep '^UU'"
+	conflicts = "!git status --short | grep '^UU'" # cat .git/MERGE_MSG
 
 	tgz = "!git archive --format=tar --prefix=`git rev-parse --short HEAD 2>/dev/null`/ HEAD | gzip > `git rev-parse --short HEAD 2>/dev/null`.tar.gz"
 	# curl https://raw.githubusercontent.com/davidfokkema/git-rewrite-author/master/git-rewrite-author | python - -w "Old <>" "New <>"
