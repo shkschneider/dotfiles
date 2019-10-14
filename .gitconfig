@@ -36,9 +36,11 @@
 	co = checkout
 	br = branch
 	brv = branch -vv
+	ri = rebase --interactive
 	rc = rebase --continue
 	rs = rebase --skip
 	ra = rebase --abort
+	rw = "!f() { rebase --interactive $1^; }; f"
 
 	ss = show --stat
 	st = status --short --branch
