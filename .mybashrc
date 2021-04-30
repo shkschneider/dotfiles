@@ -23,5 +23,11 @@ alias bc="bc -q"
 alias rm='rm -v'
 alias ..="cd .."
 
+# trash-cli
+alias trash='trash-put'
+alias untrash='trash-restore'
+alias rm="echo Use trash or $(which rm)"
+
+#eval "$(starship init bash)"
 
 # EOF
