@@ -1,0 +1,23 @@
+# zprint
+
+zprint_info() {
+  print -P "%F{008}-- $@ --%f"
+}
+
+zprint_warning() {
+  print -P "%F{yellow}-- $@ --%f"
+}
+
+zprint_error() {
+  print -P "%F{red}-- $@ --%f"
+}
+
+local lvl=$1
+shift
+case $lvl in
+  w) zprint_warning $@ ;;
+  e) zprint_error $@ ;;
+  *) zprint_info $@ ;;
+esac
+
+# EOF

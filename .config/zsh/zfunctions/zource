@@ -1,0 +1,78 @@
+# zource
+#
+# zource <file|dir|url|github[@rev]> [files-to-source]
+#
+
+[[ $# -gt 0 ]] || return 1
+
+[ -d "$ZCONFDIR/src" ] || mkdir -p "$ZCONFDIR/src"
+
+function _zource_file() {
+  local src="$1"
+  [[ $f == *.zsh ]] || return 1
+  [ -f "$src" ] || return 1
+  local dest="$ZCONFDIR/src/${src:t}"
+  [ -f "$dest" ] && return 0
+  cp "$src" "$dest" 2>/dev/null >&2
+}
+
+function _zource_dir() {
+  local src="$1"
+  [ -d "$src" ] || return 1
+  for file in $src/*.zsh ; do
+    source "$file"
+  done
+}
+
+function _zource_url() {
+  local src="$1"
+  local dest="$ZCONFDIR/src/${src:t}"
+  [ -f "$dest" ] && return 0
+  zonline "$src" || return 1
+  zcommand wget || return 1
+  wget "$src" -O "$dest" 2>/dev/null >&2
+}
+
+function _zource_git() {
+  local src="$1"
+  local rev="$2"
+  local dest="$ZCONFDIR/src/${src:t}"
+  [ -d "$dest" ] && return 0
+  zonline "$src" || return 1
+  zcommand git || return 1
+  if [ -n "$rev" ] ; then
+    git clone --branch "$rev" --single-branch "$src" "$dest" 2>/dev/null >&2
+    git --git-dir="$dest/.git" switch -c "$rev" 2>/dev/null >&2
+  else
+    git clone --single-branch "$src" "$dest" 2>/dev/null >&2
+  fi
+}
+
+local src="$1" ; shift
+local name="${${src%@*}:t}"
+if [ ! -e "$ZCONFDIR/src/$name" ] ; then
+  echo -n "${ZCONFDIR/$HOME/~}/src/$name… "
+  case $src in
+    *.git) _zource_git $(echo "$src" | tr '@' ' ') ;;
+    http*) _zource_url "$src" ;;
+    */*) _zource_git $(echo "https://github.com/$src" | tr '@' ' ') ;;
+    *) _zource_file "$src" ;;
+  esac
+  [ $? -eq 0 ] && echo "✔" || echo "✖"
+fi
+if [ -f "$ZCONFDIR/src/$name" ] ; then
+  if [[ $name == *.zsh ]] ; then
+    source "$ZCONFDIR/src/$name"
+  fi
+elif [ -d "$ZCONFDIR/src/$name" ] ; then
+  for file in "$name.plugin.zsh" "$name.zsh" "init.zsh" ; do
+    [ -f "$ZCONFDIR/src/$name/$file" ] && source "$ZCONFDIR/src/$name/$file" && break
+  done
+  for file in $@ ; do
+    source "$ZCONFDIR/src/$name/$file"
+  done
+else
+  return $?
+fi
+
+# EOF

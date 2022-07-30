@@ -1,0 +1,5 @@
+# zpath
+
+print -l $path
+
+# EOF

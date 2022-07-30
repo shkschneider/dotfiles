@@ -1,0 +1,19 @@
+# ~/.config/sh/shrc
+
+export LANG=fr_FR.UTF-8
+
+export SHCONFDIR=${SHCONFDIR:-$HOME/.config/sh}
+
+export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
+
+[ -x "$HOME/bin/bin" ] || {
+  bin() {
+    type $@ &>/dev/null
+  }
+}
+
+for rc in $SHCONFDIR/*.sh ; do
+  source $rc
+done
+
+# EOF

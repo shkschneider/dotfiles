@@ -1,0 +1,22 @@
+# gh.zsh
+
+function gh() {
+  bin git || return 1
+  local user=$(echo "$1" | cut -d'@' -f1 | cut -d'/' -f1)
+  local repo=$(echo "$1" | cut -d'@' -f1 | cut -d'/' -f2)
+  local rev; [[ $1 =~ .*@.* ]] && rev=$(echo "$1" | cut -d '@' -f2)
+  local url="https://github.com/$user/$repo.git"
+  online "$url" || { echo "invalid repository: '$user/$repo'" >&2 ; return 2 }
+  local name="${url:t:r}"
+  local dest="${2:-$name}"
+  [ -d "${dest:h}" ] || mkdir -p "${dest:h}" || { echo "invalid destination: '${dest:h}'" >&2 ; return 3 }
+  [ ! -e "$dest" ] || { echo "invalid destination: '$dest'" >&2 ; return 3 }
+  if [ -n "$rev" ] ; then
+    git clone --branch "$rev" --single-branch "$url" "$dest"
+    git --git-dir="$dest/.git" switch -c "$rev"
+  else
+    git clone --single-branch "$url" "$dest"
+  fi
+}
+
+# EOF

@@ -4,11 +4,17 @@
 *~
 \#*\#
 
-.emacs.d/auto-save-list/
-.ssh/known_hosts
+.config/backup
+.config/emacs/.backup/
+.config/emacs/auto-save-list/
+.config/zsh/.cache/
+.config/zsh/.completion
+.config/zsh/.history
+.config/zsh/.zcompdump
+.config/zsh/.zsh_history 
+.config/zsh/.zsh_sessions/
+.config/zsh/src/
 .ssh/id_*
-.zshk/plugins/*/
-.zshk/themes/*/
-.zshk/prompts/prompt_pure_setup
+.ssh/known_hosts
 
 # EOF

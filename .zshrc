@@ -1,79 +1,41 @@
-# @author shkschneider
-# $HOME/.zshrc
+# .zshrc
 
-# you should not have to edit this file
-# use $HOME/.zshkrc
+Z_CHPWD=1
+Z_COLORS=1
+Z_HIGHLIGHT=0
+Z_NOTIFY_THRESHOLD=1 # s
+Z_NOTIFY_IGNORE+=(emacs less most diff-so-fancy)
+Z_NOTIFY_SUCCESS=0
+Z_TITLE=1
+YSU_IGNORED_ALIASES=(h hh)
+YSU_IGNORED_GLOBAL_ALIASES=(h hh)
+source "${ZCONFDIR:-$HOME/.config/zsh}/zshrc"
 
-[[ -o interactive ]] || return
+alias gradlew='./gradlew'
+alias review='git pull --rebase && git review -y'
+case $OSTYPE in
+  darwin*)
+    #brew install hyper && hyper i hyper-one-dark
+    alias afk='pmset displaysleepnow' # only works with Security&Privacy>General>RequirePassword=Immediately
+    alias battery='pmset -g batt | grep -Eo "\d+%"'
+    ;;
+  freebsd*)
+    alias battery='sysctl -n hw.acpi.battery.life'
+    ;;
+  linux*)
+    # TODO acpi / acpitool
+    ;;
+esac
+bin ugrep && {
+  #alias ugrep='ugrep --sort=rchanged --files-with-matches --binary-files=without-match'
+  #alias egrep='ugrep -E'
+  alias qgrep='ugrep -Q' # query
+  alias scripts="ugrep --file-magic='#!' ''"
+  # TODO export GREP_COLORS=""
+}
 
-ZSHK="$HOME/.zshk"
-export ZSHK
-ZSHRC="${(%):-%N}"
-export ZSHRC
-
-# default prompts
-
-PROMPT='%n@%m %# '
-RPROMPT='%~'
-
-# environment
-
-if [ -z "$EDITOR" ] ; then
-    for _editor in emacs nano ; do
-        (( $+commands[$_editor] )) && export EDITOR=$_editor && break
-    done ; unset _editor
-fi
-[ -n "$EDITOR" ] && alias zshrc="$EDITOR $ZSHRC"
-if [ -z "$PAGER" ] ; then
-    for _pager in most less more ; do
-        (( $+commands[$_pager] )) && export PAGER=$_pager && break
-    done ; unset _pager
-fi
-if [ -z "$LANG" ] ; then
-    eval "$(locale)"
-fi
-
-# keybindings
-
-bindkey -e # emacs
-
-# custom configurations
-
-if [ -d "$ZSHK/" ] ; then
-    if [ -f "$ZSHK/zshk.zsh" ]; then
-        source "$ZSHK/zshk.zsh"
-    else
-        for _conf in $(find "$ZSHK/" -maxdepth 1 -type f -name "*.zsh" 2>/dev/null | sort) ; do
-            source $_conf
-        done ; unset _conf
-    fi
-elif [ -f "$HOME/.myzshrc" ] ; then
-    source "$HOME/.myzshrc"
-fi
-
-# do not edit below this line
-
-autoload -Uz promptinit && promptinit
-type prompt &>/dev/null && {
-    if [ -z "$ZSH_THEME" ] ; then
-        export ZSH_THEME="random"
-        if [ "${#ZSH_THEME_RANDOM_CANDIDATES[@]}" -eq 0 ] ; then
-            ZSH_THEME_RANDOM_CANDIDATES=()
-            ZSH_THEME_RANDOM_CANDIDATES+=( $(print -l $(prompt -l 2>/dev/null | sed '1d')) )
-            [ -d "$ZSHK/prompts" ] && ZSH_THEME_RANDOM_CANDIDATES+=( $(print -l $(print -l "$ZSHK"/prompts/*(:t:r) | cut -d'_' -f2)) )
-            ZSH_THEME_RANDOM_CANDIDATES=(${(u)ZSH_THEME_RANDOM_CANDIDATES[@]})
-        fi
-        export RANDOM_THEME=$ZSH_THEME_RANDOM_CANDIDATES[$RANDOM%$#ZSH_THEME_RANDOM_CANDIDATES+1]
-        echo "zshk: random theme: '$RANDOM_THEME'" >&2
-        prompt $RANDOM_THEME &>/dev/null
-        [ $(prompt -c | sed '1d' | wc -l) -ne 1 ] && echo "zshk: failed to load prompt '$RANDOM_THEME'" >&2
-    elif [ -f "$ZSHK/themes/$ZSH_THEME.zsh-theme" ] ; then
-        source "$ZSHK/themes/$ZSH_THEME.zsh-theme"
-    else
-        prompt $ZSH_THEME &>/dev/null
-        [ $(prompt -c | sed '1d' | wc -l) -ne 1 ] && echo "zshk: failed to load prompt '$ZSH_THEME'" >&2
-    fi
-    return $ZSH_THEME
-} || echo "zshk: failed to load prompt" >&2
+export JAVA_HOME="/Applications/Android Studio.app/Contents/jre/Contents/Home"
+[ -d "$JAVA_HOME/bin" ] && path=("$JAVA_HOME/bin" $path)
+path=($HOME/Library/Android/sdk/platform-tools $path)
 
 # EOF

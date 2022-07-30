@@ -1,6 +1,0 @@
-# @author shkschneider
-# shell
-
-echo $(basename -- $(ps -o cmd -h $$))
-
-# EOF

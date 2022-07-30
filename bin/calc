@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+[ -z "$@" ] && return 1
+bin bc || return 1
+bc -l <<< $@
+
+# EOF
+

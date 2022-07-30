@@ -1,0 +1,63 @@
+# zshrc
+# ! source me
+
+ZDOTDIR=${ZDOTDIR:-$HOME}
+ZCONFDIR=${ZCONFDIR:-$HOME/.config/zsh}
+
+bindkey -e # emacs
+[ -z "$LANG" ] && eval "$(locale)"
+[[ -o interactive ]] || export HISTFILE=/dev/null
+export EDITOR=${EDITOR:-nano}
+#export VISUAL=$EDITOR
+
+# https://zsh.sourceforge.io/Doc/Release/Options.html
+
+unsetopt beep list_beep hist_beep # stfu
+unsetopt flow_control # suspend
+unsetopt no_match
+setopt clobber # override with redirects
+setopt ignore_eof ; bindkey -r '^D' # exit
+unsetopt rm_star_silent
+setopt case_glob case_match # case-sensitives
+setopt glob_complete # expand globbing
+setopt interactive_comments
+
+# path
+
+typeset -U path # no duplicates
+setopt hash_executables_only
+path=($HOME/bin $HOME/sbin $HOME/.local/bin $HOME/.local/sbin $path)
+
+[ -x "$HOME/bin/bin" ] || {
+  bin() {
+    type $@ &>/dev/null
+  }
+}
+
+# fpath
+
+typeset -U fpath # no duplicates
+if [ -d $ZCONFDIR/zfunctions ] ; then
+  fpath=($ZCONFDIR/zfunctions $fpath)
+  for file in $ZCONFDIR/zfunctions/*(.N) ; do
+    autoload -Uz ${file:t:r}
+  done
+fi
+
+# sources
+
+for rc in $ZCONFDIR/functions/*.zsh(.N) ; do
+  source $rc
+done
+
+[ -f $ZDOTDIR/.zshenv.local ] && source $ZDOTDIR/.zshenv.local
+
+for rc in $ZCONFDIR/*.zsh(.N) ; do
+  source $rc
+done
+
+for rc in $ZDOTDIR/.zshrc.*(.N) ; do
+  source $rc
+done
+
+# EOF

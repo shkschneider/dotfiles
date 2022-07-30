@@ -5,64 +5,58 @@ echo "| shkschneider/dotfiles |"
 echo "+-----------------------+"
 
 cd $(readlink -f -- $(dirname -- $0))
+bak="$HOME/.config/backup"
+[ -d "$bak" ] || mkdir -p "$bak"
+#tmp=$(mktemp --directory)
+if [ $# -eq 0 ] ; then
+  # https://unix.stackexchange.com/a/137571
+  # https://unix.stackexchange.com/a/358286
+  set -- $(git ls-files -X .gitignore | grep -v '.git' | grep -v '*.md' | grep -v dotfiles)
+fi
+echo $bak/
+echo
 
-dotfiles() {
-    base="$1"
-    from="$2"
-    to="$3"
-    bak="$4"
-    echo "$base: $from -> $to ($bak)"
-    if [ -e "$to" ] ; then
-        cp --dereference --recursive "$to" "$bak/$base" >/dev/null
-    fi
-    if [ -L "$to" ] ; then
-        unlink "$to" >/dev/null
-        ln --symbolic "$from" "$to" >/dev/null
+i=0
+e=0
+for dotfile in "$@" ; do
+  i=$((i + 1))
+  printf '[%02d/%02d] %s … ' $i $# "$(tput rev)$dotfile$(tput sgr0)"
+  if [ ! -e "./$dotfile" ] ; then
+    printf "$(tput setaf 1)missing$(tput sgr0) ✖\n"
+    e=$((e + 1))
+    continue
+  fi
+  #dotfile=$(basename -- $dotfile)
+  mkdir -p "$(dirname "$HOME/$dotfile")" &>/dev/null
+  if [ -e "$HOME/$dotfile" ] ; then
+    printf 'exists '
+    if [ -L "$HOME/$dotfile" ] ; then
+      printf 'link '
+      if [ "$(readlink -f $HOME/$dotfile)" == "$PWD/$dotfile" ] ; then
+        printf "$(tput setaf 2)untouched$(tput sgr0) ✔\n"
+        continue
+      else
+        printf "$(tput setaf 3)conflict$(tput sgr0) "
+        printf "$(tput setaf 4)saved$(tput sgr0) "
+        echo mv -f "$HOME/$dotfile" $bak/ 2>/dev/null >&2
+      fi
     else
-        cp --recursive "$from" "$to" >/dev/null
+      echo mv -f "$HOME/$dotfile" $bak/ 2>/dev/null >&2
+      printf "$(tput setaf 4)saved$(tput sgr0) "
     fi
-}
-
-command -v "git" >/dev/null 2>&1 && {
-    git clone --quiet https://github.com/Zearin/zsh-pure $HOME/.zshk/themes/pure
-    [ -L "$HOME/.zshk/prompts/prompt_pure_setup" ] && unlink $HOME/.zshk/prompts/prompt_pure_setup
-    [ ! -e "$HOME/.zshk/prompts/prompt_pure_setup" ] && ln --symbolic $HOME/.zshk/themes/pure/pure.zsh $HOME/.zshk/prompts/prompt_pure_setup
-    git clone --quiet https://github.com/zsh-users/zsh-autosuggestions $HOME/.zshk/plugins/zsh-autosuggestions
-    git clone --quiet https://github.com/zsh-users/zsh-syntax-highlighting $HOME/.zshk/plugins/zsh-syntax-highlighting
-    git clone --quiet https://github.com/zsh-users/zsh-completions $HOME/.zshk/plugins/zsh-completions
-    # mkdir -p "$ZSHK/plugins/command-not-found/"
-    # wget --quiet https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/plugins/command-not-found/command-not-found.plugin.zsh \
-    #      -O "$ZSHK/plugins/command-not-found/command-not-found.zsh" || exit 1
-}
-
-bak=$(mktemp --directory)
-for p in $(find ./ -maxdepth 1 ! -path ./ -name '.*' ! -name '.git' ! -name '.gitignore') ; do
-    dotfiles "$(basename -- "$p")" "$(readlink -f -- "$p")" "$HOME/$(basename -- "$p")" "$bak"
+  else
+    printf "$(tput setaf 3)missing$(tput sgr0) "
+  fi
+  echo ln -s "$PWD/$dotfile" "$HOME/$dotfile" >/dev/null
+  printf "$(tput setaf 2)linked$(tput sgr0) ✔\n"
 done
 
-if [ $(id -u) -eq 0 ] ; then
-    bak=$(mktemp --directory)
-    for d in $(find ./ -maxdepth 1 -type d ! -path './' ! -name '.*') ; do
-        for p in $(find $d -maxdepth 1 ! -path ./etc/ 2>/dev/null) ; do
-            dotfiles "$(basename -- "$p")" "$(readlink -f -- "$p")" "/etc/$(basename -- "$p")" "$bak"
-        done
-    done
-    command -v "npm" 2>/dev/null && {
-        echo "npm: diff-so-fancy"
-        npm install --global diff-so-fancy >/dev/null
-    }
-fi
-
-git config --global color.ui auto
-command -v "diff-so-fancy" 2>/dev/null && {
-    echo "diff-so-fancy"
-    git config --global core.pager "diff-so-fancy | less --tabs=4 -RFX"
-}
-
+echo
+echo $bak/
 echo "+---------------------------------------+"
 echo "| So Long, and Thanks for All the Fish. |"
 echo "+---------------------------------------+"
 
-exit 0
+exit $e
 
 # EOF

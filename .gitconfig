@@ -1,132 +1,123 @@
 # ~/.gitconfig
 
 [core]
-	excludesfiles = ~/.gitignore
-	attributesfile = ~/.gitattributes
-	pager = most #diff-so-fancy | less --tabs=4 -RFX
-	editor = nano #emacs
+excludesfiles = ~/.gitignore
+attributesfile = ~/.gitattributes
+pager = most #diff-so-fancy | less --tabs=4 -RFX
+editor = nano #emacs
 
 [user]
-	#name = User Name
-	#email = useremail
-	#signkey = signkey
+#name = User Name
+#email = useremail
+#signkey = signkey
 
 [alias]
-	s = show #--name-status
-	l = log --tags --graph --color --pretty=format:"%C(yellow)%H%C(green)%d%C(reset)%n%x20%cd%n%x20%cn%x20(%ce)%n%x20%s%n"
-	a = add --update
-	t = "!git show-ref --tags | cut -c1-7,41,52-"
-	f = fetch --tags --prune
-	pr = pull --rebase
+s = show #--name-status
+l = log --tags --graph --color --pretty=format:"%C(yellow)%H%C(green)%d%C(reset)%n%x20%cd%n%x20%cn%x20(%ce)%n%x20%s%n"
+a = add --update
+t = "!git show-ref --tags | cut -c1-7,41,52-"
+f = fetch --tags --prune
+pr = pull --rebase
 
-	ls = "!git l --stat"
-	lg = log --decorate --graph --oneline
-	lga = "!git lg --all"
-	lgm = "!git lg --author=\"`git config user.name`\""
+ls = "!git l --stat"
+lg = log --decorate --graph --oneline
+lga = "!git lg --all"
+lgm = "!git lg --author=\"`git config user.name`\""
 
-	ci = commit --no-status
-	ca = "!git ci --all"
-	ar = "!git a && git ls-files --deleted -z | xargs -0 git rm 2>/dev/null"
-	reci = "!git ci --amend"
-	recia = "!git ci --amend --reset-author"
-	cp = cherry-pick --no-commit
-	cpc = "!git cp --continue"
-	cpa = "!git cp --abort"
+ci = commit --no-status
+ca = "!git ci --all"
+ar = "!git a && git ls-files --deleted -z | xargs -0 git rm 2>/dev/null"
+reci = "!git ci --amend"
+recia = "!git ci --amend --reset-author"
+cp = cherry-pick --no-commit
+cpc = "!git cp --continue"
+cpa = "!git cp --abort"
 
-	co = checkout
-	br = branch
-	brv = branch -vv
-	ri = rebase --interactive
-	rc = rebase --continue
-	rs = rebase --skip
-	ra = rebase --abort
-	rw = "!f() { rebase --interactive $1^; }; f"
+co = checkout
+br = branch
+brv = branch -vv
+ri = rebase --interactive
+rc = rebase --continue
+rs = rebase --skip
+ra = rebase --abort
+rw = "!f() { rebase --interactive $1^; }; f"
 
-	ss = show --stat
-	st = status --short --branch
-	sm = submodule
-	sf = show --name-status
-	cat = "!git show $1:$2"
+ss = show --stat
+st = status --short --branch
+sm = submodule
+sf = show --name-status
+cat = "!git show $1:$2"
 
-	df = diff --patch-with-stat
-	dc = "!git df --cached"
-	ds = diff --stat
-	dfw = diff --word-diff
-	dcw = "!git dfw --cached"
+df = diff --patch-with-stat
+dc = "!git df --cached"
+ds = diff --stat
+dfw = diff --word-diff
+dcw = "!git dfw --cached"
 
-	parent = "!git rev-parse --abbrev-ref @{u} 2>/dev/null"
-	track = "!f() { git branch -u $1/$2; }; f"
-	untrack = branch --unset-upstream
-	forget = "!f() { git push $1 --delete $2; }; f"
-	squash = rebase -i HEAD~2
+parent = "!git rev-parse --abbrev-ref @{u} 2>/dev/null"
+track = "!f() { git branch -u $1/$2; }; f"
+untrack = branch --unset-upstream
+forget = "!f() { git push $1 --delete $2; }; f"
+squash = rebase -i HEAD~2
 
-	cl = clean -d --force
-	#authors = shortlog -sne
-	authors = "!git log --format='%aN <%cE>' | sort -u"
-	rank = "!git shortlog --summary --numbered | sed -r 's;^\\s+;;g' | tr '\t' ' '"
-        born = rev-list --max-parents=0 HEAD
-	root = git rev-parse --show-toplevel
-	info = "!cat `git rev-parse --git-dir`/config"
-	ancestor = "!f() { git merge-base $1 $2; }; f"
-	separator = commit --allow-empty --no-verify -m '----------'
-	review = "!git review -y `git rev-parse --abbrev-ref HEAD`"
+cl = clean -d --force
+#authors = shortlog -sne
+authors = "!git log --format='%aN <%cE>' | sort -u"
+rank = "!git shortlog --summary --numbered | sed -r 's;^\\s+;;g' | tr '\t' ' '"
+born = rev-list --max-parents=0 HEAD
+root = git rev-parse --show-toplevel
+info = "!cat `git rev-parse --git-dir`/config"
+ancestor = "!f() { git merge-base $1 $2; }; f"
+separator = commit --allow-empty --no-verify -m '----------'
+review = "!git review -y `git rev-parse --abbrev-ref HEAD`"
 
-	re = reset --hard
-	undo = reset --hard HEAD@{1}
-	unadd = reset
-	uncommit = reset --soft HEAD^
-	unpull = reset --hard HEAD@{0}
-	unmerge = reset --hard HEAD@{0}
-	unrebase = reset --hard HEAD@{0}
-	conflicts = "!git status --short | grep '^UU'" # cat .git/MERGE_MSG
+re = reset --hard
+undo = reset --hard HEAD@{1}
+unadd = reset
+uncommit = reset --soft HEAD^
+unpull = reset --hard HEAD@{0}
+unmerge = reset --hard HEAD@{0}
+unrebase = reset --hard HEAD@{0}
+conflicts = "!git status --short | grep '^UU'" # cat .git/MERGE_MSG
 
-	tgz = "!git archive --format=tar --prefix=`git rev-parse --short HEAD 2>/dev/null`/ HEAD | gzip > `git rev-parse --short HEAD 2>/dev/null`.tar.gz"
-	# curl https://raw.githubusercontent.com/davidfokkema/git-rewrite-author/master/git-rewrite-author | python - -w "Old <>" "New <>"
-	large1 = "!git rev-list --all --objects | awk '{print $1}' | git cat-file --batch-check | sort -k3nr | head -10"
-	large2 = "!git rev-list --all --objects | grep $1 #"
+tgz = "!git archive --format=tar --prefix=`git rev-parse --short HEAD 2>/dev/null`/ HEAD | gzip > `git rev-parse --short HEAD 2>/dev/null`.tar.gz"
+# curl https://raw.githubusercontent.com/davidfokkema/git-rewrite-author/master/git-rewrite-author | python - -w "Old <>" "New <>"
+large1 = "!git rev-list --all --objects | awk '{print $1}' | git cat-file --batch-check | sort -k3nr | head -10"
+large2 = "!git rev-list --all --objects | grep $1 #"
+
+[include]
+path = ~/.gitconfig.local
 
 [apply]
-	whitespace = fix
+whitespace = fix
 
 [color]
-	ui = auto
+ui = auto
 
 [merge]
-	log = true
+log = true
 
 [pull]
-	default = upstream
+default = upstream
 
 [push]
-	default = tracking
+default = tracking
 
 [fetch]
-	prune = true
- 
-[branch "master"]
-	remote = origin
-	merge = refs/heads/master
-	rebase = true
-	autosetuprebase = always
-
-[branch "dev"]
-	remote = origin
-	merge = refs/heads/dev
-	rebase = true
-	autosetuprebase = always
+prune = true
 
 [advice]
-	pushNonFastForward = false
-	statusHints = false
+pushNonFastForward = false
+statusHints = false
 
 [credential]
-	helper = cache --timeout=43200 # 12h
+helper = cache --timeout=43200 # 12h
 
 [i18n]
-	commitEncoding = utf8
-	logOutputEncoding = utf8
-	
+commitEncoding = utf8
+logOutputEncoding = utf8
+
 [rerere]
-	enabled = true
+enabled = true
 
 # EOF

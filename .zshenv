@@ -1,12 +1,19 @@
-# @author shkschneider
-# $HOME/.zshenv
+# .zshenv
 
-for _path in bin sbin ; do
-    [ -d "$HOME/$_path" ] && path=( "$HOME/$_path" $path )
-done ; unset _path
-export PATH
+[ -z "$LANG" ] && eval "$(locale)"
 
-function _rehash { rehash; reply=() }
-compctl -C -c + -K _rehash + -c # rehash upon command-not-found
+case $OSTYPE in
+  linux*)
+    skip_global_compinit=1 # ubuntu
+    ;;
+  darwin*)
+    CLICOLOR=1
+    SHELL_SESSIONS_DISABLE=1
+    HOMEBREW_NO_ANALYTICS=1
+    ;;
+esac
+
+PROMPT='%F{green}%n%f@%F{magenta}%m%f %F{blue}%B%~%b%f %# '
+RPROMPT='[%F{yellow}%?%f]'
 
 # EOF
