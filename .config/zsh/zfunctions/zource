@@ -1,4 +1,4 @@
-# zource
+# ~/.config/zsh/zfunctions/zource
 #
 # zource <file|dir|url|github[@rev]> [files-to-source]
 #
@@ -28,8 +28,8 @@ function _zource_url() {
   local src="$1"
   local dest="$ZCONFDIR/src/${src:t}"
   [ -f "$dest" ] && return 0
-  zonline "$src" || return 1
-  zcommand wget || return 1
+  online "$src" || return 1
+  bin wget || return 1
   wget "$src" -O "$dest" 2>/dev/null >&2
 }
 
@@ -38,8 +38,8 @@ function _zource_git() {
   local rev="$2"
   local dest="$ZCONFDIR/src/${src:t}"
   [ -d "$dest" ] && return 0
-  zonline "$src" || return 1
-  zcommand git || return 1
+  online "$src" || return 1
+  bin git || return 1
   if [ -n "$rev" ] ; then
     git clone --branch "$rev" --single-branch "$src" "$dest" 2>/dev/null >&2
     git --git-dir="$dest/.git" switch -c "$rev" 2>/dev/null >&2

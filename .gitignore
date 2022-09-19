@@ -4,17 +4,4 @@
 *~
 \#*\#
 
-.config/backup
-.config/emacs/.backup/
-.config/emacs/auto-save-list/
-.config/zsh/.cache/
-.config/zsh/.completion
-.config/zsh/.history
-.config/zsh/.zcompdump
-.config/zsh/.zsh_history 
-.config/zsh/.zsh_sessions/
-.config/zsh/src/
-.ssh/id_*
-.ssh/known_hosts
-
 # EOF

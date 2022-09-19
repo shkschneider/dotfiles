@@ -24,10 +24,10 @@ Loading
 +--------------------------+---+---+---+
 | /etc/bash.bashrc         |   | * |   |
 | /etc/profile             | * |   |   |
-| ~/.bash_profile          |(1)|   |   |
-| ~/.bash_login            |(2)|   |   |
-| ~/.profile               |(3)|   |   |
-| ~/.bashrc                |(4)| * |   |
+| ~/.bash_profile          |(*)|   |   |
+| ~/.bash_login            |(*)|   |   |
+| ~/.profile               |(*)|   |   |
+| ~/.bashrc                | ? | * |   |
 | $BASHCONFDIR/bashrc      | * | * |   |
 |   $BASHCONFDIR/*.bash    | * | * |   |
 |   ~/.bashrc.*            | * | * |   |
@@ -35,7 +35,5 @@ Loading
 | ~/.bash_logout           | * | * | * |
 +--------------------------+---+---+---+
 
-> If you use .bash_profile or .bash_login, source bashrc from there!
-
-* 1/2/3: first one found only
-* 4: not automatic in login
+> Bash will source the first of .bash_profile, .bash_login or .profile.
+> Bash won't source .bashrc automatically upon login.

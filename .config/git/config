@@ -1,0 +1,49 @@
+# ~/.config/git/config
+
+[core]
+# case sensitive
+ignorecase = false
+excludesfiles = ~/.gitignore
+attributesfile = ~/.gitattributes
+pager = less -FX #diff-so-fancy | less --tabs=4 -RFX
+editor = nano #emacs
+
+[include]
+path = ~/.config/git/aliases
+path = ~/.gitconfig.local
+
+[color]
+ui = auto
+
+[i18n]
+commitEncoding = utf8
+logOutputEncoding = utf8
+
+[apply]
+# auto-fixes issues with whitespaces before applying a patch
+whitespace = fix
+
+[merge]
+# displays log in merge commit buffer
+log = true
+# non-fastforward by default
+ff = false
+
+[advice]
+pushNonFastForward = false
+statusHints = false
+
+[pull]
+default = upstream
+
+[push]
+default = tracking
+
+[fetch]
+prune = true
+
+[rerere]
+# reuse recorded resolution of conflicted merges
+enabled = true
+
+# EOF

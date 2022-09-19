@@ -2,8 +2,9 @@
 # ! after aliases
 # ! after colors
 
-bin exa || { zprint w 'missing exa' ; return }
-[[ $Z_COLORS -ne 0 ]] || return
+[[ "${Z_COLORS:-}" == true ]] || return
+
+bin exa || { zlog w 'exa: missing exa' >&2 ; return }
 
 # https://the.exa.website/docs/colour-themes
 export EXA_COLORS="$LS_COLORS:\

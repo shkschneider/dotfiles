@@ -4,14 +4,15 @@ echo "+-----------------------+"
 echo "| shkschneider/dotfiles |"
 echo "+-----------------------+"
 
+# TODO move to .local along with backup
+
 cd $(readlink -f -- $(dirname -- $0))
 bak="$HOME/.config/backup"
 [ -d "$bak" ] || mkdir -p "$bak"
-#tmp=$(mktemp --directory)
 if [ $# -eq 0 ] ; then
   # https://unix.stackexchange.com/a/137571
   # https://unix.stackexchange.com/a/358286
-  set -- $(git ls-files -X .gitignore | grep -v '.git' | grep -v '*.md' | grep -v dotfiles)
+  set -- $(git ls-files -X .gitignore | grep -v '/.gitignore$' | grep -v '.md$' | grep -v dotfiles)
 fi
 echo $bak/
 echo
@@ -26,28 +27,27 @@ for dotfile in "$@" ; do
     e=$((e + 1))
     continue
   fi
-  #dotfile=$(basename -- $dotfile)
-  mkdir -p "$(dirname "$HOME/$dotfile")" &>/dev/null
+  if [ ! -d "$(dirname "$HOME/$dotfile")" ] ; then
+    mkdir -p "$(dirname "$HOME/$dotfile")" &>/dev/null
+  fi
   if [ -e "$HOME/$dotfile" ] ; then
     printf 'exists '
     if [ -L "$HOME/$dotfile" ] ; then
-      printf 'link '
       if [ "$(readlink -f $HOME/$dotfile)" == "$PWD/$dotfile" ] ; then
-        printf "$(tput setaf 2)untouched$(tput sgr0) ✔\n"
+        printf "$(tput setaf 2)identical$(tput sgr0) ✔\n"
         continue
       else
         printf "$(tput setaf 3)conflict$(tput sgr0) "
-        printf "$(tput setaf 4)saved$(tput sgr0) "
-        echo mv -f "$HOME/$dotfile" $bak/ 2>/dev/null >&2
+        rm -f "$HOME/$dotfile" &>/dev/null
       fi
     else
-      echo mv -f "$HOME/$dotfile" $bak/ 2>/dev/null >&2
+      mv -f "$HOME/$dotfile" $bak/ &>/dev/null
       printf "$(tput setaf 4)saved$(tput sgr0) "
     fi
   else
     printf "$(tput setaf 3)missing$(tput sgr0) "
   fi
-  echo ln -s "$PWD/$dotfile" "$HOME/$dotfile" >/dev/null
+  ln -s "$PWD/$dotfile" "$HOME/$dotfile" &>/dev/null
   printf "$(tput setaf 2)linked$(tput sgr0) ✔\n"
 done
 

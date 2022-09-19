@@ -2,25 +2,31 @@
 
 Z_TITLE=${Z_TITLE:-1}
 
+[[ $Z_TITLE -ne 0 ]] || return
+
 autoload -Uz add-zsh-hook
+
+return # FIXME
 
 zource 'https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/lib/termsupport.zsh'
 add-zsh-hook -d precmd omz_termsupport_precmd
 add-zsh-hook -d preexec omz_termsupport_preexec
 
+bin title || { zlog w 'title: missing termsupport' ; return }
+
 function _title_preexec() {
   local -a argv=(${(z)1})
-  title "$argv"
+  title "${argv[1]}" "$argv"
 }
 
 function _title_precmd() {
-  title "$SHELL: $PWD"
+  title "$SHELL" "$PWD"
 }
 
 add-zsh-hook preexec _title_preexec
 add-zsh-hook precmd _title_precmd
 
-return
+return # TODO
 
 function _title() {
   [[ $Z_TITLE -ne 0 ]] || return

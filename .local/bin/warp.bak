@@ -23,7 +23,7 @@ function _warp_go() {
   local w; w="$(grep "^$1 " "$WARP" | cut -d' ' -f2-)"
   [ -n "$w" ] || { echo "no such warp: '$1'" >&2 ; return 1 ; }
   echo "$w"
-  cd "$w" || return
+  cd "$w" || return 1
 }
 
 case ${1:0:1} in

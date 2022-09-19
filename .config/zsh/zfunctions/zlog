@@ -1,0 +1,28 @@
+# ~/.config/zsh/zfunctions/zlog
+
+_zlog_verbose() {
+  print -P "%F{008}-- $@ --%f"
+}
+
+_zlog_info() {
+  print -P "%F{green}-- $@ --%f"
+}
+
+_zlog_warning() {
+  print -P "%F{yellow}-- $@ --%f"
+}
+
+_zlog_error() {
+  print -P "%F{red}-- $@ --%f"
+}
+
+local lvl=$1
+shift
+case $lvl in
+  e) _zlog_error $@ ;;
+  w) _zlog_warning $@ ;;
+  i) _zlog_info $@ ;;
+  *) _zlog_verbose $@ ;;
+esac
+
+# EOF

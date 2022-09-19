@@ -1,6 +1,4 @@
-# .zshenv
-
-[ -z "$LANG" ] && eval "$(locale)"
+# ~/.zshenv
 
 case $OSTYPE in
   linux*)
@@ -15,5 +13,9 @@ esac
 
 PROMPT='%F{green}%n%f@%F{magenta}%m%f %F{blue}%B%~%b%f %# '
 RPROMPT='[%F{yellow}%?%f]'
+
+while read rc ; do
+  source $rc
+done < <(find "${ZDOTDIR:-$HOME}" -maxdepth 1 -name '.zshenv.*' 2>/dev/null)
 
 # EOF

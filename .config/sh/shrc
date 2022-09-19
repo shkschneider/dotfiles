@@ -1,19 +1,15 @@
 # ~/.config/sh/shrc
 
-export LANG=fr_FR.UTF-8
+[ -n "$LANG" ] || eval "$(locale)"
+[ -n "$LANG" ] || LANG='en_us.UTF-8'
+umask 022
 
-export SHCONFDIR=${SHCONFDIR:-$HOME/.config/sh}
+[[ $- == *i* ]] || return
 
-export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
+export PS1="$(whoami)@$(hostname -s)> "
 
-[ -x "$HOME/bin/bin" ] || {
-  bin() {
-    type $@ &>/dev/null
-  }
-}
-
-for rc in $SHCONFDIR/*.sh ; do
+while read rc ; do
   source $rc
-done
+done < <(find $HOME/.config -maxdepth 1 -name '*.sh' 2>/dev/null)
 
 # EOF

@@ -1,8 +1,8 @@
-# highlight.zsh
+# ~/.config/zsh/highlight.zsh
 
-Z_HIGHLIGHT=${Z_HIGHLIGHT:-0}
+Z_HIGHLIGHT=${Z_HIGHLIGHT:-true}
 
-[[ $Z_HIGHLIGHT -ne 0 ]] || return
+[[ "${Z_HIGHLIGHT:-}" == true ]] || return
 
 zource 'zdharma-continuum/fast-syntax-highlighting'
 

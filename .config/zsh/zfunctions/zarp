@@ -1,0 +1,36 @@
+# ~/.config/zsh/zfunctions/zarp
+
+ZARP="${ZCONFDIR:-$HOME/.config/zsh}/.zarp"
+[ -f "$ZARP" ] || touch "$ZARP"
+
+_zarp_plus() {
+  # TODO validate input
+  sed "/^$1 /d" "$ZARP" > "$ZARP.tmp"
+  mv "$ZARP.tmp" "$ZARP" >/dev/null
+  echo "$1 $PWD" >> "$ZARP"
+  echo "+ $1 $PWD"
+}
+
+_zarp_minus() {
+  local z ; z="$(grep "^$1 " "$ZARP" | cut -d' ' -f1)"
+  [ -n "$z" ] || { echo "no such warp: '$1'" >&2 ; return 1 ; }
+  sed "/^$z /d" "$ZARP" > "$ZARP.tmp"
+  mv "$ZARP.tmp" "$ZARP" >/dev/null
+  echo "- $1 $ZARP"
+}
+
+function _zarp_go() {
+  local z ; z="$(grep "^$1 " "$ZARP" | cut -d' ' -f2-)"
+  [ -n "$z" ] || { echo "no such warp: '$1'" >&2 ; return 1 ; }
+  echo "$z"
+  cd "$z" || return 1
+}
+
+case ${1:0:1} in
+  '') cat "$ZARP" ;;
+  +) _zarp_plus "${1:s/+//}" ;;
+  -) _zarp_minus "${1:s/-//}" ;;
+  *) _zarp_go "$1" ;;
+esac
+
+# EOF

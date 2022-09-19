@@ -1,7 +1,9 @@
 # chpwd.zsh
 # ! after aliases
 
-Z_CHPWD=${Z_CHPWD:-1}
+Z_CHPWD=${Z_CHPWD:-true}
+
+[[ "${Z_CHPWD:-}" == true ]] || return
 
 autoload -U add-zsh-hook
 

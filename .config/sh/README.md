@@ -1,14 +1,15 @@
 shrc
 ====
 
-- ...
+Central point of all shells: sh, bash, zsh...
 
-Install
--------
+_NOT_ sourced automatially, as this would be dangerous.
 
-~/.profile:
+Customize _extreme_ caution!
 
-> source $HOME/.config/sh/shrc
+> for rc in $HOME/.config/sh/*.sh ; do
+>   source $rc
+> done
 
 Loading
 -------
@@ -17,10 +18,6 @@ Loading
 |                          | l | i | * |
 +--------------------------+---+---+---+
 | ~/.profile               | * | * |   |
-| ~/.config/sh/shrc        | * | * |   |
-|   ~/.config/sh/*.sh      | * | * |   |
+| ~/.profile.local         | * | * |   |
 | $ENV                     |   |   | * |
 +--------------------------+---+---+---+
-
-* 1/2/3: first one found only
-* 4: not automatic in login

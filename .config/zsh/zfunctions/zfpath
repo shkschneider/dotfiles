@@ -1,4 +1,4 @@
-# zfpath
+# ~/.config/zsh/zfunctions/zfpath
 
 print -l $fpath
 

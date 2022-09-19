@@ -1,0 +1,16 @@
+# ~/.config/.gitignore
+
+backup/
+bash/.history
+emacs/.backup/
+emacs/auto-save-list/
+zsh/.cache/
+zsh/.completion
+zsh/.history
+zsh/.zarp
+zsh/.zcompdump
+zsh/.zsh_history 
+zsh/.zsh_sessions/
+zsh/src/
+
+# EOF

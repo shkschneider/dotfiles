@@ -1,14 +1,11 @@
-# zshrc
-# ! source me
+# ~/.config/zsh/zshrc
 
-ZDOTDIR=${ZDOTDIR:-$HOME}
-ZCONFDIR=${ZCONFDIR:-$HOME/.config/zsh}
+[[ -o interactive ]] || return
+
+export ZDOTDIR=${ZDOTDIR:-$HOME}
+export ZCONFDIR=${ZCONFDIR:-$HOME/.config/zsh}
 
 bindkey -e # emacs
-[ -z "$LANG" ] && eval "$(locale)"
-[[ -o interactive ]] || export HISTFILE=/dev/null
-export EDITOR=${EDITOR:-nano}
-#export VISUAL=$EDITOR
 
 # https://zsh.sourceforge.io/Doc/Release/Options.html
 
@@ -25,10 +22,10 @@ setopt interactive_comments
 # path
 
 typeset -U path # no duplicates
-setopt hash_executables_only
-path=($HOME/bin $HOME/sbin $HOME/.local/bin $HOME/.local/sbin $path)
 
-[ -x "$HOME/bin/bin" ] || {
+setopt hash_executables_only
+
+type bin &>/dev/null || {
   bin() {
     type $@ &>/dev/null
   }
@@ -37,27 +34,22 @@ path=($HOME/bin $HOME/sbin $HOME/.local/bin $HOME/.local/sbin $path)
 # fpath
 
 typeset -U fpath # no duplicates
+
 if [ -d $ZCONFDIR/zfunctions ] ; then
   fpath=($ZCONFDIR/zfunctions $fpath)
-  for file in $ZCONFDIR/zfunctions/*(.N) ; do
-    autoload -Uz ${file:t:r}
-  done
+  while read rc ; do
+    autoload -Uz ${rc:t:r}
+  done < <(find $ZCONFDIR/zfunctions/* -maxdepth 1 2>/dev/null)
 fi
 
 # sources
 
-for rc in $ZCONFDIR/functions/*.zsh(.N) ; do
+while read rc ; do
   source $rc
-done
+done < <(find $ZCONFDIR/functions/*.zsh -maxdepth 1 2>/dev/null)
 
-[ -f $ZDOTDIR/.zshenv.local ] && source $ZDOTDIR/.zshenv.local
-
-for rc in $ZCONFDIR/*.zsh(.N) ; do
+while read rc ; do
   source $rc
-done
-
-for rc in $ZDOTDIR/.zshrc.*(.N) ; do
-  source $rc
-done
+done < <(find $ZCONFDIR/*.zsh -maxdepth 1 2>/dev/null)
 
 # EOF

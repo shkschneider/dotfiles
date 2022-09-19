@@ -3,6 +3,7 @@
 
 autoload -Uz compinit
 
-compinit -d "$ZCONFDIR/.completion"
+#rm -f "$HOME/.zcompdump" &>/dev/null
+compinit # FIXME -d "$ZCONFDIR/.completion"
 
 # EOF

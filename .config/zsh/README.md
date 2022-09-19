@@ -1,9 +1,11 @@
 zshrc
 =====
 
+TODO [[ "${DISABLE_AUTO_TITLE:-}" != true ]] || return
+
 A simple pure ZSH setup using no framework, powerful custom functions and very few plugins:
 - zource (source plugins, files, dirs...)
-- zarp (warp to bookmarked directories)
+- warp (to bookmarked directories)
 - custom (async) prompt (with VCS)
 - completion
 - history
@@ -15,15 +17,38 @@ It is strictly case-sensitive.
 Install
 -------
 
-~/.zshenv.local:
+(MacOS) ~/.zshenv.local:
 
-> path+=$(...)
+> eval $(/opt/homebrew/bin/brew shellenv)
+> PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
+
+~/.zprofile:
+
+> source $HOME/.profile
+
+~/.profile:
+
+> source ${SHCONFDIR:-$HOME/.config/sh/shrc}
 
 ~/.zshrc:
 
 > source ${ZCONFDIR:-$HOME/.config/zsh}/zshrc
 
 Extend or customize anything in any ~/.zshrc.*
+
+Configuration
+-------------
+
+ZDOTDIR=$HOME
+ZCONFDIR=$HOME/.config/zsh
+Z_CHPWD
+Z_COLORS
+Z_HIGHLIGHT
+Z_NOTIFY
+Z_NOTIFY_THRESHOLD
+Z_NOTIFY_IGNORE
+Z_NOTIFY_SUCCESS
+Z_TITLE
 
 Loading
 -------
@@ -39,10 +64,8 @@ Loading
 | $ZDOTDIR/.zshrc          | * | * |   |
 | $ZCONFDIR/zshrc          | * | * |   |
 |   $ZCONFDIR/zfunctions/* | * | * |   |
-|   $ZDOTDIR/.zshenv.local | * | * |   |
 |   $ZCONFDIR/*.zsh        | * | * |   |
 |     $ZCONFDIR/src/*      | * | * |   |
-|   $ZDOTDIR/.zshrc.*      | * | * |   |
 | $ZDOTDIR/.zlogin         | * |   |   |
 | $ZDOTDIR/.zlogout        | * |   |   |
 +--------------------------+---+---+---+

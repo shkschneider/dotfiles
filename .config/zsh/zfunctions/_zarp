@@ -1,0 +1,17 @@
+#compdef zarp
+
+ZARP=${ZARP:-${ZCONFDIR:-$HOME/.config/zsh}/.zarp}
+
+for z in $(cat "$ZARP" 2>/dev/null | grep -v " $PWD$" | cut -d' ' -f1) ; do
+  compadd -- "$z"
+done
+
+local z ; z=$(cat "$ZARP" 2>/dev/null | grep " $PWD$" | cut -d' ' -f1)
+if [ -n "$z" ] ; then
+  compadd -- "-$z"
+  _message -- "-$z"
+else
+  _message -- "+${PWD:t:l}"
+fi
+
+# EOF

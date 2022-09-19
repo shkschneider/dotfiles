@@ -13,7 +13,7 @@ unsetopt complete_aliases # https://stackoverflow.com/a/20643204
 setopt glob_complete
 unsetopt glob_dots # auto-include .*
 unsetopt cdable_vars correct correct_all ; CORRECT_IGNORE="[_|.]*"
-unsetopt always_last_prompt # completion below prompt
+setopt always_last_prompt # completion below prompt
 
 zource 'zsh-users/zsh-completions@0.34.0'
 

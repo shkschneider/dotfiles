@@ -1,19 +1,23 @@
 # notify.zsh
 # ! before timer
 
+Z_NOTIFY=${Z_NOTIFY:-true}
+
+[[ "${Z_NOTIFY:-}" == true ]] || return
+
 case $OSTYPE in
-  darwin*) bin osascript || zprint e 'missing osascript' >&2 ; return ;;
-  *) bin notify-send || zprint e 'missing notify-send' >&2 ; return ;;
+  darwin*) bin osascript || zlog e 'notify: missing osascript' >&2 ; return ;;
+  *) bin notify-send || zlog e 'notify: missing notify-send' >&2 ; return ;;
 esac
 
 Z_NOTIFY_THRESHOLD=${Z_NOTIFY_THRESHOLD:-60} # s
 Z_NOTIFY_IGNORE=(${Z_NOTIFY_IGNORE:-${EDITOR:-nano} sleep})
-Z_NOTIFY_SUCCESS=${Z_NOTIFY_SUCCESS:-0}
+Z_NOTIFY_SUCCESS=${Z_NOTIFY_SUCCESS:-false}
 
 typeset -U Z_NOTIFY_IGNORE
 
 function _notify() {
-  [[ $Z_NOTIFY_SUCCESS -eq 0 && $? -eq 0 ]] && return
+  [[ "${Z_NOTIFY_SUCCESS:-}" == false && $? -eq 0 ]] && return
   [ -n "$TIMER" ] || return
   [[ $TIMER =~ ^[0-9]+(\.[0-9]+)?$ ]] || return
   local argv="$(fc -ln -1)"

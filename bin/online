@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-# https://stackoverflow.com/a/26820300
-
-url="${1:-https://google.com}"
-domain=$(echo "$url" | cut -d'/' -f3-)
-
-echo -e "GET $url HTTP/1.0\n\n" | nc "$domain" 80 2>/dev/null >&2
-
-# EOF

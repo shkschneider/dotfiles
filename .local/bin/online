@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# https://stackoverflow.com/a/26820300
+
+url="${1:-https://google.com}"
+domain=$(echo "$url" | cut -d'/' -f3-)
+
+bin wget || exit 0 # FIXME
+bin wget && {
+  wget --spider "$url" &>/dev/null
+} || {
+  echo -e "GET $url HTTP/1.0\n\n" | nc "$domain" 80 &>/dev/null
+}
+
+# EOF

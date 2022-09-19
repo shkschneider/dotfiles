@@ -1,11 +1,13 @@
 # ~/.config/bash/bashrc
 
-# If not running interactively, don't do anything
+source $HOME/.config/sh/shrc
+
 [ -z "$PS1" ] && return 0
 
-BASHCONFDIR=${BASHCONFDIR:-$HOME/.config/bash}
+export BASHCONFDIR=${BASHCONFDIR:-$HOME/.config/bash}
 
-# Options
+# options
+
 if [ -x "$(which stty)" ] ; then
     stty -ixon 2>/dev/null
     stty -ixoff 2>/dev/null
@@ -31,18 +33,10 @@ case $OSTYPE in
     ;;
 esac
 
-# source
+# sources
 
-for rc in $BASHCONFDIR/functions/*.bash ; do
+while read rc ; do
   source $rc
-done
-
-for rc in $BASHCONFDIR/*.bash ; do
-  source $rc
-done
-
-for rc in $HOME/.bashrc.* ; do
-  source $rc
-done
+done < <(find $BASHCONFDIR -maxdepth 1 -name '*.bash' 2>/dev/null)
 
 # EOF
