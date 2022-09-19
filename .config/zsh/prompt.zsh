@@ -33,7 +33,7 @@ function rprompt() {
 }
 
 PROMPT=$'$(prompt) '
-export SHELL=$(ps -o command -h $$ | sed '1d' | cut -d' ' -f1 | xargs basename)
+export SHELL=$(ps -o command -h $$) # sed '1d' | cut -d' ' -f1 | xargs basename
 RPROMPT=$'$(rprompt "%F{008}${SHELL:t}(%L)%f") '
 
 autoload -Uz vcs_info

@@ -1,8 +1,8 @@
 # ~/.gitconfig
 
 [user]
-name = alan.schneider
-email = alan.schneider@adevinta.com
+name = shkschneider
+email = shk.schneider@gmail.com
 
 [include]
 path = ~/.config/git/config

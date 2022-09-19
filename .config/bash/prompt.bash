@@ -7,7 +7,7 @@ function __ps1() {
   [ $(id -u) -eq 0 ] && c="$c$(tput setaf 1)" || c="$c$(tput setaf 2)"
 
   user=$(whoami)
-  host=$(hostname -s)
+  host=$(hostname)
   [ -n "$SSH_CLIENT$SSH2_CLIENT" ] && host="ssh:"$host
   _user="$c[$user@$host]$(tput sgr0)"
   unset user host

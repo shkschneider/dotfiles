@@ -9,7 +9,8 @@ set history-preserve-point on
 set mark-directories on
 set mark-symlinked-directories on
 set match-hidden-files off
-set bell-style visible # none visible bell
+# none visible bell
+set bell-style visible
 set page-completions off
 set completion-query-items 2000
 set completion-ignore-case off

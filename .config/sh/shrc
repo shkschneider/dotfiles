@@ -6,7 +6,7 @@ umask 022
 
 [[ $- == *i* ]] || return
 
-export PS1="$(whoami)@$(hostname -s)> "
+export PS1="$(whoami)@$(hostname)> "
 
 while read rc ; do
   source $rc

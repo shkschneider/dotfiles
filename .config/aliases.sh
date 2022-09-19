@@ -32,7 +32,6 @@ alias curl='curl --silent'
 alias bc='bc --quiet'
 alias less='less -FX' # exit on EOF
 alias more='more -e' # exit on EOF
-alias nano='nano -z' # suspend
 alias j='jobs'
 alias h='history'
 alias hh='history | grep -i'
@@ -45,7 +44,7 @@ case $OSTYPE in
     alias battery='sysctl -n hw.acpi.battery.life'
     ;;
   linux*)
-    # TODO acpi / acpitool
+    alias battery='acpi --battery'
     ;;
 esac
 

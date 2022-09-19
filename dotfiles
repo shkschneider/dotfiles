@@ -1,62 +1,66 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
-echo "+-----------------------+"
-echo "| shkschneider/dotfiles |"
-echo "+-----------------------+"
+VERBOSE=false
+case $1 in
+  -v|--verbose) VERBOSE=true ; shift ;;
+esac
 
-# TODO move to .local along with backup
+set -- $(find .* -maxdepth 0 | tail +3 | grep -v '.git')
 
-cd $(readlink -f -- $(dirname -- $0))
-bak="$HOME/.config/backup"
-[ -d "$bak" ] || mkdir -p "$bak"
-if [ $# -eq 0 ] ; then
-  # https://unix.stackexchange.com/a/137571
-  # https://unix.stackexchange.com/a/358286
-  set -- $(git ls-files -X .gitignore | grep -v '/.gitignore$' | grep -v '.md$' | grep -v dotfiles)
-fi
-echo $bak/
-echo
+function _backup() {
+  local dotfile=$1
+  $VERBOSE && echo "mv --force $HOME/$dotfile $HOME/.config/backup/"
+  mv -f $HOME/$dotfile $HOME/.config/backup/ >/dev/null
+}
 
-i=0
-e=0
-for dotfile in "$@" ; do
-  i=$((i + 1))
-  printf '[%02d/%02d] %s … ' $i $# "$(tput rev)$dotfile$(tput sgr0)"
-  if [ ! -e "./$dotfile" ] ; then
-    printf "$(tput setaf 1)missing$(tput sgr0) ✖\n"
-    e=$((e + 1))
-    continue
+function _remove() {
+  local dotfile=$1
+  $VERBOSE && echo "rm --force $HOME/$dotfile"
+  rm -f $HOME/$dotfile >/dev/null
+}
+
+function _link() {
+  local dotfile=$1
+  if [ $dotfile == ".nanorc" ] ; then
+    $VERBOSE && echo "bash $dotfile > $HOME/$dotfile"
+    cat $dotfile | cut -c3- | bash > "$HOME/$dotfile"
+  else
+    $VERBOSE && echo "ln --symbolic $PWD/$dotfile $HOME/$dotfile"
+    ln -s $PWD/$dotfile $HOME/$dotfile >/dev/null
   fi
-  if [ ! -d "$(dirname "$HOME/$dotfile")" ] ; then
-    mkdir -p "$(dirname "$HOME/$dotfile")" &>/dev/null
-  fi
-  if [ -e "$HOME/$dotfile" ] ; then
-    printf 'exists '
-    if [ -L "$HOME/$dotfile" ] ; then
-      if [ "$(readlink -f $HOME/$dotfile)" == "$PWD/$dotfile" ] ; then
-        printf "$(tput setaf 2)identical$(tput sgr0) ✔\n"
-        continue
-      else
-        printf "$(tput setaf 3)conflict$(tput sgr0) "
-        rm -f "$HOME/$dotfile" &>/dev/null
-      fi
+}
+
+function _dotdir() {
+  for dotfile in $(find $1/* -maxdepth 0 | grep -v '.git' | grep -v 'README.md') ; do
+    _dotfile $dotfile
+  done
+}
+
+function _dotfile() {
+  local dotfile=$1
+  $VERBOSE || echo $dotfile
+  if [ -e $HOME/$dotfile ] ; then
+    if [ -L $HOME/$dotfile ] ; then
+      _remove $dotfile
+      _link $dotfile
+    elif [ -d $HOME/$dotfile ] ; then
+      _dotdir $dotfile
     else
-      mv -f "$HOME/$dotfile" $bak/ &>/dev/null
-      printf "$(tput setaf 4)saved$(tput sgr0) "
+      _backup $dotfile
+      _link $dotfile
     fi
   else
-    printf "$(tput setaf 3)missing$(tput sgr0) "
+    _link $dotfile
   fi
-  ln -s "$PWD/$dotfile" "$HOME/$dotfile" &>/dev/null
-  printf "$(tput setaf 2)linked$(tput sgr0) ✔\n"
+}
+
+git submodule update --init >/dev/null || exit 1
+
+for dotfile in "$@" ; do
+  _dotfile $dotfile
 done
 
-echo
-echo $bak/
-echo "+---------------------------------------+"
-echo "| So Long, and Thanks for All the Fish. |"
-echo "+---------------------------------------+"
-
-exit $e
+$VERBOSE || echo $HOME/.config/backup
+$VERBOSE && find $HOME/.config/backup 2>/dev/null
 
 # EOF
