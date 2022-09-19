@@ -11,7 +11,7 @@ local function padding(w)
 end
 
 local function background(w)
-  return wibox.container.background(w, beautiful.bg_normal .. beautiful.alpha, gears.shape.rounded_rect)
+  return wibox.container.background(w, beautiful.bg_normal .. beautiful.alpha, beautiful.shape)
 end
 
 local function tasks(s)
@@ -19,7 +19,6 @@ local function tasks(s)
     screen = s,
     filter = awful.widget.tasklist.filter.currenttags,
     style = {
-      shape = gears.shape.rounded_rect
       --shape = function (cr, w, h) return gears.shape.partially_rounded_rect(cr, w, h, false, true, true, false, 6) end
     },
     --widget_template = nil,

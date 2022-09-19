@@ -15,8 +15,13 @@ end)
 client.add_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.add_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 
-clientkey { m = { super }, k = "f", g = "windows", d = "fullscreen", f = function ()
+clientkey { m = { super }, k = "f", g = "windows", d = "fullscreen", f = function (c)
   c.fullscreen = not c.fullscreen
+  if c.fullscreen then
+    c.shape = nil
+  else
+    c.shape = beautiful.shape
+  end
   c:raise()
 end }
 

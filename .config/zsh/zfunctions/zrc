@@ -3,7 +3,7 @@
 local rc="$1"
 [ -n "$rc" ] || return 1
 local u="${$(uname -s):l}"
-local h="${$(hostname -s):l}"
+local h="${$(hostname):l}"
 for file in $ZDOTDIR/$rc{.localm.$u,.$h} ; do
   echo "$file"
 done

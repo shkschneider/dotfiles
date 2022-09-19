@@ -1,5 +1,7 @@
 # ~/.config/zsh/zshrc
 
+source $HOME/.config/sh/shrc
+
 [[ -o interactive ]] || return
 
 export ZDOTDIR=${ZDOTDIR:-$HOME}

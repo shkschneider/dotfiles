@@ -9,9 +9,6 @@ local widget = awful.widget.taglist {
     filter = function (t)
       return t.index <= #tags
     end,
-    style = {
-      shape = gears.shape.rounded_rect
-    },
     -- TODO widget_template = {},
     buttons = gears.table.join(
       awful.button({}, 1, function(t) t:view_only() end),

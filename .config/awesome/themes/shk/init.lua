@@ -1,9 +1,7 @@
 -- https://elv13.github.io/documentation/06-appearance.md.html
 
 client.connect_signal("manage", function (c)
-  c.shape = function (cr, w, h)
-    gears.shape.rounded_rect(cr, w, h, dpi(4))
-  end
+  c.shape = beautiful.shape
 end)
 
 screen.connect_signal("arrange", function (s)
@@ -19,29 +17,13 @@ end)
 
 client.connect_signal("focus", function (c)
   c.border_color = beautiful.border_focus
-  c.opacity = 0.99
+  c.opacity = 1.00
 end)
 client.connect_signal("unfocus", function (c)
   c.border_color = beautiful.border_normal
   c.opacity = 0.80
 end)
 
---[[ monokai-ish
-local colors = {
-  black = "#000000",
-  white = "#FFFFFF",
-  background = "#272822",
-  foreground = "#F8F8F2",
-  comment = "#75715E",
-  red = "#F92672",
-  orange = "#FD971F",
-  yellow = "#E6DB74",
-  green = "#A6E22E",
-  blue = "#66D9EF",
-  purple = "#AE81FF",
-  transparent = "#00000000"
-}
---]]
 -- horizon-dark
 local colors = {
   black = "#16161c",
@@ -102,7 +84,11 @@ beautiful.hotkeys_bg = beautiful.bg_normal
 beautiful.hotkeys_fg = beautiful.fg_normal
 beautiful.hotkeys_modifiers_fg = beautiful.fg_focus
 beautiful.hotkeys_border_width = 0
-beautiful.hotkeys_shape = gears.shape.rounded_rect
+--beautiful.hotkeys_shape = gears.shape.rounded_rect
+
+beautiful.shape = function (cr, w, h)
+  return gears.shape.rounded_rect(cr, w, h, 8)
+end
 
 beautiful.systray_icon_spacing = dpi(2)
 beautiful.useless_gap = dpi(4)

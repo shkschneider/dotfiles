@@ -5,14 +5,16 @@ widget.bar.visible = false
 
 widget.update = function ()
   widget.icon.image = beautiful.icon_loading
-  awful.spawn.easy_async_with_shell("xbps-install --dry-run --sync --update | cut -d' ' -f1", function (stdout)
-    local packages = string.split(stdout, "\n")
-    if #packages > 0 then
-      widget.icon.image = beautiful.icon_system_ko
-    else
-      widget.icon.image = beautiful.icon_system_ok
-    end
-    widget.tooltip.update(packages)
+  awful.spawn.easy_async_with_shell("xbps-install --sync >/dev/null", function (stdout)
+    awful.spawn.easy_async_with_shell("xbps-install --dry-run --update | cut -d' ' -f1", function (stdout)
+      local packages = string.split(stdout, "\n")
+      if #packages > 0 then
+        widget.icon.image = beautiful.icon_system_ko
+      else
+        widget.icon.image = beautiful.icon_system_ok
+      end
+      widget.tooltip.update(packages)
+    end)
   end)
 end
 
@@ -38,6 +40,10 @@ end
 tooltip(widget)
 
 -- return
+
+widget:buttons(gears.table.join(
+  awful.button({}, mouse_left, function () widget:update() end)
+))
 
 awful.widget.watch("true", 24 * 60 * 60, function ()
   widget:update()

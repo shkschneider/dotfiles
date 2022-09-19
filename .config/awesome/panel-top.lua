@@ -51,9 +51,6 @@ local function tags(s)
     filter = function (t)
       return t.index <= #s.tags
     end,
-    style = {
-      shape = gears.shape.rounded_rect
-    },
     widget_template = template,
     buttons = buttons
   }
@@ -68,7 +65,7 @@ local function padding(w)
 end
 
 local function background(w)
-  return wibox.container.background(w, beautiful.bg_normal .. beautiful.alpha, gears.shape.rounded_rect)
+  return wibox.container.background(w, beautiful.bg_normal .. beautiful.alpha, beautiful.shape)
 end
 
 return function (widget)
