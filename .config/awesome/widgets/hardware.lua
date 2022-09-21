@@ -51,7 +51,7 @@ widget.cpu = widget:get_children_by_id("cpu")[1]
 widget.mem = widget:get_children_by_id("mem")[1]
 
 widget.data = {
-  cpu = { 0 },
+  cpu = { 0, "..." },
   mem = { 0, 0 }
 }
 
@@ -59,8 +59,8 @@ tooltip(widget)
 
 widget.tooltip.update = function ()
   local str = ""
-  str = str .. "CPU " .. markup.bold(markup.fg(beautiful.fg_focus, string.format("%.0f", tonumber(widget.data.cpu[1])) .. "%")) .. "\n"
-  str = str .. "RAM " .. markup.bold(markup.fg(beautiful.fg_focus, string.format("%.0f", tonumber(widget.data.mem[1])) .. "%")) .. " /" .. widget.data.mem[2] .. "\n"
+  str = str .. "CPU " .. markup.bold(markup.fg(beautiful.fg_focus, string.format("%.0f", tonumber(widget.data.cpu[1])) .. "%")) .. " (" .. tostring(widget.data.cpu[2]) .. ")\n"
+  str = str .. "RAM " .. markup.bold(markup.fg(beautiful.fg_focus, string.format("%.0f", tonumber(widget.data.mem[1])) .. "%")) .. " /" .. tostring(widget.data.mem[2]) .. "\n"
   widget.tooltip.markup = str:sub(1, -2)
 end
 
@@ -69,6 +69,10 @@ lain.widget.cpu {
     widget.data.cpu = { cpu_now.usage, nil }
     widget.cpu.value = cpu_now.usage / 2
     widget.tooltip.update()
+    awful.spawn.easy_async_with_shell("cat /proc/loadavg | cut -c-14", function (stdout)
+      widget.data.cpu[2] = string.trim(stdout)
+    widget.tooltip.update()
+    end)
   end
 }
 

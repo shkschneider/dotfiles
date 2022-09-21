@@ -2,9 +2,7 @@
 
 -- alt-tab
 
---[[
 local function alttab(i, c)
-  -- FIXME do not iterate on minimized
   local old = awful.client.visible
   awful.client.visible = function (_, s) return old(nil, s) end
   awful.client.focus.byidx(i, c)
@@ -13,13 +11,11 @@ end
 
 globalkey { m = { super }, k = "Tab", g = "windows", d = "next", f = function() alttab(1) end }
 globalkey { m = { super, shift }, k = "Tab", g = "windows", d = "previous", f = function() alttab(-1) end }
---]]
-
-globalkey { m = { super }, k = "Tab", g = "windows", d = "switch", f = function ()
-  awful.spawn.with_shell(defaults.switch)
+globalkey { m = { super }, k = "o", g = "windows", d = "cycle", f = function ()
+  awful.client.cycle(true)
 end }
 
--- workspaces
+-- switch tags
 
 local function workspace(i)
   local screen = awful.screen.focused()
@@ -38,19 +34,6 @@ local function workspaces(i)
   end
 end
 
---[[ BROKEN
--- revelation
-local revelation = require("revelation")
-revelation.init {
-  tag_name = "revelation",
-  charorder = "123456789",
-  curr_tag_only = true
-}
-globalkey { m = { super }, k = "e", g = "windows", d = "revelation", f = revelation }
---]]
-
--- switch tags
-
 for i = 1, 9 do
   globalkey { m = { super }, k = "#" .. i + 9, g = "navigation", d = "switch", f = function () workspaces(i) end }
 end
@@ -58,17 +41,31 @@ end
 -- switch focus
 
 local function focus_by_direction(dir)
-  -- change focus inside the screen
-  -- if focus not changed, we must change screen
-  awful.client.focus.global_bydirection(dir)
-  -- https://github.com/awesomeWM/awesome/blob/master/lib/awful/client/focus.lua#L200
+  local s = awful.screen.focused()
+  if client.focus then
+    local id = client.focus.window
+    awful.client.focus.bydirection(dir)
+    if id == client.focus.window then
+      if dir == "up" then
+        workspaces(s.selected_tag.index - 1)
+      elseif dir == "down" then
+        workspaces(s.selected_tag.index + 1)
+      end
+    end
+  else
+    if dir == "up" then
+      workspaces(s.selected_tag.index - 1)
+    elseif dir == "down" then
+      workspaces(s.selected_tag.index + 1)
+    end
+  end
 end
 
-globalkey { m = { super }, k = "Up", g = "navigation", d = "focus left", f = function () focus_by_direction("up") end }
-globalkey { m = { super }, k = "Down", g = "navigation", d = "focus left", f = function () focus_by_direction("down") end }
+globalkey { m = { super }, k = "Up", g = "navigation", d = "focus up", f = function () focus_by_direction("up") end }
+globalkey { m = { super }, k = "Down", g = "navigation", d = "focus down", f = function () focus_by_direction("down") end }
 --globalkey { m = { super }, k = "Up", g = "navigation", d = "focus up", f = function () workspaces(awful.screen.focused().selected_tag.index - 1) end }
 --globalkey { m = { super }, k = "Down", g = "navigation", d = "focus down", f = function () workspaces(awful.screen.focused().selected_tag.index + 1) end }
-globalkey { m = { super }, k = "Left", g = "navigation", d = "focus left", f = function () focus_by_direction("left") end }
+globalkey { m = { super }, k = "Left", g = "navigation", d = "focus left", f = function () awful.client.focus.global_bydirection("left") end }
 globalkey { m = { super }, k = "Right", g = "navigation", d = "focus right", f = function () awful.client.focus.global_bydirection("right") end }
 
 -- move windows

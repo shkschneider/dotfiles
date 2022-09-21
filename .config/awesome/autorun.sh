@@ -8,6 +8,7 @@ run() {
 
 -- run ...
 
+run unclutter -idle 1 -keystroke -root
 run picom
 --run brave
 --run spotify
