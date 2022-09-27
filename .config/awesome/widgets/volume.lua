@@ -52,7 +52,7 @@ end
 widget.refresh = function (self)
   awful.spawn.easy_async_with_shell("pamixer --get-volume", function (stdout)
     widget.volume = tonumber(stdout)
-    widget:update(0)
+    widget:update()
   end)
 end
 

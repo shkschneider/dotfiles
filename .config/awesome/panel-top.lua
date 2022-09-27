@@ -97,9 +97,9 @@ return function (widget)
         padding(require("widgets.network")),
         layout = wibox.layout.fixed.horizontal
       }))),
-      margin(background(
+      margin(
         wibox.widget.systray()
-      )),
+      ),
       margin(background(padding(wibox.widget {
         padding(require("widgets.clock")),
         padding(require("widgets.battery")),

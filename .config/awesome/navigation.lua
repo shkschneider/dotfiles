@@ -11,6 +11,7 @@ end
 
 globalkey { m = { super }, k = "Tab", g = "windows", d = "next", f = function() alttab(1) end }
 globalkey { m = { super, shift }, k = "Tab", g = "windows", d = "previous", f = function() alttab(-1) end }
+--globalkey { m = { super }, k = "o", g = "windows", d = "switch screen", f = awful.client.movetoscreen }
 globalkey { m = { super }, k = "o", g = "windows", d = "cycle", f = function ()
   awful.client.cycle(true)
 end }

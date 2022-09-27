@@ -16,6 +16,12 @@ awful.rules.rules = {
       size_hint_honor = true -- required to ensure useless_gap
     }
   },
+  {
+    rule = { floating = true }, properties = { placement = awful.placement.centered }
+  },
+  {
+    rule_any = { class = { "Steam" } }, properties = { floating = true, fullscreen = true, border_width = 0, shape = nil, screen = awful.screen.primary, size_hints_honor = false }
+  },
   -- vlc
   {
     rule = { class = "vlc" }, properties = { maximized = true }

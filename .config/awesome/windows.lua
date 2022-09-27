@@ -25,6 +25,22 @@ clientkey { m = { super }, k = "f", g = "windows", d = "fullscreen", f = functio
   c:raise()
 end }
 
+--[[
+local lock = false
+clientkey { m = { super }, k = "g", g = "windows", d = "gaming mode", f = function (c)
+  lock = not lock
+  c:connect_signal("mouse::leave", function (c)
+    if lock then
+      local cg = c:geometry()
+      local mc = mouse.coords()
+      local x = mc.x <= cg.x and cg.x + 5 or mc.x >= (cg.x + cg.width) and cg.x + cg.width - 5 or mc.x
+      local y = mc.y <= cg.y and cg.y + 5 or mc.y >= (cg.y + cg.height) and cg.y + cg.height - 5 or mc.y
+      mouse.coords { x = x, y = x }
+    end
+  end)
+end }
+--]]
+
 clientkey { m = { super }, k = "m", g = "windows", d = "magnify", f = lain.util.magnify_client }
 
 --[[

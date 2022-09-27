@@ -21,7 +21,7 @@ client.connect_signal("focus", function (c)
 end)
 client.connect_signal("unfocus", function (c)
   c.border_color = beautiful.border_normal
-  c.opacity = 0.80
+  c.opacity = 0.85
 end)
 
 -- horizon-dark
@@ -40,13 +40,13 @@ local colors = {
   transparent = "#00000000"
 }
 -- https://gist.github.com/lopspower/03fb1cc0ac9f32ef38f4
-beautiful.opacity = 0.8
+beautiful.opacity = 0.85
 beautiful.alpha = "CC"
 
 beautiful._font = "JetBrains Mono"
 beautiful.font = beautiful._font .. " 10"
 beautiful.useless_gap = dpi(4)
-beautiful.border_width = dpi(1)
+beautiful.border_width = 0
 beautiful.border_normal = colors.black
 beautiful.border_focus = colors.white
 beautiful.border_marked = colors.white
@@ -65,7 +65,7 @@ beautiful.bg_systray = beautiful.bg_normal
 
 -- ...
 
-beautiful.taglist_bg_focus = beautiful.fg_normal
+beautiful.taglist_bg_focus = beautiful.fg_urgent
 beautiful.taglist_bg_occupied = colors.transparent
 beautiful.taglist_bg_urgent = colors.transparent
 beautiful.taglist_bg_empty = colors.transparent
@@ -76,6 +76,8 @@ beautiful.taglist_fg_empty = beautiful.fg_normal
 beautiful.taglist_spacing = nil
 beautiful.taglist_font = beautiful.font
 beautiful.taglist_disable_icon = true
+
+beautiful.icon_theme = "Papirus-Dark"
 
 beautiful.tooltip_bg = colors.background
 beautiful.tooltip_fg = colors.normal
