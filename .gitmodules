@@ -4,9 +4,6 @@
 [submodule ".config/awesome/bling"]
 	path = .config/awesome/bling
 	url = https://github.com/BlingCorp/bling.git
-[submodule ".themes/yaru"]
-	path = .themes/yaru
-	url = https://github.com/Jannomag/Yaru-Colors
 [submodule ".config/ranger/plugins/devicons"]
 	path = .config/ranger/plugins/devicons
 	url = https://github.com/alexanderjeurissen/ranger_devicons
