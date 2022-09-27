@@ -5,11 +5,12 @@ case $1 in
   -v|--verbose) VERBOSE=true ; shift ;;
 esac
 
-set -- $(find .* -maxdepth 0 | tail +3 | grep -v '.git')
+set -- $(find .* -maxdepth 0 -not -name '.git' | tail +3)
 
 function _backup() {
   local dotfile=$1
   $VERBOSE && echo "mv --force $HOME/$dotfile $HOME/.config/backup/"
+  [ ! -d $HOME/.config/backup ] && mkdir $HOME/.config/backup
   mv -f $HOME/$dotfile $HOME/.config/backup/ >/dev/null
 }
 
@@ -31,7 +32,7 @@ function _link() {
 }
 
 function _dotdir() {
-  for dotfile in $(find $1/* -maxdepth 0 | grep -v '.git' | grep -v 'README.md') ; do
+  for dotfile in $(find $1/* -maxdepth 0 -not -name '.git' -not -name '*.md') ; do
     _dotfile $dotfile
   done
 }
