@@ -3,6 +3,8 @@
 *.ignore
 *~
 \#*\#
+__init__.py
+__pycache__/
 
 .config/backup/
 .config/bash/.history
