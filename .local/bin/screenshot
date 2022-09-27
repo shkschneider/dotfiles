@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+scrot --silent --focus ~/Desktop/$(date +%Y%M%d_%H%M%S).png
+
+# EOF
