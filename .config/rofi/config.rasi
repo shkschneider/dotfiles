@@ -15,11 +15,11 @@ configuration {
     show-icons: true;
     icon-theme: "Papirus";
 
-    display-combi:              "";
-    display-drun:               "";
-    display-run:                "";
-    display-filebrowser:        "";
-    display-window:             "";
+    display-combi:              "*";
+    display-drun:               "!";
+    display-run:                "!";
+    display-filebrowser:        "?";
+    display-window:             "?";
     drun-display-format:        "{name} [<span weight='light' size='small'><i>({generic})</i></span>]";
     window-format:              "{w} · {t}";
 }
