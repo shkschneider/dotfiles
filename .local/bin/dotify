@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+for path in "$@" ; do
+  basename=$(basename "$path")
+  dirname=$(dirname "$path")
+  case "$basename" in
+    .*) mv -v -- "$path" "$dirname/${basename#.}" ;;
+    *) mv -v -- "$path" "$dirname/.${basename}" ;;
+  esac
+done
+
+# EOF
