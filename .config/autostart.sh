@@ -12,6 +12,7 @@ which dex >/dev/null 2>/dev/null && {
     if [ ! -x $file ] ; then
       notify-send -u critical "Autostart script not executable!" "$file"
     else
+      pkill -9 $(basename ${file%.sh}) 2>/dev/null
       $file
     fi
   done
