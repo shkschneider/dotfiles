@@ -1,3 +1,5 @@
+local naughty = require("naughty")
+
 naughty.config.defaults.screen = awful.screen.focused()
 naughty.config.defaults.title = nil
 
