@@ -2,15 +2,25 @@ local naughty = require("naughty")
 
 naughty.config.defaults.screen = awful.screen.focused()
 naughty.config.defaults.title = nil
-
 naughty.config.defaults.ontop = true
 naughty.config.defaults.margin = dpi(8)
 naughty.config.defaults.border_width = 0
 naughty.config.defaults.position = "top_right"
 naughty.config.defaults.font = font
 naughty.config.defaults.hover_timeout = nil
+
 naughty.config.padding = dpi(8)
 naughty.config.spacing = dpi(8)
+
+naughty.config.presets.low.bg = beautiful.bg_normal
+naughty.config.presets.low.fg = beautiful.fg_normal
+naughty.config.presets.low.timeout = 1
+naughty.config.presets.normal.bg = beautiful.bg_normal
+naughty.config.presets.normal.fg = beautiful.fg_focus
+naughty.config.presets.normal.timeout = 3
+naughty.config.presets.critical.bg = beautiful.fg_focus
+naughty.config.presets.critical.fg = beautiful.bg_focus
+naughty.config.presets.critical.timeout = 0
 
 beautiful.notification_font = beautiful.font
 beautiful.notification_bg = beautiful.bg_normal
