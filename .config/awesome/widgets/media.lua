@@ -56,14 +56,9 @@ local function usec2hms(usec)
   return string.format("%02d:%02d:%02d", h, m, s)
 end
 
-local function metadata(playing)
+local function metadata()
   awful.spawn.easy_async_with_shell("playerctl metadata -f '{{playerName}}\n<b>{{artist}}</b> - {{title}}\n{{position}}/{{mpris:length}}'", function (stdout)
     if #stdout > 0 then
-      if playing then
-        widget.icon.image = beautiful.icon_music_play
-      else
-        widget.icon.image = beautiful.icon_music_pause
-      end
       local p = string.split(string.trim(tostring(stdout)), "\n")
       local player = tostring(p[1] or "?")
       widget.text.visible = true
@@ -86,9 +81,13 @@ local function metadata(playing)
 end
 
 widget.update = function ()
-  awful.spawn.easy_async_with_shell("playerctl status", function (stdout)
-    if #stdout > 0 then
-      metadata(string.trim(stdout) == "Playing")
+  awful.spawn.easy_async_with_shell("playerctl -a status", function (stdout)
+    if string.find(stdout, "Playing") then
+      widget.icon.image = beautiful.icon_music_play
+      metadata()
+    elseif string.find(stdout, "Paused") then
+      widget.icon.image = beautiful.icon_music_pause
+      metadata()
     else
       widget.icon.image = beautiful.icon_music_off
       widget.text.visible = false
@@ -109,7 +108,8 @@ awful.widget.watch("true", 1, function () widget:update() end)
 
 widget:buttons(gears.table.join(
   awful.button({}, mouse_left, function ()
-    awful.spawn("playerctl play-pause") -- TODO start spotify?
+    awful.spawn("playerctl -a play-pause")
+    widget:update()
   end)
 ))
 
