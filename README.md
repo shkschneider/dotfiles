@@ -7,7 +7,7 @@ dotfiles
 
 ```
 git clone https://github.com/shkschneider/dotfiles.git
-./dotfiles [specific-files]
+./dotfiles [-v|--verbose] [-d|--dry-run] [specific-files]
 ```
 
 > Use at your own risk.
