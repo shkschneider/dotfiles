@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
 VERBOSE=false
+DRYRUN=false
 case $1 in
   -v|--verbose) VERBOSE=true ; shift ;;
+  -d|--dry-run) DRYRUN=true ; VERBOSE=true ; shift ;;
 esac
 
 set -- $(find .* -maxdepth 0 -not -name '.git' | tail +3)
@@ -10,6 +12,7 @@ set -- $(find .* -maxdepth 0 -not -name '.git' | tail +3)
 function _backup() {
   local dotfile=$1
   $VERBOSE && echo "mv --force $HOME/$dotfile $HOME/.config/backup/"
+  $DRYRUN && return
   [ ! -d $HOME/.config/backup ] && mkdir $HOME/.config/backup
   mv -f $HOME/$dotfile $HOME/.config/backup/ >/dev/null
 }
@@ -17,6 +20,7 @@ function _backup() {
 function _remove() {
   local dotfile=$1
   $VERBOSE && echo "rm --force $HOME/$dotfile"
+  $DRYRUN && return
   rm -f $HOME/$dotfile >/dev/null
 }
 
@@ -24,9 +28,11 @@ function _link() {
   local dotfile=$1
   if [ $dotfile == ".nanorc" ] ; then
     $VERBOSE && echo "bash $dotfile > $HOME/$dotfile"
+    $DRYRUN && return
     cat $dotfile | cut -c3- | bash > "$HOME/$dotfile"
   else
     $VERBOSE && echo "ln --symbolic $PWD/$dotfile $HOME/$dotfile"
+    $DRYRUN && return
     ln -s $PWD/$dotfile $HOME/$dotfile >/dev/null
   fi
 }
@@ -61,7 +67,11 @@ for dotfile in "$@" ; do
   _dotfile $dotfile
 done
 
-$VERBOSE || echo $HOME/.config/backup
-$VERBOSE && find $HOME/.config/backup 2>/dev/null
+$DRYRUN && {
+  echo "DRY-RUN: nothing was changed on your system" >&2
+} || {
+  $VERBOSE || echo $HOME/.config/backup
+  $VERBOSE && find $HOME/.config/backup 2>/dev/null
+}
 
 # EOF
