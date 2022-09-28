@@ -37,6 +37,6 @@ esac
 
 while read rc ; do
   source $rc
-done < <(find $BASHCONFDIR -maxdepth 1 -name '*.bash' 2>/dev/null)
+done < <(find $BASHCONFDIR/ -maxdepth 1 -name '*.bash' 2>/dev/null)
 
 # EOF
