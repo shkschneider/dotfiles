@@ -7,7 +7,9 @@ case $1 in
   -d|--dry-run) DRYRUN=true ; VERBOSE=true ; shift ;;
 esac
 
-set -- $(find .* -maxdepth 0 -not -name '.git' | tail +3)
+if [ $# -eq 0 ] ; then
+  set -- $(find .* -maxdepth 0 -not -name '.git' | tail +3)
+fi
 
 function _backup() {
   local dotfile=$1
