@@ -57,25 +57,25 @@ local function usec2hms(usec)
 end
 
 local function metadata()
-  awful.spawn.easy_async_with_shell("playerctl metadata -f '{{playerName}}\n<b>{{artist}}</b> - {{title}}\n{{position}}/{{mpris:length}}'", function (stdout)
+  awful.spawn.easy_async_with_shell("playerctl metadata -f '{{playerName}}@<b>{{artist}}</b> - {{title}}@{{position}}/{{mpris:length}}'", function (stdout)
     if #stdout > 0 then
-      local p = string.split(string.trim(tostring(stdout)), "\n")
+      local p = string.split(string.trim(tostring(stdout)), "@")
       local player = tostring(p[1] or "?")
       widget.text.visible = true
       widget.text.markup = p[2]
-      local p = string.split(p[3], "/")
-      if #p == 2 then
-        local position = tonumber(p[1] or "0")
-        local length = tonumber(p[2] or "0")
+      local pp = string.split(p[3], "/")
+      if #pp == 2 then
+        local position = tonumber(pp[1] or "0")
+        local length = tonumber(pp[2] or "0")
         widget.bar.visible = true
         widget.bar.span_ratio = position / length
         widget.tooltip.markup = markup.fg(beautiful.fg_focus, player) .. "\n" .. usec2hms(position) .. " / " .. usec2hms(length)
       end
     else
-      widget.icon.image = beautiful.icon_music_off
+      --widget.icon.image = beautiful.icon_music_off
       widget.text.visible = false
       widget.bar.visible = false
-      widget.tooltip.markup = markup.italic("none")
+      widget.tooltip.markup = markup.italic("error")
     end
   end)
 end

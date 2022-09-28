@@ -7,26 +7,26 @@ local widget = wibox.widget.arc(beautiful.icon_volume_up)
 widget.volume = 0
 
 widget.increase = function ()
-  if widget.volume == 0 then widget:mute() end
+  if widget.volume == 0 then awful.spawn("pamixer --unmute") end
   if widget.volume == 100 then return end
   widget.volume = widget.volume + step
   if widget.volume > 100 then widget.volume = 100 end
-  --awful.spawn("pamixer --increase " .. step)
+  awful.spawn("pamixer --set-volume " .. widget.volume)
   widget:update()
 end
 
 widget.decrease = function ()
-  if widget.volume == 0 then return end
+  if widget.volume == 0 then
+    return
+  end
   widget.volume = widget.volume - step
   if widget.volume < 0 then widget.volume = 0 end
-  --awful.spawn("pamixer --decrease " .. step)
+  if widget.volume == 0 then awful.spawn("pamixer --mute") end
+  awful.spawn("pamixer --set-volume " .. widget.volume)
   widget:update()
 end
 
 widget.update = function ()
-  if widget.volume > 0 then
-    awful.spawn("pamixer --set-volume " .. widget.volume)
-  end
   widget.bar.value = widget.volume
   if widget.volume == 0 then
     widget.bar.opacity = 0
@@ -36,6 +36,11 @@ widget.update = function ()
     widget.icon.image = beautiful.icon_volume_up
   end
   widget.tooltip.update(widget.volume)
+  if widget.volume == 0 then
+    notify_low(beautiful.icon_volume_mute, "Volume", tostring(widget.volume))
+  else
+    notify_low(beautiful.icon_volume_up, "Volume", tostring(widget.volume))
+  end
 end
 
 widget.mute = function ()
@@ -68,7 +73,7 @@ widget.tooltip.update = function (v)
 end
 tooltip(widget)
 
--- return
+-- keys
 
 globalkey { m = {}, k = "XF86AudioRaiseVolume", g = "media", d = "increase", f = function () widget:increase() end }
 globalkey { m = {}, k = "XF86AudioLowerVolume", g = "media", d = "decrease", f = function () widget:decrease() end }
