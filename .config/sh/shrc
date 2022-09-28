@@ -10,6 +10,6 @@ export PS1="$(whoami)@$(hostname)> "
 
 while read rc ; do
   source $rc
-done < <(find $HOME/.config/sh -maxdepth 1 -name '*.sh' 2>/dev/null)
+done < <(find $HOME/.config/sh/ -maxdepth 1 -name '*.sh' 2>/dev/null)
 
 # EOF
