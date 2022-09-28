@@ -13,14 +13,14 @@ awful.rules.rules = {
       buttons = clientbuttons,
       screen = awful.screen.preferred,
       placement = awful.placement.no_overlap+awful.placement.no_offscreen,
-      size_hint_honor = true -- required to ensure useless_gap
+      size_hints_honor = true
     }
   },
   {
     rule = { floating = true }, properties = { placement = awful.placement.centered }
   },
   {
-    rule_any = { class = { "Steam" } }, properties = { floating = true, fullscreen = true, border_width = 0, shape = nil, screen = awful.screen.primary, size_hints_honor = false }
+    rule_any = { class = { "Steam" } }, properties = { floating = false, fullscreen = false, border_width = 0, shape = nil }
   },
   -- vlc
   {

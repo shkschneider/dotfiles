@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 
-# /etx/xdg/autostart/*.desktop
-# ~/.config/autostart/*.desktop
-[ -d $HOME/.config/autostart ] || exit 0
-
 which dex >/dev/null 2>/dev/null && {
+  for file in /etc/xdg/autostart/*.desktop ; do
+    dex $file
+  done
   for file in $HOME/.config/autostart/*.desktop ; do
     dex $file
   done
@@ -13,7 +12,7 @@ which dex >/dev/null 2>/dev/null && {
       notify-send -u critical "Autostart script not executable!" "$file"
     else
       pkill -9 $(basename ${file%.sh}) 2>/dev/null
-      $file
+      sh $file &
     fi
   done
   exit 0
