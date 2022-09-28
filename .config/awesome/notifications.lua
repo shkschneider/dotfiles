@@ -16,33 +16,38 @@ beautiful.notification_font = beautiful.font
 beautiful.notification_bg = beautiful.bg_normal
 beautiful.notification_fg = beautiful.fg_normal
 beautiful.notification_border_width = 0
-beautiful.notification_shape = nil
+beautiful.notification_shape = beautiful.shape
 beautiful.notification_opacity = 1.0
 beautiful.notification_margin = dpi(8)
 beautiful.notification_spacing = dpi(8)
+beautiful.notification_icon_size = dpi(32)
 
---[[
-naughty.config.presets.low = {
-  timeout = 1,
-  bg = beautiful.bg_normal,
-  fg = beautiful.fg_normal
-}
-naughty.config.presets.normal = {
-  timeout = 3,
-  bg = beautiful.bg_normal,
-  fg = beautiful.fg_focus
-}
-naughty.config.presets.critical = {
-  timeout = 0,
-  bg = beautiful.bg_normal,
-  fg = beautiful.fg_urgent
-}
---naughty.config.defaults.timeout = naughty.config.presets.normal.timeout
---]]
+_notifications = {}
 
-function notify(title, text) -- FIXME
-  -- low normal critical
-  naughty.notify({ preset = naughty.config.presets.normal, title = title, text = text})
+local function notify(urgency, icon, title, text)
+  local id = 0
+  for _, notification in pairs(_notifications) do
+    if notification.title == title then
+      id = notification.id
+      break
+    end
+  end
+  --awful.spawn.with_shell(string.format("dunstify --urgency='%s' --icon='%s' --hints='string:x-dunst-stack-tag:%s' '%s' '%s'", urgency, icon, title, title, text))
+  awful.spawn.easy_async_with_shell(string.format("notify-send -u '%s' -i '%s' -r '%d' -p '%s' '%s'", urgency, icon, id, title, text), function (stdout)
+    table.insert(_notifications, { title = title, id = string.trim(stdout) })
+  end)
+end
+
+function notify_low(icon, title, text)
+  notify("low", icon, title, text)
+end
+
+function notify_normal(icon, title, text)
+  notify("normal", icon, title, text)
+end
+
+function notify_critical(icon, title, text)
+  notify("critical", icon, title, text)
 end
 
 if awesome.startup_errors then
@@ -57,16 +62,3 @@ do
     in_error = false
   end)
 end
-
---[[ TODO
-naughty.connect_signal("request::display", function (n)
-  local icon = n.app_icon
-  -- TODO if not icon then
-  local time = os.date("%H:%M")
-  naughty.layout.box {
-    notification = n,
-    type = "notification",
-    -- TODO widget_template
-  }
-end)
---]]

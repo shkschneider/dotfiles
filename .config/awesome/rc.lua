@@ -11,7 +11,7 @@ markup = require("markup")
 
 require("defaults")
 require("theme")("shk")
---require("notifications")
+require("notifications")
 require("keys")
 require("layouts")
 require("mouse")
