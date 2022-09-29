@@ -28,7 +28,7 @@ globalkey { m = { super }, k = "l", g = "awesome", d = "lock", f = function ()
   awful.spawn("sync")
   awful.spawn(defaults.lock)
 end }
-globalkey { m = {}, k = "Print", g = "awesome", d = "screenshot", f = function () notify("Print", "TODO") end } -- TODO
+globalkey { m = {}, k = "Print", g = "awesome", d = "screenshot", f = function () notify_critical(nil, "Print", "TODO") end } -- TODO
 globalkey { m = { super }, k = "r", g = "awesome", d = "run", f = function () awful.spawn.with_shell(defaults.run) end }
 globalkey { m = { super }, k = "Return", g = "awesome", d = "terminal", f = function () awful.spawn(defaults.terminal) end }
 globalkey { m = { super, control }, k = "BackSpace", g = "awesome", d = "quit", f = awesome.quit }

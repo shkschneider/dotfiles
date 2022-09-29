@@ -14,7 +14,5 @@
 ## TODO
 
 - keychains https://github.com/uzsolt/keychains
-- apps configuration from $HOME/.config
 - keys: screenshots
-- notification template
 - notification progress bars

@@ -17,4 +17,5 @@ awful.layout.layouts = {
   bling.layout.centered,
   bling.layout.equalarea,
   --bling.layout.deck
+  awful.layout.suit.floating,
 }

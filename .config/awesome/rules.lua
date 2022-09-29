@@ -12,16 +12,18 @@ awful.rules.rules = {
       keys = clientkeys,
       buttons = clientbuttons,
       screen = awful.screen.preferred,
-      placement = awful.placement.no_overlap+awful.placement.no_offscreen,
+      placement = awful.placement.no_overlap+awful.placement.no_offscreen, -- awful.placement.under_mouse
       size_hints_honor = true
     }
   },
   {
     rule = { floating = true }, properties = { placement = awful.placement.centered }
   },
+--[[
   {
     rule_any = { class = { "Steam" } }, properties = { floating = false, fullscreen = false, border_width = 0, shape = nil }
   },
+--]]
   -- vlc
   {
     rule = { class = "vlc" }, properties = { maximized = true }
@@ -34,10 +36,6 @@ awful.rules.rules = {
   },
   {
     rule = { name = "cava" }, properties = { tag = "W", screen = 2 }
-  },--]]
-  --[[ steam
-  {
-    rule = { class = "Steam"} , properties = { tag = "W", screen = 2 }
   },--]]
   nil
 }
