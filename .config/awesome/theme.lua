@@ -25,9 +25,14 @@ screen.connect_signal("property::geometry", set_wallpaper)
 
 return function (t)
   -- theming
-  beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
-  --beautiful.init("~/.awesome/themes/monokai/theme.lua")
-  require("themes.shk")
+  local theme = os.getenv("HOME") .. "/.config/awesome/themes/" .. t .. "/theme.lua"
+  if gears.filesystem.file_readable(theme) then
+    beautiful.init(theme)
+  else
+    beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
+    beautiful.opacity = 1.00
+    beautiful.alpha = "FF"
+  end
   -- wallpaper
   awful.screen.connect_for_each_screen(function (s)
     set_wallpaper(s)

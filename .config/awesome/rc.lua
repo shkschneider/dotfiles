@@ -19,8 +19,6 @@ require("panels")
 require("windows")
 require("navigation")
 
--- WIP require("titlebars")
-
 require("help")
 
 root.keys(globalkeys or {})
