@@ -18,5 +18,5 @@ end
 awful.screen.connect_for_each_screen(function (s)
   awful.tag({ "A", "W", "E", "S", "O", "M", "E" }, s, awful.layout.layouts[1])
   require("panel-top")(widget(s, "top"))
-  --require("panel-bottom")(widget(s, "bottom"))
+  require("panel-bottom")(widget(s, "bottom"))
 end)
