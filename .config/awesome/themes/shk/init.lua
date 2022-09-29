@@ -1,9 +1,5 @@
 -- https://elv13.github.io/documentation/06-appearance.md.html
 
-client.connect_signal("manage", function (c)
-  c.shape = beautiful.shape
-end)
-
 screen.connect_signal("arrange", function (s)
   local single = #s.tiled_clients == 1
   for _, c in pairs(s.clients) do
@@ -15,14 +11,16 @@ screen.connect_signal("arrange", function (s)
   end
 end)
 
+--[[
 client.connect_signal("focus", function (c)
   c.border_color = beautiful.border_focus
-  c.opacity = 1.00
+  --c.opacity = 1.00
 end)
 client.connect_signal("unfocus", function (c)
   c.border_color = beautiful.border_normal
-  c.opacity = 0.85
+  --c.opacity = 0.85
 end)
+--]]
 
 -- horizon-dark
 local colors = {
