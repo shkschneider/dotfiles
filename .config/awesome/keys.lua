@@ -22,21 +22,31 @@ function clientbutton(button)
 end
 
 globalkey(awful.key({ super }, "F1", help.show_help))
-
 globalkey { m = { super, control }, k = "r", g = "awesome", d = "restart awesomewm", f = awesome.restart }
+globalkey { m = { super, control }, k = "BackSpace", g = "awesome", d = "quit", f = awesome.quit }
+
 globalkey { m = { super }, k = "l", g = "awesome", d = "lock", f = function ()
   awful.spawn("sync")
   awful.spawn(defaults.lock)
 end }
-globalkey { m = {}, k = "Print", g = "awesome", d = "screenshot", f = function () notify_critical(nil, "Print", "TODO") end } -- TODO
-globalkey { m = { super }, k = "r", g = "awesome", d = "run", f = function () awful.spawn.with_shell(defaults.run) end }
-globalkey { m = { super }, k = "Return", g = "awesome", d = "terminal", f = function () awful.spawn(defaults.terminal) end }
-globalkey { m = { super, control }, k = "BackSpace", g = "awesome", d = "quit", f = awesome.quit }
+
+globalkey { m = {}, k = "Print", g = "awesome", d = "screenshot", f = function ()
+  notify_critical(nil, "Print", "TODO") -- TODO
+end }
+
+globalkey { m = { super }, k = "r", g = "awesome", d = "run", f = function ()
+  awful.spawn.with_shell(defaults.run)
+end }
+
+globalkey { m = { super }, k = "Return", g = "awesome", d = "terminal", f = function ()
+  awful.spawn(defaults.terminal)
+end }
+
 globalkey { m = { super }, k = "Escape", g = "awesome", d = "exit menu", f = function ()
   awful.spawn.with_shell(defaults.power)
 end }
 
---[[
+--[[ X86MonBrightness
 globalkey { m = {}, k = "XF86MonBrightnessUp", g = "screen", d = "brightness +", f = function ()
   -- xbacklight -inc 10
   -- brightnessctl set 5%+ -q

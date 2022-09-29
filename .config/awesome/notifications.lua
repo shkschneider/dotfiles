@@ -35,6 +35,8 @@ beautiful.notification_icon_size = dpi(32)
 _notifications = {}
 
 local function notify(urgency, icon, title, text)
+  title = string.gsub(title, '"', "'")
+  text = string.gsub(text, '"', "'")
   local id = 0
   for _, notification in pairs(_notifications) do
     if notification.title == title then
@@ -42,9 +44,10 @@ local function notify(urgency, icon, title, text)
       break
     end
   end
-  --awful.spawn.with_shell(string.format("dunstify --urgency='%s' --icon='%s' --hints='string:x-dunst-stack-tag:%s' '%s' '%s'", urgency, icon, title, title, text))
-  awful.spawn.easy_async_with_shell(string.format("notify-send -u '%s' -i '%s' -r '%d' -p '%s' '%s'", urgency, icon, id, title, text), function (stdout)
-    table.insert(_notifications, { title = title, id = string.trim(stdout) })
+  awful.spawn.easy_async_with_shell(string.format('notify-send -u "%s" -i "%s" -r "%d" -p "%s" "%s"', urgency, icon, id, title, text), function (stdout)
+    if #stdout > 0 then
+      table.insert(_notifications, { title = title, id = tonumber(string.trim(stdout)) })
+    end
   end)
 end
 

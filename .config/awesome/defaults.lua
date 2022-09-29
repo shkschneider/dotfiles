@@ -11,6 +11,10 @@ defaults.network = "nm-connection-editor"
 defaults.hardware = "lxtasks"
 defaults.disks = "gnome-disks"
 defaults.power = "bash ~/.config/rofi/powermenu.sh"
+
+--globalkey { m = { super }, k = "r", g = "awesome", d = "run", f = function () awful.spawn.with_shell(defaults.run) end }
+--globalkey { m = { super }, k = "Return", g = "awesome", d = "terminal", f = function () awful.spawn(defaults.terminal) end }
+
 --defaults.copy = "xsel | xsel -i -b"
 --defaults.paste = "xsel -b | xsel"
 --defaults.sound = "pavucontrol"
