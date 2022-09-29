@@ -57,23 +57,29 @@ local function usec2hms(usec)
 end
 
 local function metadata()
-  awful.spawn.easy_async_with_shell("playerctl metadata -f '{{playerName}}@<b>{{artist}}</b> - {{title}}@{{position}}/{{mpris:length}}'", function (stdout)
+  awful.spawn.easy_async_with_shell("playerctl metadata -f '<b>{{artist}}</b> - {{title}}'", function (stdout)
+    stdout = string.trim(stdout)
     if #stdout > 0 then
-      local p = string.split(string.trim(tostring(stdout)), "@")
-      local player = tostring(p[1] or "?")
       widget.text.visible = true
-      widget.text.markup = p[2]
-      local pp = string.split(p[3], "/")
-      if #pp == 2 then
-        local position = tonumber(pp[1] or "0")
-        local length = tonumber(pp[2] or "0")
+      widget.text.text = string.gsub(stdout, "</?[a-z]>", "") -- fallback
+      widget.text.markup = stdout
+    end
+  end)
+  awful.spawn.easy_async_with_shell("playerctl metadata -f '{{playerName}}@{{position}}@{{mpris:length}}'", function (stdout)
+    stdout = string.trim(stdout)
+    if #stdout > 0 then
+      local p = string.split(stdout, "@")
+      if #p == 3 then
+        local player = p[1] or "?"
+        local position = tonumber(p[2] or "0")
+        local length = tonumber(p[3] or "0")
         widget.bar.visible = true
         widget.bar.span_ratio = position / length
         widget.tooltip.markup = markup.fg(beautiful.fg_focus, player) .. "\n" .. usec2hms(position) .. " / " .. usec2hms(length)
+      else
+        widget.tooltip.markup = markup.italic("error")
       end
     else
-      --widget.icon.image = beautiful.icon_music_off
-      widget.text.visible = false
       widget.bar.visible = false
       widget.tooltip.markup = markup.italic("error")
     end
@@ -98,7 +104,7 @@ widget.update = function ()
 end
 
 widget.tooltip = awful.tooltip {
-  markup = markup.italic("none"),
+  markup = markup.italic("..."),
   fg = beautiful.fg_normal,
   visible = false
 }

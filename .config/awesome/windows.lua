@@ -1,5 +1,7 @@
 local lain = require("lain")
 
+-- borders
+
 screen.connect_signal("arrange", function (s)
   local single = #s.tiled_clients == 1
   for _, c in pairs(s.clients) do
@@ -14,37 +16,35 @@ end)
 client.add_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.add_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 
+-- fullscreen
+
 clientkey { m = { super }, k = "f", g = "windows", d = "fullscreen", f = function (c)
   c.fullscreen = not c.fullscreen
-  --c:raise()
+  c:raise()
 end }
 
-clientkey { m = { super }, k = "m", g = "windows", d = "magnify", f = lain.util.magnify_client }
+--clientkey { m = { super }, k = "m", g = "windows", d = "magnify", f = lain.util.magnify_client }
 
+--[[ sticky
 clientkey(awful.key({ super }, "p", function (c)
   if not c.sticky then
     c.sticky = true
-    c.border_color = beautiful.border_focus
   else
     c.sticky = false
-    c.border_color = beautiful.border_normal
   end
   --c.ontop = not c.ontop
 end))
---[[
 client.add_signal("property::sticky", function(c)
-  c.border_width = 1
-  c.border_color = beautiful.border_focus
+  if c.sticky then
+    c.border_color = beautiful.border_focus
+  else
+    c.border_color = beautiful.border_normal
+  end
 end)
 --]]
---[[
-awful.button({}, mouse_left, function(c)
-  awful.mouse.client.move(c)
-end)
---]]
+
+-- open/close
 
 clientkey { m = { super }, k = "q", g = "windows", d = "kill", f = function (c)
   c:kill()
 end }
-
-globalkey { m = { super }, k = "Escape", g = "popup", d = "popup", f = popup }
