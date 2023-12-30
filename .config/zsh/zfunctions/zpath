@@ -1,5 +1,0 @@
-# ~/.config/zsh/zfunctions/zpath
-
-print -l $path
-
-# EOF

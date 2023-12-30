@@ -1,0 +1,13 @@
+#/no/shebang
+
+bin() {
+    # https://stackoverflow.com/questions/592620/how-can-i-check-if-a-program-exists-from-a-bash-script
+    command -v $@
+    # https://www.topbug.net/blog/2016/10/11/speed-test-check-the-existence-of-a-command-in-bash-and-zsh/
+    type $@ &>/dev/null
+}
+
+test $# -eq 0 && set -- $(cat /dev/stdin)
+for arg in $@ ; do bin $arg ; done
+
+# EOF

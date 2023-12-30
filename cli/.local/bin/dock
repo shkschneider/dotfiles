@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+
+dock() {
+    command -v docker >/dev/null || exit 1
+    options=""
+    while test $# -gt 0 ; do
+        case "$1" in
+            --test) docker run "hello-world" ; exit $? ;;
+            --clean) docker image prune --all ; exit $? ;;
+            --purge) docker system prune --all ; exit $? ;;
+            -*) options="$options $1" ; shift ;;
+            ""|--) shift ; break ;;
+            *) break ;;
+        esac
+    done
+    id=$(echo "$1" | tr '[:upper:]' '[:lower:]' | tr -dc '[^a-z]')
+    id=${id:-"bash"}
+    image=$(
+        case "$id" in
+            helloworld) echo "hello-world" ;;
+            # shells
+            bash) echo "bash" ;;
+            busybox) echo "busybox" ;;
+            windows|powershell) "docker pull mcr.microsoft.com/powershell" ;;
+            zsh) echo "zshusers/zsh" ;;
+            # systems
+            arch*) echo "archlinux/archlinux" ;;
+            debian) echo "debian" ;;
+            fedora) echo "fedora" ;;
+            alpine*) echo "alpine" ;;
+            gentoo) echo "gentoo/portage" ;;
+            guix) echo "metacall/guix" ;;
+            nix*) echo "nixos/nix" ;;
+            opensuse) echo "opensuse/leap" ;;
+            slackware) echo "slackware/base" ;;
+            #solus) echo "silkeh/solus" ;;
+            void*) echo "ghcr.io/void-linux/void-glibc-full" ;;
+            # others
+            *) echo "$1" ;;
+        esac
+    )
+    if [[ ! $options =~ \-\-quiet ]] ; then
+        echo ">>> docker run --interactive --tty --rm --name=$id --hostname=$id $image"
+    fi
+    docker run -it --rm --name=$id --hostname=$id $image
+    if test $? -eq 0 ; then
+        echo "<<< ✔"
+    else
+        echo "<<< ✘"
+    fi
+}
+
+test $# -eq 0 && set -- $(cat /dev/stdin)
+test $# -gt 0 && dock $@
+
+# EOF

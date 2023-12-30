@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+
+type -p wget >/dev/null || exit 1
+type -p unzip >/dev/null || exit 1
+type -p git >/dev/null || exit 1
+type -p tar >/dev/null || exit 1
+mkdir --parents ~/.cache
+mkdir --parents ~/.themes
+
+#:sweet
+
+if ! test -d ~/.themes/Sweet ; then
+    wget --quiet https://github.com/EliverLara/Sweet/releases/download/v3.0/Sweet-Dark-v40.zip -O ~/.cache/sweet.zip
+    unzip -o ~/.cache/sweet.zip -d ~/.cache
+    mv ~/.cache/Sweet-Dark-v40 ~/.themes/Sweet
+    rm -f ~/.cache/sweet.zip
+fi
+
+#:nordic
+
+if ! test -d ~/.themes/Nordic ; then
+    wget --quiet https://github.com/EliverLara/Nordic/releases/download/v2.2.0/Nordic-darker-v40.tar.xz -O ~/.cache/nordic.tar.xz
+    tar -C ~/.cache -xJf ~/.cache/nordic.tar.xz
+    mv ~/.cache/Nordic-darker-v40 ~/.themes/Nordic
+    rm -f ~/.cache/Nordic-darker-v40.tar.xz
+fi
+
+#:yaru
+
+if ! test -d ~/.themes/Yaru ; then
+    git clone https://github.com/Jannomag/Yaru-Colors.git ~/.cache/yaru
+    mv ~/.cache/yaru/Themes/Yaru-Orange-dark ~/.themes/Yaru
+    rm -rf ~/.cache/yaru
+fi
+
+#:graphite
+
+if ! test -d ~/.themes/Graphite ; then
+    if type -p sassc >/dev/null ; then
+        git clone https://github.com/vinceliuice/Graphite-gtk-theme.git ~/.cache/graphite
+        cd ~/.cache/graphite
+        sh install.sh --theme orange --color dark --tweaks rimless
+        cd -
+        mv ~/.themes/Graphite-orange-Dark ~/.themes/Graphite
+        cp -rf ~/.themes/Graphite-orange-Dark-hdpi/* ~/.themes/Graphite/
+        rm -rf ~/.themes/Graphite-orange-Dark-hdpi
+        cp -rf ~/.themes/Graphite-orange-Dark-xhdpi/* ~/.themes/Graphite/
+        rm -rf ~/.themes/Graphite-orange-Dark-xhdpi
+        rm -rf ~/.cache/graphite
+    fi
+fi
+
+#:cursors
+
+if ! test -d ~/.local/share/icons/vimix ; then
+    mkdir -p ~/.local/share/icons
+    git clone https://github.com/vinceliuice/Vimix-cursors.git ~/.cache/vimix
+    cp -r ~/.cache/vimix/dist ~/.local/share/icons/vimix
+    rm -rf ~/.cache/vimix
+fi
+
+#:main
+
+if type -p gsettings >/dev/null ; then
+    export GTK_THEME="Graphite"
+    gsettings set org.gnome.desktop.interface gtk-theme "$GTK_THEME"
+    gsettings set org.gnome.desktop.wm.preferences theme "$GTK_THEME"
+    gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+    gsettings set org.gnome.desktop.interface cursor-theme 'Vimix'
+fi
+
+# EOF

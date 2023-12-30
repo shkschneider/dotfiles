@@ -1,0 +1,7 @@
+#:void:xbps
+
+xbps-install -u xbps
+xbps-install -Syu
+xbps-install bash
+
+#...

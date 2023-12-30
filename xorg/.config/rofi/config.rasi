@@ -1,0 +1,29 @@
+* {
+    background:     #1E2127FF;
+    background-alt: #282B31FF;
+    foreground:     #FFFFFFFF;
+    selected:       #61AFEFFF;
+    active:         #98C379FF;
+    urgent:         #E06C75FF;
+}
+
+configuration {
+    modes: [window,drun,run,ssh,filebrowser];
+    case-sensitive: true;
+    cycle: true;
+    show-icons: true;
+    icon-theme: "Papirus";
+    font: "JetBrainsMono 11";
+    terminal: "alacritty";
+    matching: "fuzzy";
+    separator-style: "dash";
+
+    display-combi:              "*";
+    display-drun:               "!";
+    display-run:                "!";
+    display-filebrowser:        "?";
+    display-window:             "?";
+    drun-display-format:        "{name} [<span weight='light' size='small'><i>({generic})</i></span>]";
+    window-format:              "{w} · {t}";
+}
+

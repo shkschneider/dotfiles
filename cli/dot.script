@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+
+_() {
+    if ! command -v $1 ; then
+        echo -n "$1: command not found"
+        shift
+        test $# -gt 0 && echo " -- $@"
+    fi
+}
+
+_ wget "https://www.gnu.org/software/wget/" # package for retrieving files using the most widely used internet protocols
+command -v wget || exit 1
+
+mkdir -p ~/.local/bin
+if ! test -f ~/.local/bin/pipes ; then
+    wget --quiet https://raw.githubusercontent.com/pipeseroni/pipes.sh/master/pipes.sh -O ~/.local/bin/pipes
+fi
+if ! test -x ~/.local/bin/pipes ; then
+    chmod a+x ~/.local/bin/pipes
+fi
+
+_    git "https://github.com/gitgitgadget/git" # distributed version control system
+_    fzf "https://github.com/junegunn/fzf" # a command-line fuzzy finder
+_ forgit "https://github.com/wfxr/forgit"
+
+if command -v git >/dev/null ; then
+    if command -v fzf >/dev/null ; then
+        # https://github.com/junegunn/fzf
+        if ! test -f ~/.config/sh/fzf-git.sh ; then
+            test -d ~/.config/sh || mkdir -p ~/.config/sh
+            wget --quiet https://raw.githubusercontent.com/junegunn/fzf-git.sh/main/fzf-git.sh -O ~/.config/sh/fzf-git.sh
+            source ~/.config/sh/fzf-git.sh
+            echo "#source ~/.config/sh/fzf-git.sh"
+            echo "#alias git-fuzzy-files=_fzf_git_files"
+            echo "#alias git-fuzzy-branches=_fzf_git_branches"
+            echo "#alias git-fuzzy-tags=_fzf_git_tags"
+            echo "#alias git-fuzzy-hashes=_fzf_git_hashes"
+        fi
+        _ forgit "https://github.com/wfxr/forgit" # a utility tool powered by fzf for using git interactively
+    fi
+    # https://github.com/jwiegley/git-scripts
+    if ! test -d ~/.config/git/scripts ; then
+        test -d ~/.config/git || mkdir -p ~/.config/git
+        git clone https://github.com/jwiegley/git-scripts.git ~/.config/git/scripts
+        find ~/.config/git/scripts -maxdepth 1 -type f -name "git-*"
+    fi
+fi
+
+_     acpi "https://sourceforge.net/projects/acpiclient/files/acpiclient/" # battery and thermal information
+_      bat "https://github.com/sharkdp/bat" # a cat(1) clone with wings
+_     cava "https://github.com/karlstav/cava" # cross-platform audio visualizer
+_   docker "https://github.com/docker/docker" # pack, ship and run any application as a lightweight container
+_     dtrx "https://github.com/moonpyk/dtrx" # intelligent archive extraction
+_       fd "https://github.com/sharkdp/fd" # a simple, fast and user-friendly alternative to find(1)
+_  glances "https://github.com/nicolargo/glances" # glances an eye on your system
+_   httpie "https://github.com/httpie/cli" # modern, user-friendly command-line http client for the api era
+_       jq "https://github.com/jqlang/jq" # command-line json processor
+_ progress "https://github.com/Xfennec/progress" # linux tool to show progress for cp, mv, dd, ...
+_   ranger "https://github.com/ranger/ranger" # a vim-inspired filemanager for the console
+_       rg "https://github.com/BurntSushi/ripgrep" # ripgrep recursively searches directories for a regex pattern while respecting your gitignore
+_   slides "https://github.com/maaslalani/slides" # terminal based presentation tool
+_    spark "https://github.com/holman/spark" # generates sparklines for a set of data
+_     tldr "https://github.com/tldr-pages/tldr" # collaborative cheatsheets for console commands
+_       yq "https://github.com/mikefarah/yq" # portable command-line yaml, json, xml, csv, toml and properties processor
+_        z "https://github.com/rupa/z" # jump around
+
+# EOF

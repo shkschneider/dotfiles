@@ -1,0 +1,442 @@
+#!/usr/bin/env bash
+# FIXME grep-oP -- P is not portable
+
+LC_ALL=C
+LANG=C
+NAME="neo"
+DESCRIPTION="bash system info script"
+VERSION="2.1.0"
+VERBOSITY=""
+
+_version() {
+    echo "$NAME $VERSION"
+}
+
+_help() {
+    echo    "$NAME -- $DESCRIPTION"
+    echo -e "\t-v[v[v...]] increase verbosity"
+    echo -e "\t| cut -c3-  no (Nerd Fonts) icons"
+}
+
+while test $# -gt 0 ; do
+    case "$1" in
+        -v*) VERBOSITY="$VERBOSITY${1/-/}" ; shift ;;
+        "--") shift ; break ;;
+        --version) _version >&2 ; exit 0 ;;
+        --help) _help >&2 ; exit 0 ;;
+        *) _help >&2 ; exit 1 ;;
+    esac
+done
+
+_v='[0-9]+([\.\-][0-9]+)+'
+_version() {
+    #shellcheck disable=SC2005
+    echo "$(false \
+        || "$@" --version 2>/dev/null \
+        || "$@" -version 2>/dev/null \
+        || "$@" -v 2>/dev/null \
+        || "$@" version 2>/dev/null \
+    )" | grep -oP "$_v" 2>/dev/null | head -1
+}
+
+#:main
+
+kernel="$(cat /proc/sys/kernel/ostype 2>/dev/null || uname --kernel-name)"
+kernel="${kernel,,}"
+if test -z "$kernel" ; then
+    echo "!!! unknown kernel: '$(uname --kernel-name --kernel-release 2>/dev/null)'" >&2
+    exit 1
+fi
+os=""
+if test "$kernel" == "darwin" ; then
+    os="$(grep -A1 'ProductName' /System/Library/CoreServices/SystemVersion.plist 2>/dev/null | tr '[:upper:]' '[:lower:]' || echo 'apple')"
+elif test -f /system/build.prop && test -d /system/app && test -d /system/priv-app ; then
+    os="android"
+elif test -f /etc/lsb-release && grep -i -o '*chrome*' /etc/lsb-release >/dev/null ; then
+    os="chrome"
+elif command -v guix >/dev/null ; then
+    os="guix"
+elif command -v nix >/dev/null ; then
+    os="nix"
+elif test -f /etc/os-release || test -f /usr/lib/os-release ; then
+    os=$(grep ^ID= /etc/os-release /usr/lib/os-release 2>/dev/null | head -1 | cut -d'=' -f2 | tr -d '"' | tr '[:upper:]' '[:lower:]')
+elif command -v lsb_release >/dev/null ; then
+    os="$(lsb_release --id --short | tr '[:upper:]' '[:lower:]')"
+else
+    os=$(grep ^ID= /etc/*-release 2>/dev/null | head -1 | cut -d'=' -f2 | tr -d '"' | tr '[:upper:]' '[:lower:]')
+fi
+if test -z "$os" ; then
+    echo "!!! unknown os: '$(uname --kernel-name --kernel-release 2>/dev/null)'" >&2
+    exit 1
+fi
+sys="$kernel-$os"
+user=$(id --user --name)
+host=$(cat /proc/sys/kernel/hostname 2>/dev/null || hostname 2>/dev/null || cat /etc/hostname 2>/dev/null)
+
+#:machine
+
+if test -e /sys/class/power_supply || test -e /proc/acpi/button/lid ; then
+    printf " "
+elif test -n "$XDG_CURRENT_DESKTOP" || command -v tset >/dev/null ; then
+    printf "󰪫 "
+else
+    printf " "
+fi
+if [[ $VERBOSITY =~ ^v{2,}$ ]] ; then
+    printf "$user@"
+fi
+printf "$host"
+if [[ $VERBOSITY =~ ^v{1,}$ ]] ; then
+    printf " ($(date -d "@$(stat -c %Y /)" '+%Y-%m-%d' 2>/dev/null))"
+fi
+printf "\n"
+
+if command -v hostnamectl >/dev/null ; then
+    printf "󰓼 %s\n" "$(hostnamectl status | grep 'Hardware Model:' | cut -d':' -f2- | xargs)"
+elif test -d /sys/devices/virtual/dmi/id ; then
+    printf "󰓼 %s %s\n" \
+         "$(cat /sys/devices/virtual/dmi/id/product_name 2>/dev/null || cat /sys/devices/virtual/dmi/id/board_name 2>/dev/null)" \
+        "$(cat /sys/devices/virtual/dmi/id/product_version 2>/dev/null || cat /sys/devices/virtual/dmi/id/board_version 2>/dev/null)"
+fi
+
+#:user
+
+if [[ $VERBOSITY =~ ^v{2,}$ ]] ; then
+    printf " "
+    if command -v lslogins >/dev/null ; then
+        lslogins --output=USER,SHELL --logins="$user" | tail -1 | xargs -d ' ' -i basename {} | xargs
+    elif test -z "$SHELL" ; then
+        printf "%s %s\n" "$user" "$(readlink /proc/$$/exe 2>/dev/null | xargs basename)"
+    else
+        printf "%s %s\n" "$user" "$(command -v $SHELL 2>/dev/null | xargs basename)"
+    fi
+fi
+
+#:uptime
+
+uptime=""
+if command -v uptime >/dev/null ; then
+    uptime="$(uptime --pretty 2>/dev/null || uptime | cut -d',' -f1 | xargs | cut -d' ' -f2-)"
+elif test -f /proc/uptime ; then
+    uptime="$(cat /proc/uptime)"
+fi
+if test -n "$uptime" ; then
+    printf "󰔛 %s\n" "$uptime"
+fi
+
+#:kernel
+
+case "$kernel" in
+    darwin) printf ' ' ;;
+    linux) printf ' ' ;;
+    sun*) printf ' ' ;;
+    gnu*) printf ' ' ;;
+    *bsd) printf '󰣠 ' ;;
+esac
+printf "%s" "$kernel"
+if [[ $VERBOSITY =~ ^v{1,}$ ]] ; then
+    printf " %s" "$(cat /proc/sys/kernel/osrelease 2>/dev/null || uname -r)"
+fi
+if [[ $VERBOSITY =~ ^v{2,}$ ]] ; then
+    printf " (%s)" "$(uname -m)"
+fi
+printf "\n"
+
+#:os
+
+case "$os" in
+    android) printf '󰀲 ' ;;
+    chrome*) printf ' ' ;;
+    macosx|osx|macos) printf ' ' ;;
+    win*|nt*) printf '󰖳 ' ;;
+
+    alma*) printf ' ' ;;
+    alpine*) printf ' ' ;;
+    aosc) printf '' ;;
+    archcraft) printf ' ' ;;
+    archlabs) printf ' ' ;;
+    arch*) printf ' ' ;;
+    arco*) printf ' ' ;;
+    artix*) printf ' ' ;;
+    big*) printf ' ' ;;
+    centos) printf ' ' ;;
+    coreos) printf ' ' ;;
+    debian) printf ' ' ;;
+    deepin) printf ' ' ;;
+    devuan) printf ' ' ;;
+    elementary*) printf ' ' ;;
+    endeavour*) printf ' ' ;;
+    fedora) printf ' ' ;;
+    freebsd) printf ' ' ;;
+    garuda) printf ' ' ;;
+    gentoo) printf ' ' ;;
+    guix) printf ' ' ;;
+    hyperbola) printf ' ' ;;
+    illuminos) printf ' ' ;;
+    kali*) printf ' ' ;;
+    kubuntu) printf ' ' ;;
+    locos) printf ' ' ;;
+    mageia) printf ' ' ;;
+    mandriva) printf ' ' ;;
+    manjaro) printf ' ' ;;
+    *mint) printf '󰣭 ' ;;
+    mx*) printf ' ' ;;
+    nix*) printf ' ' ;;
+    openbsd) printf ' ' ;;
+    opensuse) printf ' ' ;;
+    parabola) printf ' ' ;;
+    parrot) printf ' ' ;;
+    pop*) printf ' ' ;;
+    qube*) printf ' ' ;;
+    rhel|redhat*) printf ' ' ;;
+    rocky*) printf ' ' ;;
+    slackware) printf ' ' ;;
+    solus) printf ' ' ;;
+    tails*) printf ' ' ;;
+    trisquel) printf ' ' ;;
+    *ubuntu) printf ' ' ;;
+    vanilla) printf ' ' ;;
+    void*) printf ' ' ;;
+    xero*) printf ' ' ;;
+    zorin*) printf ' ' ;;
+
+    *) printf ' ' ;;
+esac
+printf "%s" "$os"
+if [[ $VERBOSITY =~ ^v{1,}$ ]] ; then
+    if test "$kernel" == "darwin" ; then
+        printf " %s" "$(grep -A1 'ProductVersion' /System/Library/CoreServices/SystemVersion.plist 2>/dev/null | tr '[:upper:]' '[:lower:]' || uname -r)"
+    elif test "$os" == "chrome" ; then
+        printf " %s" "$(grep MILESTONE= /etc/lsb-release 2>/dev/null | cut -d'=' -f1)"
+    elif test "$os" == "nix" ; then
+        printf " %s" "$(_version nix)"
+    elif test -f /etc/os-release || test -f /usr/lib/os-release ; then
+        printf " %s" "$(grep _ID= /etc/os-release /usr/lib/os-release 2>/dev/null | head -1 | cut -d'=' -f2 | tr -d \" | tr '[:upper:]' '[:lower:]' || uname --kernel-release)"
+    elif command -v lsb_release ; then
+        printf " %s" "$(lsb_release --release --short)"
+    fi
+fi
+printf "\n"
+
+#:init
+
+init="$(cat /proc/1/comm)"
+printf "󰌧 %s" "$init"
+if [[ $VERBOSITY =~ ^v{1,}$ ]] ; then
+    printf " %s\n" "$(_version "$(case "$init" in
+        sv|runit) echo "sulogin" ;;
+        systemd) echo "systemctl" ;;
+        init|systemv) echo "init" ;;
+        *) echo "$init" ;;
+    esac)")"
+else
+    printf "\n"
+fi
+
+#:session
+
+session="${XDG_SESSION_TYPE,,:-$(tty)}"
+case "$session" in
+    x11|xorg*) printf " " ;;
+    wayland) printf " " ;;
+    *) test -n "$(env | grep ^DISPLAY=)" && printf " " || printf " " ;;
+esac
+printf "%s" "$session"
+if [[ $VERBOSITY =~ ^v{1,}$ ]] ; then
+    case "$session" in
+        x11|xorg*) printf " %s" "$(man xorg | tail -1 | grep -oP "$_v" 2>/dev/null)" ;;
+        #wayland) printf " %s" "$(journalctl --user --grep=wayland --lines=1 --no-pager | grep -oP "wayland-$_v" 2>/dev/null | tail -1 | cut -d'-' -f2-)" ;;
+    esac
+fi
+printf "\n"
+
+#:wm
+
+wm="${XDG_CURRENT_DESKTOP,,}"
+if test -n "$wm" ; then
+    case "$wm" in
+        # xorg
+        awesome) printf ' ' ;;
+        bspwm) printf ' ' ;;
+        dwm) printf ' ' ;;
+        i3*) printf ' ' ;;
+        qtile) printf ' ' ;;
+        xmonad) printf ' ' ;;
+        # wayland
+        hyprland) printf ' ' ;;
+        sway*) printf ' ' ;;
+        # ...
+        enlightenment) printf ' ' ;;
+        gnome*|metacity|mutter) printf ' ' ;;
+        fluxbox) printf ' ' ;;
+        freedesktop) printf ' ' ;;
+        lxde) printf ' ' ;;
+        lxqt) printf ' ' ;;
+        xfce*) printf ' ' ;;
+        kde*neon) printf ' ' ;;
+        kde*plasma) printf ' ' ;;
+        kde*) printf ' ' ;;
+        *) printf ' ' ;;
+    esac
+    printf "%s" "$wm"
+    if [[ $VERBOSITY =~ ^v{1,}$ ]] ; then
+        printf " %s" "$(_version "$XDG_CURRENT_DESKTOP")"
+    fi
+    printf "\n"
+fi
+
+#:terminal
+
+if test -n "$TERM" ; then
+    printf " %s" "${TERM,,}"
+    if [[ $VERBOSITY =~ ^v{1,}$ ]] ; then
+        printf " %s" "$(_version "$TERM")"
+    fi
+    printf "\n"
+fi
+
+shell="${SHELL##*/}"
+case "$shell" in
+    sh|dash) printf '󱆃 ' ;;
+    bash|zsh) printf ' ' ;;
+    *) printf '󱆃 ' ;;
+esac
+printf "%s" "$shell"
+if [[ $VERBOSITY =~ ^v{1,}$ ]] ; then
+    printf " %s" "$(_version "$shell")"
+fi
+printf "\n"
+
+#:battery
+
+if test -d /sys/class/power_supply ; then
+    lvl="$(cat /sys/class/power_supply/BAT1/capacity)"
+    if test $(cat /sys/class/power_supply/ADP1/online 2>/dev/null | tr -d "\n") == "1" ; then
+        if   test "$lvl" -gt 99 ; then printf '󱊦 '
+        elif test "$lvl" -gt 66 ; then printf '󱊥 '
+        elif test "$lvl" -gt 33 ; then printf '󱊤 '
+        else                           printf '󰢟 '
+        fi
+    else
+        if   test "$lvl" -gt 99 ; then printf '󱊣 '
+        elif test "$lvl" -gt 66 ; then printf '󱊢 '
+        elif test "$lvl" -gt 33 ; then printf '󱊡 '
+        else                           printf '󰂎 '
+        fi
+    fi
+    printf "%s%%" "$lvl"
+    if [[ $VERBOSITY =~ ^v{1,}$ ]] ; then
+        printf " (%s)" "$(cat /sys/class/power_supply/BAT1/status 2>/dev/null | tr '[:upper:]' '[:lower:]')"
+    fi
+    printf "\n"
+fi
+
+#:cpu
+
+n=""
+m=""
+if test "$kernel" == "darwin" ; then
+    n="$(sysctl -n machdep.cpu.core_count)"
+    m="$(sysctl -n machdep.cpu.brand_string)"
+elif command -v wmic >/dev/null ; then
+    m="$(wmic cpu get name)"
+elif command -v lscpu >/dev/null ; then
+    n="$(nproc 2>/dev/null || lscpu --parse=MODELNAME | grep -v '^#' | wc -l)"
+    m="$(lscpu --parse=MODELNAME | grep -v '^#' | head -1 | sed 's/([^)]*)//g' | cut -d'@' -f1 | xargs)"
+elif test -f /proc/cpuinfo ; then
+    n="$(nproc 2>/dev/null || grep -c '^processor' /proc/cpuinfo)"
+    m="$(grep '^model name' /proc/cpuinfo | head -1 | cut -d':' -f2- | xargs)"
+fi
+printf " "
+if test -n "$n" ; then
+    printf "%sx %s" "$n" "$m"
+else
+    printf "%s" "$m"
+fi
+#if [[ $VERBOSITY =~ ^v{1,}$ ]] ; then
+#    if command -v getconf >/dev/null ; then
+#        printf " [%s]" "$(getconf LONG_BIT 2>/dev/null | xargs -i echo '{}bit')"
+#    elif command -v lscpu >/dev/null ; then
+#        printf " [%s]" "$(lscpu 2>/dev/null | grep 'op-mode' | awk '{print $NF}')"
+#    fi
+#fi
+if [[ $VERBOSITY =~ ^v{2,}$ ]] ; then
+    printf " (%.0f%%)" "$(top -b | head -3 | tail -1 | awk '{print 2+4}' | bc)"
+fi
+printf "\n"
+
+#:ram
+
+if command -v free >/dev/null ; then
+    printf " %sM / %sM" \
+        "$(free --mega | grep ^Mem | awk '{print $3}')" \
+        "$(free --mega | grep ^Mem | awk '{print $2}')"
+    if [[ $VERBOSITY =~ ^v{2,}$ ]] ; then
+        printf " (%.0f%%)" "$(free | grep ^Mem | awk '{print $3/$2 * 100}')"
+    fi
+    printf "\n"
+elif test -f /proc/meminfo ; then
+    printf " %s\n" "$(grep ^MemTotal: /proc/meminfo | awk '{print $2,$3}')"
+fi
+
+#:gpu
+
+#if test -n "$DISPLAY" ; then
+gpu=""
+if command -v glxinfo >/dev/null ; then
+    gpu="$(glxinfo 2>/dev/null | grep -i 'device:' | sed 's/([^)]*)//g' | cut -d':' -f2- | xargs)"
+elif command -v lshw >/dev/null ; then
+    gpu="$(lshw -class display 2>/dev/null | grep -i 'product:' | cut -d':' -f2- | xargs | tr -d '[]')"
+fi
+if test -n "$gpu" ; then
+    printf "󰢮 %s" "$gpu"
+    if [[ $VERBOSITY =~ ^v{1,}$ ]] ; then
+        mem="$(glxinfo 2>/dev/null | grep -i 'video memory:' | cut -d':' -f2- | xargs | sed 's;B$;;')"
+        test -n "$mem" && printf " (%s)" "$mem"
+    fi
+    printf "\n"
+fi
+
+#:net
+
+if test -d /sys/class/net && test -d /proc/net ; then
+    while read iface ; do
+        test "$(cat /sys/class/net/${iface}/operstate)" == "up" || continue
+        printf "󰀂 "
+        if [[ $VERBOSITY =~ ^v{1,}$ ]] ; then
+            printf "%s:" "$(grep "^$iface" /proc/net/wireless >/dev/null && echo "wlan" || echo "eth")"
+        fi
+        printf "%s" "$iface"
+        if [[ $VERBOSITY =~ ^v{2,}$ ]] ; then
+            test -n "$addr" || addr=$(ip -o addr 2>/dev/null | grep $iface | head -1 | xargs | cut -d' ' -f4)
+            test -n "$addr" || addr=$(hostname -I 2>/dev/null | cut -d' ' -f1)
+            test -n "$addr" || addr=$(ifconfig $iface | grep inet | head -1 | xargs | cut -d' ' -f2)
+            test -n "$addr" && printf " (%s)" "$addr"
+        fi
+        printf "\n"
+    done < <(find /sys/class/net/ -maxdepth 1 -type l | xargs -i basename {})
+fi
+
+#:fs
+
+# TODO numfmt etc
+if command -v df >/dev/null && command -v bc >/dev/null ; then
+    printf "󱛟 %s" "$(df --human / | sed '1d' | awk '{print $2}')"
+    if [[ $VERBOSITY =~ ^v{1,}$ ]] ; then
+        printf " (%s)" "$(df --human / | sed '1d' | awk '{print $5}')"
+    fi
+    printf "\n"
+fi
+
+#:colors
+
+printf "  "
+for ((i=0; i<=7; i++)) ; do
+    printf "\e[1;4${i}m  \e[0m"
+done
+for ((i=0; i<=7; i++)) ; do
+    printf "\e[1;10${i}m  \e[0m"
+done
+printf "\n"
+
+# EOF

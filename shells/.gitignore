@@ -1,0 +1,11 @@
+bash/.history
+ssh/id_*
+ssh/known_hosts
+zsh/.cache/
+zsh/.completion
+zsh/.history
+zsh/.zarp
+zsh/.zcompdump
+zsh/.zsh_history
+zsh/.zsh_sessions/
+zsh/src/

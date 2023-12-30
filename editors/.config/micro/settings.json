@@ -1,0 +1,11 @@
+{
+    "autoclose": false,
+    "autosu": true,
+    "colorscheme": "monokai",
+    "mkparents": true,
+    "reload": "auto",
+    "rmtrailingws": true,
+    "statusformatl": "$(filename) ($(line),$(col)) $(modified)",
+    "statusformatr": "$(opt:filetype) $(opt:fileformat) $(opt:encoding)",
+    "tabstospaces": true
+}

@@ -1,0 +1,55 @@
+/* @theme:shk@ */
+@define-color background #0C0C0C;
+@define-color foreground #FCFCFC;
+@define-color darker #151515;
+@define-color dark #292929;
+@define-color black #000000;
+@define-color red #ED1515;
+@define-color green #11D116;
+@define-color yellow #FF9400;
+@define-color blue #0C48CC;
+@define-color magenta #8C54FE;
+@define-color cyan #1D99F3;
+@define-color white #FFFFFF;
+* {
+    font-family: "Hack Nerd Font Mono";
+}
+
+#window {
+    margin: auto;
+    padding: 8px;
+    border-radius: 8px;
+    background: @darker;
+}
+
+#input {
+    padding: 8px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    background: @dark;
+}
+#scroll {
+    background: transparent;
+}
+#text {
+    color: @white;
+}
+#text:selected {
+    color: @yellow;
+}
+
+#inner-box {
+    padding: 0px;
+    border-radius: 8px;
+    background: @transparent;
+}
+#outer-box {
+    padding: 8px;
+}
+
+#entry {
+    padding: 8px;
+}
+#entry:selected {
+    /* background: @black; */
+}

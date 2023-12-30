@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+calc() {
+    command -v bc >/dev/null || exit 1
+    bc -l <<< "$@"
+}
+
+test $# -eq 0 && set -- $(cat /dev/stdin)
+for arg in $@ ; do calc $arg ; done
+
+# EOF

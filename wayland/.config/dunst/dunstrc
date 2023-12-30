@@ -1,0 +1,93 @@
+[global]
+monitor = 0
+follow = none
+#width = (0, 420)
+#height = (0, 42)
+origin = top-center
+offset = 8x8
+#scale = 0
+#notification_limit = 0
+
+# dunstify -h int:value:42
+progress_bar = true
+progress_bar_height = 8
+progress_bar_frame_width = 0
+#progress_bar_min_width = 150
+#progress_bar_max_width = 300
+progress_bar_corner_radius = 4
+
+icon_corner_radius = 4
+indicate_hidden = yes
+
+#transparency = 20
+#separator_height = 2
+
+padding = 8
+horizontal_padding = 8
+text_icon_padding = 8
+frame_width = 1
+gap_size = 8
+separator_color = frame
+sort = yes # by urgency
+
+line_height = 0
+markup = full
+format = "<b>%s:</b> %b"
+alignment = left
+vertical_alignment = center
+#show_age_threshold = 60
+ellipsize = end
+ignore_newline = no
+stack_duplicates = true
+hide_duplicate_count = false
+#show_indicators = yes # urls and actions
+
+enable_recursive_icon_lookup = true
+icon_theme = "breeze"
+icon_position = left
+min_icon_size = 16
+max_icon_size = 32
+icon_path = /usr/share/icons/gnome/16x16/status/:/usr/share/icons/gnome/16x16/devices/
+
+#sticky_history = yes
+#history_length = 20
+history_length = 1
+
+dmenu = /usr/bin/dmenu -p dunst:
+browser = /usr/bin/xdg-open
+always_run_script = true
+title = Dunst
+class = dunst
+corner_radius = 8
+
+ignore_dbusclose = false
+
+layer = top
+#force_xwayland = false
+#force_xinerama = false
+
+mouse_left_click = close_current
+mouse_middle_click = do_action, close_current
+mouse_right_click = close_all
+
+# @theme:shk@ #
+font = "Hack Nerd Font Mono" 11
+highlight = "#FF9400"
+[urgency_low]
+background = "#0C0C0C"
+foreground = "#FCFCFC"
+frame_color = "#292929"
+timeout = 1
+#default_icon = /path/to/icon
+[urgency_normal]
+background = "#151515"
+foreground = "#FCFCFC"
+frame_color = "#292929"
+timeout = 3
+#default_icon = /path/to/icon
+[urgency_critical]
+background = "#151515"
+foreground = "#FF9400"
+frame_color = "#292929"
+timeout = 0
+#default_icon = /path/to/icon

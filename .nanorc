@@ -1,1 +1,0 @@
-# find /usr/share/nano -type f | xargs printf -- "include %s\n"

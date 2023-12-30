@@ -1,0 +1,12 @@
+# micro -plugin list
+editorconfig
+filemanager
+fzf
+wc
+autoclose
+comment
+diff
+ftoptions
+linter
+literate
+status

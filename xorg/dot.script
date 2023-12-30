@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+if command -v awesome >/dev/null ; then
+    if ! test -d ~/.config/awesome/bling ; then
+        command -v git >/dev/null || exit 1
+        git clone https://github.com/BlingCorp/bling.git ~/.config/awesome/bling
+    fi
+fi
+
+# EOF

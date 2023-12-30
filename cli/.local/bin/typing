@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+while read line ; do
+    echo "$line" | pv -qL 10
+done
+
+# EOF

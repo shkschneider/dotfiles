@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+test $# -gt 1 || exit 1
+command -v openssl >/dev/null || exit 1
+
+email="${1:-$EMAIL}"
+test -z "$email" && command -v git >/dev/null && email="$(git config user.email 2>/dev/null)"
+test -n "$email" || exit 1
+
+email="$(echo $mail | openssl dgst -md5 -r | cut -d' ' -f1)"
+size="${2:-1024}"
+wget --quiet "https://gravatar.com/avatar/$email?s=$size" -O "$email.png"
+echo "$email.png"
+
+# EOF

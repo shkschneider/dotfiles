@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+manual() {
+    command -v fzf >/dev/null || exit 1
+    m=$(man -k "${@:-.}" | fzf)
+    test $? -eq 0 || test -n "$m" || exit 1
+    man $(echo "$m" | tr -d '()' | awk '{print $2,$1}')
+}
+
+test $# -gt 0 && manual $@
+
+# EOF

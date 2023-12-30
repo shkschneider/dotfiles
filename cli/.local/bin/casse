@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+# actually not a typo
+# 'case' is a bash internal
+# 'casse' is French for breaking, breakage, broken, broken, broken, broken
+casse() {
+    case "$1" in
+        snake) shift ; echo "${@,,}" | xargs | tr ' ' '_' ;;
+        kebab) shift ; echo "${@,,}" | xargs | tr ' ' '-' ;;
+        camel) shift ; echo "${@,,}" | xargs | sed 's/ \([a-z]\)/\U\1/g;s/^\([a-z]\)/\1/g' ;;
+        pascal) shift ; echo "${@,,}" | xargs | sed 's/ \([a-z]\)/\U\1/g;s/^\([a-z]\)/\U\1/g' ;;
+        lower) shift ; echo "${@,,}" ;;
+        upper) shift ; echo "${@^^}" ;;
+        first) shift ; lower="${@,,}" ; echo "${lower^}" ;;
+        title) shift ; echo "$@" | sed 's/\w\+/\L\u&/g' ;;
+        invert) shift
+            lower="$(echo "$@" | tr '[:upper:]' '_')"
+            upper="$(echo "$@" | tr '[:lower:]' '_')"
+            newline=""
+            i=1
+            for c in $(echo "$@" | grep -o .) ; do
+                l=$(echo "$lower" | cut -c$i)
+                u=$(echo "$upper" | cut -c$i)
+                if [[ $l != '_' ]] ; then
+                    newline="$newline${l^}"
+                elif [[ $u != '_' ]] ; then
+                    newline="$newline${u,}"
+                else
+                    newline="$newline$c"
+                fi
+                i=$((i + 1))
+            done
+            echo "$newline"
+            ;;
+        *) echo "$@" ;;
+    esac
+}
+
+test $# -eq 0 && set -- $(cat /dev/stdin)
+test $# -gt 0 && casse $@
+
+# EOF

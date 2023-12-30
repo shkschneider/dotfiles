@@ -1,0 +1,243 @@
+#!/usr/bin/env bash
+
+LC_ALL=C
+LANG=C
+
+NAME="pm"
+DESCRIPTION="one package manager (wrapper) to rule them all"
+VERSION="3.2.0"
+# 3.2: more methods (list, check, sources...)
+# 3.1: configuration (~/.config/pm.conf)
+# 3: if/else of binaries (apt, dnf, pacman, xbps, ...)
+# 2: package managers as methods (dpkg, rpm)
+# 1: huge switch/case (dpkg)
+
+_version() {
+    echo -n "$NAME $VERSION"
+    for bin in $(echo "$pm" | tr ':' ' ') ; do
+        command -v $bin >/dev/null || continue
+        echo -n " > $(command -v $bin) $($bin --version 2>/dev/null | grep -oP '[0-9]+(\.[0-9]+)+' | head -1)"
+    done
+    echo
+}
+
+_help() {
+    echo    "$NAME -- $DESCRIPTION"
+    echo -e "\t<[l]ist, [i]nfo, [u]pdate, [c]heck, [U]pgrade, [s]earch, [a]dd|install, [r]emove|uninstall, [S]ources, [C]lean>"
+    # TODO files, provides, dependencies, depends-on...
+}
+
+#:package:managers
+
+if test -f ~/.config/pm.conf ; then
+
+    #TODO pm="$(cat ~/.config/pm.conf | cut -d'=' -f2 | cut -d' ' -f1)"
+    list="$(grep ^list= ~/.config/pm.conf | cut -d'=' -f2- | tr "\n" ";")"
+    info="$(grep ^info= ~/.config/pm.conf | cut -d'=' -f2- | tr "\n" ";")"
+    update="$(grep ^update= ~/.config/pm.conf | cut -d'=' -f2- | tr "\n" ";")"
+    check="$(grep ^check= ~/.config/pm.conf | cut -d'=' -f2- | tr "\n" ";")"
+    upgrade="$(grep ^upgrade= ~/.config/pm.conf | cut -d'=' -f2- | tr "\n" ";")"
+    search="$(grep ^search= ~/.config/pm.conf | cut -d'=' -f2- | tr "\n" ";")"
+    install="$(grep ^install= ~/.config/pm.conf | cut -d'=' -f2- | tr "\n" ";")"
+    uninstall="$(grep ^uninstall= ~/.config/pm.conf | cut -d'=' -f2- | tr "\n" ";")"
+    sources="$(grep ^sources= ~/.config/pm.conf | cut -d'=' | tr "\n" ";")"
+    clean="$(grep ^clean= ~/.config/pm.conf | cut -d'=' -f2- | tr "\n" ";")"
+
+elif command -v apk >/dev/null ; then
+
+    pm="apk" # alpine
+    list="apk info"
+    info="apk info"
+    update="apk update"
+    check="apk -u list 2>/dev/null | wc -l"
+    upgrade="apk upgrade"
+    search="apk search"
+    install="apk add"
+    uninstall="apk del"
+    sources="cat /etc/apk/repositories"
+    clean="apk cache clean"
+
+elif command -v apt >/dev/null ; then
+
+    pm="apt:dpkg" # debian
+    list="apt list | cut -d'/' -f1"
+    info="apt show"
+    update="apt update"
+    check="apt list --upgradable 2>/dev/null | tail -n +2 | wc -l"
+    upgrade="apt upgrade"
+    search="apt search"
+    install="apt install"
+    uninstall="apt purge"
+    sources="grep ^URIs: /etc/apt/sources.list /etc/apt/sources.list.d/*.list 2>/dev/null | cut -d' ' -f2-"
+    clean="apt clean ; apt autoclean ; apt autoremove"
+
+elif command -v dnf >/dev/null ; then
+
+    pm="dnf:rpm" # fedora
+    list="dnf list installed | cut -d' ' -f1"
+    info="dnf info"
+    update="dnf update"
+    check="dnf --quiet list --updates 2>/dev/null | wc -l"
+    upgrade="dnf upgrade"
+    search="dnf search"
+    install="dnf install"
+    uninstall="dnf remove"
+    sources="dnf --quiet repolist --enabled | sed '1d' | cut -d' ' -f1"
+    clean="dnf clean all ; dnf autoremove"
+
+# TODO pm="emerge" # gentoo
+
+elif command -v eopkg >/dev/null ; then
+
+    pm="eopkg" # solus
+    list="exit 1"
+    info="exit 1"
+    update="eopkg ur"
+    check="exit 1"
+    upgrade="eopkg upgrade"
+    search="eopkg search"
+    install="eopkg install"
+    uninstall="eopkg remove"
+    sources="exit 1"
+    clean="eopkg remove-orphans"
+
+elif command -v guix >/dev/null ; then
+
+    pm="guix" # guix
+    list="guix package -I | xargs | cut -d' ' -f1"
+    info="guix package --show="
+    update="guix pull"
+    check="guix refresh -t gnu | wc -l"
+    upgrade="guix package -u"
+    search="guix package -s"
+    install="guix package -i"
+    uninstall="guix package -r"
+    sources="guix package -I | grep -oE '/.+'"
+    clean="guix gc"
+
+# TODO pm="nix" #nixos
+
+elif command -v paru >/dev/null ; then
+
+    pm="paru:pacman:rpm" # arch
+    list="paru -Q | cut -d' ' -f1"
+    info="paru -Qi"
+    update="paru -Sy"
+    check="pacman -Qu 2>/dev/null | wc -l"
+    upgrade="paru -Syu"
+    search="paru -Ss"
+    install="paru -S"
+    uninstall="paru -Rs"
+    sources=""
+    clean="paru -Sc ; paru -Qtdq | xargs | xargs paru -Rs"
+
+elif command -v pacman >/dev/null ; then
+
+    pm="pacman:rpm" # arch
+    list="pacman -Q | cut -d' ' -f1"
+    info="pacman -Qi"
+    update="pacman -Sy"
+    check="pacman -Qu 2>/dev/null | wc -l"
+    upgrade="pacman -Syu"
+    search="pacman -Ss"
+    install="pacman -S"
+    uninstall="pacman -Rs"
+    sources="cat /etc/pacman.conf | grep '^\[' | grep -v '\[options\]'"
+    clean="pacman -Sc ; pacman -Qtdq | xargs | xargs pacman -Rs"
+
+# TODO pm="pkg" # *bsd
+
+elif command -v xbps-install >dev/null ; then
+
+    pm="xbps" # void
+    list="xbps-query -l | cut -d' ' -f2"
+    info="xbps-query -S"
+    update="xbps-install -S"
+    check="xbps-install -un | wc -l"
+    upgrade="xbps-install -Su"
+    search="xbps-query -Rs"
+    install="xbps-install"
+    uninstall="xbps-remove"
+    sources="xbps-query -L | cut -d' ' -f2"
+    clean="xbps-remove -p ; xbps-remove -O"
+
+elif command -v zypper >/dev/null ; then
+
+    pm="zypper:rpm" # opensuse
+    list="rpm -qa"
+    info="zupper search -si"
+    update="zypper refresh"
+    check="zypper lu | wc -l"
+    upgrade="zypper update"
+    search="zypper search"
+    install="zypper install"
+    uninstall="zypper remove -u"
+    sources="zypper repos --uri | grep -oP 'https?://.+"
+    clean="zypper clean --all"
+
+else
+
+    echo "!!! unrecognized package manager" >&2
+    exit 1
+
+fi
+
+#:main
+
+e=0
+_() {
+    for cmdline in "$(echo "$*" | tr ";" "\n")" ; do
+        echo ">>> $cmdline"
+        sh -c "$cmdline"
+        if test $? -eq 0 ; then
+            echo "<<< ✔"
+        else
+            e=$((e + 1))
+            echo "<<< ✘"
+        fi
+    done
+}
+
+if test $# -eq 0 ; then
+    _help >&2
+    exit 1
+fi
+options=""
+for arg in $@ ; do
+    case $arg in
+        --version) _version ; exit 0 ;;
+        --help) _help >&2 ; exit 0 ;;
+        -*) options="$options $arg" ;;
+        --) shift ; break ;;
+        *) break ;;
+    esac
+done
+case $1 in
+    l|list) shift ; _ $list ;;
+    i|info) shift ; _ $info $@ ;;
+    u|update) shift ; _ $update $@ ;;
+    c|check) shift ; _ $check $@ ;;
+    U|upgrade) shift ; _ $upgrade $@ ;;
+    s|search) shift ; _ $search $@ ;;
+    a|add|install) shift ; _ $install $@ ;;
+    r|remove|uninstall) shift ; _ $uninstall $@ ;;
+    C|clean) shift ; _ $clean ;;
+    *)
+        command=$(grep "^$1=" ~/.config/pm.conf 2>/dev/null | cut -d'=' -f2-)
+        if test -n "$command" ; then
+            _ $command $@
+        else
+            echo "!!! unknown command: $1" >&2
+            exit 1
+        fi
+        ;;
+esac
+
+if test $e -gt 0 ; then
+    echo "!!! $e error(s)" >&2
+    exit 1
+else
+    exit 0
+fi
+
+# EOF

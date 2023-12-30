@@ -1,0 +1,47 @@
+# ~/.config/bash/bashrc
+
+source $HOME/.config/sh/shrc
+
+[ -z "$PS1" ] && return 0
+
+export BASHCONFDIR=${BASHCONFDIR:-$HOME/.config/bash}
+
+# options
+
+command -v stty >/dev/null && {
+    stty -ixon 2>/dev/null
+    stty -ixoff 2>/dev/null
+}
+command -v xset >/dev/null && {
+    xset -dpms 2>/dev/null
+    xset s off 2>/dev/null
+}
+
+set -m # job control
+
+set -o noclobber # >| to force
+set -o emacs
+set -o ignoreeof
+#shopt -s autocd
+shopt -s hostcomplete
+shopt -s cdspell
+shopt -s histappend
+shopt -s checkwinsize
+shopt -s dotglob
+shopt -s checkhash
+
+test -f ~/.config/bash/defaults.bash && source ~/.config/bash/defaults.bash
+
+case $OSTYPE in
+  darwin*)
+    SHELL_SESSION_HISTORY=0
+    ;;
+esac
+
+# sources
+
+while read rc ; do
+  source $rc
+done < <(find $BASHCONFDIR/ -maxdepth 1 -name '*.bash' 2>/dev/null)
+
+# EOF

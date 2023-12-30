@@ -1,0 +1,96 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+add_newline = true
+format = """
+$username\
+$hostname\
+$localip\
+$shlvl\
+$directory\
+$git_branch\
+$git_commit\
+$git_state\
+$git_metrics\
+$git_status\
+$custom\
+$sudo\
+$cmd_duration\
+$line_break\
+$jobs\
+$battery\
+$time\
+$status\
+$os\
+$container\
+$shell\
+$character"""
+
+palette = 'shk'
+# @theme:shk@ #
+[palettes.shk]
+black = '#000000'
+red = '#ED1515'
+green = '#11D116'
+yellow = '#FF9400'
+blue = '#0C48CC'
+magenta = '#8C54FE'
+cyan = '#1D99F3'
+white = '#FFFFFF'
+
+[battery]
+disabled = false
+
+[character]
+success_symbol = "[>](bold green)"
+error_symbol = "[x](bold red)"
+
+[cmd_duration]
+min_time = 1_000
+show_milliseconds = true
+#show_notifications = true
+min_time_to_notify = 60_000
+
+[directory]
+truncation_symbol = '… '
+
+[git_status]
+conflicted = '!'
+ahead = '>'
+behind = '<'
+diverged = ']['
+untracked = '?'
+stashed = '()'
+modified = '~'
+staged = '+'
+renamed = '~'
+deleted = '-'
+
+[hostname]
+ssh_only = true
+
+[jobs]
+threshold = 1
+symbol_threshold = 1
+number_threshold = 1
+symbol = '✦ '
+
+[line_break]
+disabled = false
+
+[os]
+disabled = true
+
+[package]
+disabled = true
+
+[shell]
+disabled = true
+
+[sudo]
+disabled = false
+
+[time]
+disabled = true
+
+[username]
+show_always = false

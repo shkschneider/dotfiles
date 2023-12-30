@@ -1,0 +1,22 @@
+[global]
+    focus = "sloppy"
+    borderless = True
+    tab_position = "top"
+    close_button_on_tab = False
+    hide_tabbar = False
+
+[keybindings]
+
+[profiles]
+    [[default]]
+    audible_bell = False
+    visible_bell = True
+    color_scheme = "white_on_black"
+    cursor_blink = True
+    cursor_shape = "block"
+    font = "Hack Nerd Font Mono 11"
+    scroll_on_output = True
+    show_titlebar = False
+    scrollback_lines = 1000
+    mouse_autohide = True
+    copy_on_selection = True
