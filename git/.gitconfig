@@ -1,0 +1,10 @@
+# ~/.config/gitconfig
+
+[user]
+#name = shkschneider
+#email = shk.schneider@gmail.com
+
+[include]
+path = ~/.config/git/config
+
+# EOF

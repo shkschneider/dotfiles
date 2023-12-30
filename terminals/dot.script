@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+command -v wget >/dev/null || exit 1
+command -v git >/dev/null || exit 1
+
+if ! test -f ~/.config/tmux/tmux.conf ; then
+    test -d ~/.config/tmux || mkdir -p ~/.config/tmux
+    wget --quiet https://raw.githubusercontent.com/gpakosz/.tmux/master/.tmux.conf -O ~/.config/tmux/tmux.conf
+fi
+
+# alacritty >= 0.13.0
+if test -f ~/.config/alacritty/alacritty.toml ; then
+    if ! test -d ~/.config/alacritty/themes ; then
+        git clone https://github.com/alacritty/alacritty-theme ~/.cache/alacritty-themes
+        mv ~/.cache/alacritty-themes ~/.config/alacritty/themes
+        rm -rf ~/.cache/alacritty-themes
+    fi
+    #import = [ "~/.config/alacritty/themes/${THEME:-afterglow}.toml" ]'
+fi
+
+# EOF

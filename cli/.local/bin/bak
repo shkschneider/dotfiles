@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+bak() {
+    for path in "$@" ; do
+      basename=$(basename "$path")
+      dirname=$(dirname "$path")
+      case "$basename" in
+        *.bak) mv -v -- "$path" "$dirname/${basename%.bak}" ;;
+        *) mv -v -- "$path" "$dirname/${basename}.bak" ;;
+      esac
+    done
+}
+
+test $# -eq 0 && set -- $(cat /dev/stdin)
+for arg in $@ ; do bak $arg ; done
+
+# EOF

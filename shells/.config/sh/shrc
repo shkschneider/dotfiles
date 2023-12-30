@@ -1,0 +1,57 @@
+# ~/.config/sh/shrc
+
+test -n "$LANG" || eval "$(locale)"
+test -n "$LANG" || LANG='en_us.UTF-8'
+test $(umask) -eq 0 && umask 022
+
+[[ $- == *i* ]] || return
+#echo "shopt -s nullglob extglob globstar &>/dev/null || :"
+
+tput bold ; for i in 1 2 3 4 5 6 7 0 ; do tput setaf $i ; printf '#! ' ; done ; tput sgr0
+
+export PS1="$(whoami)@$(hostname -s)> "
+
+#:user
+
+for user in $(echo $USER) $(id --user --name) $(echo $LOGNAME) ; do
+    export USER="$user"
+    export LOGNAME="$user"
+    break
+done
+
+#:host
+
+for host in $(cat /proc/sys/kernel/hostname 2>/dev/null) $(echo $HOSTNAME) $(hostnamectl hostname 2>/dev/null) $(uname --nodename) ; do
+    export HOST="$host"
+    break
+done
+
+#:editor
+
+for editor in $(command -v micro) $(command -v nano) ; do
+    export EDITOR="$editor"
+    break
+done
+alias e="$EDITOR"
+
+#:pager
+
+for pager in $(command -v most) $(command -v less) $(command -v more) $(command -v pg) ; do
+    export PAGER="$pager"
+    for opt in 'QUIT-AT-EOF' 'exit-on-eof' ; do
+        test "$($pager --help 2>&1 | grep -c -- "--$opt")" != "0" && \
+            export PAGER="$PAGER --$opt"
+    done
+    break
+done
+alias p="$PAGER"
+
+#:source
+
+while read rc ; do
+    source $rc
+done < <(find $HOME/.config/sh/ -maxdepth 1 -name '*.sh' 2>/dev/null)
+
+test -f ~/.config/sh/shrc.local && source ~/.config/sh/shrc.local
+
+# EOF

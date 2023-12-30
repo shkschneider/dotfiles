@@ -1,0 +1,278 @@
+#!/usr/bin/env bash
+
+LC_ALL=C
+LANG=C
+
+NAME="demon"
+DESCRIPTION="one service manager (wrapper) to rule them all"
+VERSION="1.5.0"
+# 1.5: openrc {}
+# 1.4: list, shutdown, reboot
+# 1.3: runlevel
+# 1.2: follows symlink
+# 1.1: /proc/1/cmdline, sysv
+# 1: /proc/1/comm, systemd, runit
+
+_version() {
+    echo "$NAME $VERSION"
+}
+
+_help() {
+    echo    "$NAME -- $DESCRIPTION"
+    echo -e "\t<[i]nfo, [l]ist, [s]tatus, [r]eload>"
+    echo -e "\t<[e]nable, [d]isable, [s]tart, [S]top, [R]estart>"
+    echo -e "\t--shutdown, --reboot"
+}
+
+#:init
+
+p0=""
+p1="$(cat /proc/1/cmdline | xargs --null)"
+if test -z "$p1" ; then
+    echo "!!! unknown process 1" >&2
+    exit 1
+fi
+if test -L "$p1" ; then
+    if command -v readlink >/dev/null ; then
+        p0="$p1"
+        p1="$(readlink -f "$p1")"
+    elif command -v realpath >/dev/null ; then
+        p0="$p1"
+        p1="$(realpath "$p1")"
+    elif command -v stat >/dev/null ; then
+        p0=$(stat --format '%N' "$p1" 2>/dev/null | awk -F \' '{print $2}')
+        p1=$(stat --format '%N' "$p1" 2>/dev/null | awk -F \' '{print $4}')
+        p1=$(realpath -s "${p0%/*}/$p1" 2>/dev/null || echo "$p0")
+    fi
+fi
+rl=$(systemctl get-default 2>/dev/null || runlevel 2>/dev//null || echo "?")
+rl="${rl/.target/}"
+
+p=""
+case "$p1" in
+    */init)
+        if command -v sv >/dev/null ; then p="runit"
+        elif command -v rc.d >/dev/null ; then p="sysv"
+        else p="${p1##*/}" ; fi
+        ;;
+    */openrc-init|init-openrc) p="openrc" ;;
+    */sinit) p="sinit" ;;
+    */systemd) p="systemd" ;;
+    *) p="${p1##*/}" ;;
+esac
+
+_info() {
+    echo ">>> /proc/1/"
+    if test -n "$p0" ; then
+        echo "$p0"
+    fi
+    echo "$p: $p1 ($rl)"
+}
+
+#:runit
+
+demon:runit:list() {
+    while read service ; do
+        case "$service" in
+            up:*|run:*) printf "✔ " ;;
+            down:*|stop:*|fail:*) printf "✘ " ;;
+            *) printf "? " ;;
+        esac
+        echo "$service"
+    done < <(sv status /var/services/*)
+}
+
+demon:runit:enable() {
+    if test $# -eq 0 || test -z "$1" ; then
+        echo "!!! no service" >&2
+        exit 1
+    elif test -e "/var/service/$1" ; then
+        echo "!!! already enabled" >&2
+    elif test -e "/etc/sv/$1" ; then
+        _ ln --symbolic "/etc/sv/$1" /var/service/
+    elif test -e "$1" ; then
+        _ ln --symbolic "$1" /var/service/
+    else
+        echo "!!! service not found" >&2
+        exit 1
+    fi
+}
+
+demon:runit:disable() {
+    if test $# -eq 0 || test -z "$1" ; then
+        echo "!!! no service" >&2
+    elif ! test -e "/var/service/$1" ; then
+        echo "!!! already disabled" >&2
+    else
+        _ rm --force "/var/service/$1"
+    fi
+}
+
+#:systemd
+
+demon:systemd:list() {
+    while read service ; do
+        name="$(echo $service | cut -d' ' -f1)"
+        name="${name/.service/}"
+        if systemctl is-enabled $name >/dev/null ; then
+            printf "  "
+            if systemctl is-active $name >/dev/null ; then
+                printf "✔ "
+            else
+                printf "✘ "
+            fi
+        else
+            printf "✘   "
+        fi
+        echo "$name"
+    done < <(
+        systemctl --quiet --no-pager \
+            list-units --type=service --state=active \
+            | awk '{print $1,$2,$3,$4}'
+    )
+}
+
+#:sysvinit
+
+demon_sysv_status() {
+    case "$(runlevel | tr -dc '[^0-9]')" in
+        0) echo "off / shutdown" ;;
+        1) echo "single-user / recovery" ;;
+        2) echo "multi-user (no network)" ;;
+        3) echo "multi-user + network" ;;
+        5) echo "full + display manager" ;;
+        6) echo "reboot" ;;
+        *) echo "special" ;;
+    esac
+}
+
+#:service:managers
+
+case "$p" in
+    openrc)
+        list="rc-status"
+        status="rc-service %s status"
+        enable="rc-update add %s"
+        disable="rc-update del %s"
+        reload="exit 1"
+        start="rc-service %s start"
+        stop="rc-service %s stop"
+        restart="rc-service %s restart"
+        shutdown="openrc-shutdown -H --poweroff"
+        reboot="openrc-shutdown --reboot"
+        ;;
+    runit)
+        list="demon:runit:list"
+        status="sv status"
+        enable="runit_enable"
+        disable="runit_disable"
+        reload="sv reload"
+        start="sv start"
+        stop="sv stop"
+        restart="sv restart"
+        shutdown="shutdown -h now -P"
+        reboot="shutdown -r"
+        ;;
+    sinit)
+        list="echo"
+        status="echo"
+        enable="echo"
+        disable="echo"
+        start="echo"
+        stop="exit 1"
+        reload="exit 1"
+        restart="exit 1"
+        shutdown="sinit poweroff"
+        reboot="sinit reboot"
+        ;;
+    sysv)
+        list="rc.d list"
+        status="demon_sysv_status"
+        enable="chkconfig {} on"
+        disable="chkconfig {} off"
+        reload="chkconfig {} --add"
+        start="rc.d start {}"
+        stop="rc.d stop {}"
+        restart="rc.d restart {}"
+        shutdown="shutdown -h now -P"
+        reboot="shutdown -r"
+        ;;
+    systemd)
+        list="demon:systemd:list"
+        status="systemctl --no-pager status"
+        enable="systemctl enable"
+        disable="systemctl disable"
+        reload="systemctl reload"
+        start="systemctl start"
+        stop="systemctl stop"
+        restart="systemctl restart"
+        shutdown="systemctl poweroff"
+        reboot="systemctl reboot"
+        ;;
+    *)
+        echo "!!! unknown init system" >&2
+        exit 1
+        ;;
+esac
+
+#:main
+
+e=0
+_() {
+    for cmdline in "$(echo "$*" | tr ";" "\n")" ; do
+        s=$(echo "$cmdline" | awk '{print $NF}')
+        if [[ $cmdline =~ \{\} ]] ; then
+            cmdline=$(echo "$cmdline" | sed "s;{};$s;")
+            cmdline=$(echo "$cmdline" | sed "s;$s\$;;")
+        fi
+        echo ">>> $cmdline"
+        $cmdline
+        if test $? -eq 0 ; then
+            echo "<<< ✔"
+        else
+            e=$((e + 1))
+            echo "<<< ✘"
+        fi
+    done
+}
+
+if test $# -eq 0 ; then
+    _help >&2
+    exit 1
+fi
+options=""
+for arg in $@ ; do
+    case $arg in
+        --version) _version ; exit 0 ;;
+        --help) _help >&2 ; exit 0 ;;
+        -*) options="$options $arg" ;;
+        --) shift ; break ;;
+        *) break ;;
+    esac
+done
+
+case $1 in
+    i|info) _info ;;
+    l|list) shift ; _ $list ;;
+    s|status) shift ; _ $status $@ ;;
+    r|reload) shift ; _ $reload $@ ;;
+    e|enable) shift ; _ $enable $@ ;;
+    d|disable) shift ; _ $disable $@ ;;
+    s|start) shift ; _ $start $@ ;;
+    S|stop) shift ; _ $stop $@ ;;
+    R|restart) shift ; _ $restart $@ ;;
+    --shutdown) _ $shutdown ;;
+    --reboot) _ $reboot ;;
+    *)
+        echo "!!! unknown command: $1" >&2
+        ;;
+esac
+
+if test $e -gt 0 ; then
+    echo "!!! $e error(s)" >&2
+    exit 1
+else
+    exit 0
+fi
+
+# EOF

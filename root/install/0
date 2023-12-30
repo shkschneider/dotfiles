@@ -1,0 +1,6 @@
+hostnamectl status
+hostnamectl set-hostname ...
+hostnamectl set-hostname --pretty ...
+
+install -Dm6755 cli/.local/bin/pm /sbin/pm
+install -Dm6755 cli/.local/bin/demon /sbin/demon

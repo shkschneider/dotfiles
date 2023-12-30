@@ -1,0 +1,38 @@
+#:arch:paru:pacman
+
+pacman --sync --refresh --sysupgrade
+
+pacman --sync --refresh --needed base-devel man-db git diff-so-fancy
+pacman --sync --refresh fbset terminus-font ttf-jetbrains-mono-nerd
+find /usr/share/kbd/consolefonts -type f -name "ter-*"
+/etc/vconsole.conf:
+    FONT=ter-14b
+mkinitcpio -p linux
+
+pacman --sync --refresh starship
+
+laptop && pacman --sync --refresh tlp thermald
+
+pacman -Sy libnotify dunst
+pacman -Sy cliphist
+pacman -Sy hyprland waybar
+pacman -Sy lxappearance breeze-gtk breeze-icons
+pacman -Sy starship tree
+pacman -Sy nemo nemo-fileroller nemo-preview nemo-share glacier-calc
+pacman -Sy dnsmasq virt-manager
+
+pacman -Sy meson
+git clone https://github.com/kennylevinsen/wlsunset.git ~/.wlsunset
+cd ~/.wlsunset
+meson build
+ninja build
+ninja build install
+rm -rf ~/.wlsunset
+
+git clone https://aur.archlinux.org/paru.git ~/paru
+cd ~/paru
+makepkg -si
+paru --version
+
+paru -Sy brave-bin
+paru -Sy btop gotop-bin glances

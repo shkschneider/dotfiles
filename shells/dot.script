@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+if ! command -v starship >/dev/null ; then
+    command -v wget >/dev/null || exit 1
+    wget --quiet https://starship.rs/install.sh -O - | sh
+fi
+
+# EOF

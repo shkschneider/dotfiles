@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+command -v curl >/dev/null || exit 1
+
+curl --silent wttr.in/${@:-?d&m&lang=$(
+    locale | grep ^LANG= | cut -d'=' -f2 | cut -d'_' -f1
+)}
+
+# EOF

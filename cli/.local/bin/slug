@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+_slug() {
+    # https://gist.github.com/oneohthree/f528c7ae1e701ad990e6
+    echo "$@" | sed -E -e 's/[^[:alnum:]]+/-/g' -e 's/^-+|-+$//g' | tr '[:upper:]' '[:lower:]'
+}
+
+while read line ; do
+    _slug "$line"
+done < /dev/stdin
+
+for line in $@ ; do
+    _slug "$line"
+done
+
+# EOF

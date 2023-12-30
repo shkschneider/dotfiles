@@ -1,0 +1,11 @@
+#:fedora:dnf:rpm
+
+dnf update
+dnf upgrade
+dnf install bash
+dnf install nano micro emacs
+dnf install git diff-so-fancy meson ninja-build
+
+dnf install libnotify dunst
+dnf install hyprland waybar
+#...

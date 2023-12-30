@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+# adjusts the color temperature of your screen according to your surroundings
+# https://github.com/jonls/redshift
+command -v redshift || echo "redshift: command not found" >&2
+
+# Day/night gamma adjustments for Wayland
+# https://github.com/kennylevinsen/wlsunset
+if ! command -v wlsunset >dev/null ; then
+    if command -v git >/dev/null ; then
+        git clone https://github.com/kennylevinsen/wlsunset.git ~/.local/share/wlsunset
+        if command -v meson >/dev/null && command -v ninja >/dev/null ; then
+            cd ~/.local/share/sunset
+            meson build
+            ninja build
+            sudo ninja build install
+        else
+            echo "meson/ninja: command not found" >&2
+        fi
+    else
+        echo "git: command not found" >&2
+    fi
+fi
+
+# A wlroots-compatible Wayland color picker that does not suck.
+# https://github.com/hyprwm/hyprpicker
+command -v hyprpicker || echo "hyprpicker: command not found" >&2
+
+# https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html
+
+export XDG_DATA_HOME=${XDG_DATA_HOME:-$HOME/.local/share}
+echo "XDG_DATA_HOME=$XDG_DATA_HOME"
+
+export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}
+echo "XDG_CONFIG_HOME=$XDG_CONFIG_HOME"
+
+export XDG_STATE_HOME=${XDG_STATE_HOME:-$HOME/.local/state}
+echo "XDG_STATE_HOME=$XDG_STATE_HOME"
+
+export XDG_CACHE_HOME=${XDG_CACHE_HOME:-$HOME/.cache}
+echo "XDG_CACHE_HOME=$XDG_CACHE_HOME"
+
+export XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR
+echo "XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR"
+
+# EOF

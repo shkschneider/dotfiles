@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+test $# -eq 0 && set -- $(cat /dev/stdin)
+
+for arg in $@ ; do
+    # dirname basename
+    echo ${arg%/*} ${arg##*/}
+done
+
+# EOF

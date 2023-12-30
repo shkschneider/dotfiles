@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# mimics lsb_release
+
+if test -f /etc/os-release ; then
+    source /etc/os-release
+    if test -n "$PRETTY_NAME" ; then
+        echo "$PRETTY_NAME"
+    else
+        echo "${NAME:-$ID} ${VERSION:-$VERSION_ID}"
+    fi
+else
+    echo $(uname --kernel-name) $(uname --kernel-release)
+fi
+
+# EOF

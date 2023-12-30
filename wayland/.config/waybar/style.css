@@ -1,0 +1,135 @@
+/* @theme:shk@ */
+@define-color background #0C0C0C;
+@define-color foreground #FCFCFC;
+@define-color darker #151515;
+@define-color dark #292929;
+@define-color black #000000;
+@define-color red #ED1515;
+@define-color green #11D116;
+@define-color yellow #FF9400;
+@define-color blue #0C48CC;
+@define-color magenta #8C54FE;
+@define-color cyan #1D99F3;
+@define-color white #FFFFFF;
+* {
+    font-family: "Hack Nerd Font Mono";
+}
+
+* {
+	border: none;
+	font-size: 13px;
+	min-height: 24px;
+	/* background: transparent; */
+}
+window#waybar {
+    background-color: transparent;
+}
+.drawer-child > * {
+    padding-right: 8px;
+    /* background-color: @dark; */
+}
+tooltip {
+    color: @foreground;
+    border-radius: 8px;
+    /* @theme:shk@ */
+    background-color: rgba(0x0c, 0x0c, 0x0c, 0.8);
+}
+
+.modules-left, .modules-center, .modules-right {
+    color: @foreground;
+    background-color: @dark;
+}
+a {
+    color: @yellow;
+}
+.modules-left, .modules-right {
+    padding-left: 8px;
+    padding-right: 8px;
+    border-radius: 8px;
+    background-color: @dark;
+}
+.modules-center {
+    padding-left: 8px;
+    padding-right: 8px;
+    border-radius: 8px;
+    background-color: transparent;
+}
+
+#workspaces {
+    color: @foreground;
+}
+#workspaces button.empty {
+    color: transparent;
+}
+#workspaces button {
+    box-shadow: none;
+	color: @foreground;
+	border-radius: 0px;
+	/* border-bottom: 1px solid @foreground; */
+}
+#workspaces button:hover {
+	box-shadow: inherit;
+	text-shadow: inherit;
+    color: @yellow;
+    /* border-bottom: 1px solid @yellow; */
+}
+#workspaces button.active {
+    color: @yellow;
+    /* border-bottom: 1px solid @foreground; */
+}
+#workspaces button.active:hover {
+    /* border-bottom: 1px solid @yellow; */
+}
+
+#mpris.playing {
+    color: @foreground;
+}
+#mpris.paused {
+    color: @yellow;
+}
+#mpris.stopped {
+    color: @red;
+}
+
+#window.empty {
+    background: transparent;
+}
+
+#tray, #cpu, #memory, #disk, #network, #bluetooth, #temperature, #battery, #clock,
+#custom-processor, #custom-graphics, #custom-updates {
+    /* background-image: none; */
+    /* background-position: bottom center; */
+    /* background-repeat: no-repeat; */
+    /* background-size: 50% 1px; */
+}
+#tray > .passive {
+    -gtk-icon-effect: dim;
+}
+#tray > .needs-attention {
+    -gtk-icon-effect: highlight;
+    color: @yellow;
+    /* background-image: linear-gradient(@yellow, @yellow); */
+}
+
+.perfect, #battery.charging, #battery.plugged {
+    color: @green;
+    /* background-image: linear-gradient(@green, @green); */
+}
+.normal, #network.linked, #network.ethernet, #network.wifi, #bluetooth.on, #bluetooth.connected, #battery:not(.charging) {
+    color: @foreground;
+    /* background-image: linear-gradient(@foreground, @foreground); */
+}
+.warning, #bluetooth.discoverable, #bluetooth.pairable, .out-of-date {
+    color: @yellow;
+    /* background-image: linear-gradient(@yellow, @yellow); */
+}
+.critical, #network.disabled, #network.disconnected {
+    color: @red;
+    /* background-image: linear-gradient(@red, @red); */
+}
+/* #battery.warning:not(.charging) { */
+    /* background-image: linear-gradient(@yellow, @yellow); */
+/* } */
+/* #battery.critical:not(.charging) { */
+    /* background-image: linear-gradient(@red, @red); */
+/* } */

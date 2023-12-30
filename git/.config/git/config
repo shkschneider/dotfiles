@@ -1,0 +1,45 @@
+# ~/.config/git/config
+
+[core]
+ignorecase = false
+excludesfiles = ~/.gitignore
+attributesfile = ~/.gitattributes
+#pager = $PAGER
+#editor = $EDITOR
+
+[include]
+path = ~/.config/git/aliases
+path = ~/.gitconfig.local
+
+[color]
+ui = auto
+
+[i18n]
+commitEncoding = utf8
+logOutputEncoding = utf8
+
+[apply]
+whitespace = fix
+
+[merge]
+log = true
+ff = false
+
+[advice]
+pushNonFastForward = false
+statusHints = false
+
+[pull]
+default = upstream
+
+[push]
+default = tracking
+
+[fetch]
+prune = true
+
+[rerere]
+# reuse recorded resolution of conflicted merges
+enabled = true
+
+# EOF

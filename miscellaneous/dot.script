@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+_() {
+    if ! command -v $1 ; then
+        echo -n "$1: command not found"
+        shift
+        test $# -gt 0 && echo " -- $@"
+    fi
+}
+
+_ wget "https://www.gnu.org/software/wget/" # package for retrieving files using the most widely used internet protocols
+command -v wget || exit 1
+
+_ batsignal "https://github.com/electrickite/batsignal" # lightweight battery daemon -- notifies
+#_ redshift "https://github.com/jonls/redshift" # adjusts the color temperature of your screen according to your surroundings
+
+if command -v batsignal >/dev/null ; then
+    if command -v systemctl >/dev/null ; then
+        systemctl --user enable batsignal
+        systemctl --user start batsignal
+        if test -f ~/.config/systemd/user/batsignal.service.d/options.conf ; then
+            mkdir --parents ~/.config/systemd/user/batsignal.service.d
+            printf "[Service]\nExecStart=batsignal -d 5 -c 10 -w 20\n" \
+                > ~/.config/systemd/user/batsignal.service.d/options.conf
+        fi
+    fi
+fi
+
+# EOF

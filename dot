@@ -1,0 +1,130 @@
+#!/usr/bin/env bash
+
+# git clone https://github.com/shkschneider/dotfiles.git ~/.dot
+# bash ~/.dot/dot
+
+LC_ALL=C
+LANG=C
+
+NAME="dot"
+DESCRIPTION="dotfiles (symbolic) linker"
+VERSION="3.3.0"
+# 3.3: logging
+# 3.2: options
+# 3.1: safer
+# 3: dot script that symlinks
+# 2: dotfiles script that copies
+# 1: naive and unsafe
+
+_version() {
+    echo "$NAME $VERSION"
+}
+
+opt_yesdoit="false"
+opt_verbosity=""
+
+_help() {
+    echo    "$NAME -- $DESCRIPTION"
+    echo -e "usage: ${0#/} [module]"
+    echo -e "                       defaults to dry-run for safety"
+    echo -e "       --yes, --do-it  (default: $opt_yesdoit)"
+    echo -e "       -v[v...]        increase verbosity"
+}
+
+#:main
+
+DOT=$(readlink -f "$(dirname "${BASH_SOURCE[0]}")")
+cd "$DOT" || {
+    echo "!!! cd $DOT" >&2
+    exit 1
+}
+
+while test $# -gt 0 ; do
+    case "$1" in
+        -v*) opt_verbosity="${opt_verbosity}${1/-/}" ; shift ;;
+        --yes|--do-it|--yes-do-it) opt_yesdoit="true" ; shift ;;
+        "--") shift ; break ;;
+        --version) _version ; exit 0 ;;
+        --help) _help >&2 ; exit 0 ;;
+        *)
+            for module in $@ ; do
+                if ! test -d "$1" ; then
+                    echo "!!! $1" >&2
+                    exit 1
+                fi
+            done
+            break
+            ;;
+    esac
+done
+
+if test $# -eq 0 ; then
+    set -- $(find . -maxdepth 1 -type d -not -path ".dot" -not -path "." -not -path "*/.git" | sed 's;^./;;')
+fi
+
+#:loop
+
+_() {
+    if [[ $opt_verbosity =~ ^v{2,}$ ]] ; then
+        echo -n "  "
+        for arg in $@ ; do
+            echo "$arg" | sed "s;$HOME;\~;g"
+        done | xargs
+    fi
+    echo "$@" >> $DOT/stdout.log
+    if test "$opt_yesdoit" == "true" ; then
+        $@ >>$DOT/stdout.log 2>>$DOT/stderr.log
+    fi
+}
+
+echo "date +%c # $(date +%c 2>/dev/null)" > "$DOT/stdout.log" 2>/dev/null
+test -f "$DOT/stderr.log" && rm -f "$DOT/stderr.log"
+
+echo ">>> $DOT"
+for dir in "$@" ; do
+    dir="${dir%/}"
+    for file in $(find "$dir" -type d -or -type f -not -name 'dot.script') ; do
+        src="$DOT/$file"
+        dst="$HOME/${file#*/}"
+        if test "$file" == "$dir" ; then
+            tput setaf 4 2>/dev/null
+            echo "> $file"
+            tput sgr0 2>/dev/null
+        elif test -d "$file" ; then
+            [[ $opt_verbosity =~ ^v$ ]] && echo "  - ${file/$dir\//}"
+        else
+            test -e "$dst" && _ rm -f "$dst"
+            test -d "${dst%/*}" || _ mkdir --parents "${dst%/*}"
+            _ ln --symbolic "$src" "$dst"
+        fi
+    done
+    if test -f "$dir/dot.script" ; then
+        shebang="$(cat "$dir/dot.script" | head -1 | grep -oP '^#!/.+' | cut -c3-)"
+        shebang="${shebang:-sh}"
+        _ $shebang "$dir/dot.script"
+    fi
+done
+
+echo "date +%c # $(date +%c 2>/dev/null)" >> "$DOT/stdout.log"
+
+e=$(cat "$DOT/stderr.log" 2>/dev/null | wc -l)
+if test "$e" -gt 0 ; then
+    tput setaf 1 2>/dev/null
+    echo "!!! $e errors"
+    echo "<<< ✘ ${DOT/$HOME/\~}/stderr.log"
+    tput sgr0 2>/dev/null
+    exit 1
+else
+    tput setaf 2 2>/dev/null
+    echo "<<< ✔ ${DOT/$HOME/\~}/stdout.log"
+    tput sgr0 2>/dev/null
+    if test "$opt_yesdoit" == "false" ; then
+        tput rev 2>/dev/null
+        echo " -| DRY-RUN: nothing was actually applied |-"
+        echo " -| re-run with --yes or --do-it to apply |-"
+        tput sgr0 2>/dev/null
+    fi
+    exit 0
+fi
+
+# EOF

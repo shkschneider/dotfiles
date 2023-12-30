@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+rc="$1"
+test -n "$rc" || exit 1
+
+export LC_ALL=C
+t="server"
+if test -e "/sys/class/power_supply" || test -e "/proc/acpi/button/lid" ; then
+    t="laptop"
+elif test -n $XDG_CURRENT_DESKTOP || command -v tset >/dev/null ; then
+    t="desktop"
+fi
+k=$(uname -s | tr '[A-Z]' '[a-z]')
+h=$(hostname -s)
+s=$(grep ^ID /etc/os-release 2>/dev/null | cut -d'=' -f2)
+
+for rc in ~/$rc ~/${rc}_$s ~/${rc}_$t ~/${rc}_$k ~/${rc}_$h ~/${rc}_local \
+    ~/.config/$rc ~/${rc}_$s ~/.config/${rc}_$t ~/.config/${rc}_$k ~/.config/${rc}_$h ~/.config/${rc}_local ; do
+    test -f $rc && echo $rc
+done
+
+# EOF

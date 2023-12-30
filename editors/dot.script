@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+mkdir --parents ~/.config/nano
+if test -d /usr/share/nano ; then
+    find /usr/share/nano -type f -name "*.nanorc" | xargs -i cp -f {} ~/.config/nano
+fi
+if command -v git >/dev/null ; then
+    git clone https://github.com/scopatz/nanorc ~/.cache/nano
+    find ~/.cache/nano -type f -name "*.nanorc" | xargs -i cp -f {} ~/.config/nano
+    rm -rf ~/.cache/nano
+else
+    echo "git: command not found" >&2
+fi
+if ! test -f ~/.nanorc ; then
+    echo "set linenumbers" > ~/.nanorc
+    find ~/.config/nano -type f -name "*.nanorc" | xargs printf -- "include \"%s\"\n" >> ~/.nanorc
+fi
+
+# EOF

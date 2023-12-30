@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+desktops=()
+for location in ~/.local/share /usr/share ; do
+  while read desktop ; do
+    desktops+=($desktop)
+  done < <(find $location -type f,l -name '*.desktop' 2>/dev/null)
+done
+
+echo ${desktops[@]} | tr ' ' "\n" | sort --uniq
+
+# EOF

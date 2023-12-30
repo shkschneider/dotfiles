@@ -1,0 +1,13 @@
+#:debian:apt:dpkg
+
+apt update
+apt upgrade
+
+timedatectl set-timezone # dpkg-reconfigure tzdata
+systemctl status ntp
+
+apt install bash
+apt install nano micro emacs-nox
+apt install git diff-so-fancy meson ninja-build
+apt purge ntp
+systemctl start systemd-timesyncd

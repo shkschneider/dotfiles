@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+# https://github.com/molovo/revolver/blob/master/revolver
+barrel() {
+    case $1 in
+        block|fade) spin='░▒▓' ;;
+        blocks|rotate) spin='▖▘▝▗' ;;
+        circle) spin='◜◠◝◞◡◟' ;;
+        jump) spin='⠄⠂⠁⠂' ;;
+        letters) spin='qwertyuiopasdfghjklzxcvbnm' ;;
+        line) spin='-–—–-' ;;
+        numbers) spin='1234567890' ;;
+        snake) spin='⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏' ;;
+        spin|spin0) spin='⣾⣷⣯⣟⡿⢿⣻⣽' ;;
+        spin1) spin='⡀⠄⠂⠁⠈⠐⠠⢀' ;;
+        spin2) spin='⢄⢂⢁⡁⡈⡐⡠' ;;
+        star) spin='+x*' ;;
+        toggle) spin='▫▪' ;;
+        *) spin='-\|/' ;;
+    esac
+    while true ; do
+        i=$(( (i+1) % ${#spin} ))
+        echo -ne "\b${spin:$i:1}"
+        sleep 0.1
+    done
+}
+
+test $# -gt 0 && barrel $@
+
+# EOF

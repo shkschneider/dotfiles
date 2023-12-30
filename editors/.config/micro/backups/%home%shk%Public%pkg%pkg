@@ -1,0 +1,164 @@
+#!/usr/bin/env bash
+
+_NAME="pkg"
+_VERSION="0.1.0"
+_DESCRIPTION="one package manager (wrapper) to rule them all"
+_SUPPORT="aptitude apt xbps dnf pacman"
+
+# pkg <info|update|search|install|remove|clean>
+
+_binary() {
+    command -v aptitude && return 0
+    command -v apt && return 0
+    command -v xbps-install && return 0
+    command -v dnf && return 0
+    command -v pacman && return 0
+}
+
+_info() {
+    case $(_binary) in
+        */aptitude) aptitude show $@ ;;
+        */apt) apt show $@ ;;
+        */xbps*) xbps-query --info $@ ;;
+        */dnf) dnf info $@ ;;
+        */pacman) pacman -Si $@ ;;
+        *) return 1 ;;
+    esac
+    return $?
+}
+
+_update() {
+    case $(_binary) in
+        */aptitude) aptitude update $@ ;;
+        */apt) apt update $@ ;;
+        */xbps*) xbps --sync --update $@ ;;
+        */dnf) dnf update $@ ;;
+        */pacman) pacman -Syu $@ ;;
+        *) return 1 ;;
+    esac
+    return $?
+}
+
+_search() {
+    case $(_binary) in
+        */aptitude) aptitude search $@ ;;
+        */apt) apt search $@ ;;
+        */xbps*) xbps-query -Rs $@ ;;
+        */dnf) dnf search $@ ;;
+        */pacman) pacman -Ss $@ ;;
+        *) return 1 ;;
+    esac
+    return $?
+}
+
+_install() {
+    case $(_binary) in
+        */aptitude) test -f "$1" && dpkg -i $@ || aptitude install $@ ;;
+        */apt) test -f "$1" && dpkg -i $@ || apt install $@ ;;
+        */xbps*) xbps-install $@ ;;
+        */dnf) dnf install $@ ;;
+        */pacman) pacman -Syu $@ ;;
+        *) return 1 ;;
+    esac
+    return $?
+}
+
+_remove() {
+    case $(_binary) in
+        */aptitude) aptitude remove $@ ;;
+        */apt) apt remove $@ ;;
+        */xbps*) xbps-remove --recursive ;;
+        */dnf) dnf remove $@ ;;
+        */pacman) pacman -Rs $@ ;;
+        *) return 1 ;;
+    esac
+    return $?
+}
+
+_list_available() {
+    case $(_binary) in
+        */aptitude) ;;
+        */apt) ;;
+        */xbps*) ;;
+        */dnf) dnf list --available $@ ;;
+        */pacman) ;;
+        *) return 1 ;;
+    esac
+    return $?
+}
+
+_list_installed() {
+    case $(_binary) in
+        */aptitude) aptitude search ~i $@ ;;
+        */apt) apt list --installed $@ ;;
+        */xbps*) ;;
+        */dnf) dnf list --installed $@ ;;
+        */pacman) ;;
+        *) return 1 ;;
+    esac
+    return $?
+}
+
+_list_updates() {
+    case $(_binary) in
+        */aptitude) aptitude --simulate upgrade $@ ;;
+        */apt) apt --simulate upgrade $@ ;;
+        */xbps*) ;;
+        */dnf) dnf list --upgradable $@ ;;
+        */pacman) ;;
+        *) return 1 ;;
+    esac
+    return $?
+}
+
+_clean() {
+    case $(_binary) in
+        */aptitude) aptitude clean $@ ; aptitude autoclean $@ ;;
+        */apt) apt clean $@ ; apt autoclean $@ ; apt autoremove --purge ;;
+        */xbps*) xbps-remove --remove-orphans  ;;
+        */dnf) dnf autoremove $@ ; dnf clean all ;;
+        */pacman) pacman -Qtdq | pacman -Rns - ;;
+        *) return 1 ;;
+    esac
+    return $?
+}
+
+# _list_upgradable() {
+    # case $(_binary) in
+        # */apt) apt --simulate upgrade $@ ;;
+        # */dnf) dnf list --upgradable $@ ;;
+        # *) return 1 ;;
+    # esac
+    # return $?
+# }
+
+_version() {
+    echo "$_NAME $_VERSION > $(_binary) $($(_binary) --version | head -1)"
+}
+
+_help() {
+    _version
+    echo "<clean|install|list|remove|search|update|upgrade>"
+}
+
+case $1 in
+    info) shift ; _info $@ ;;
+    update) shift ; _update $@ ;;
+    search) shift ; _search $@ ;;
+    install) shift ; _install $@ ;;
+    remove) shift ; _remove $@ ;;
+    clean) shift ; _clean $@ ;;
+    list) shift ; case $1 in
+        available) shift ; _list_available $@ ;;
+        installed) shift ; _list_installed $@ ;;
+        updates) shift ; _list_updates $@ ;;
+        *) exit 1 ;;
+        esac ;;
+    "--version") _version ; exit 0 ;;
+    ""|"--help") _help ; exit 0 ;;
+    *) echo "E: $1" >&2 ; _help ; exit 1 ;;
+esac
+
+exit $?
+
+# EOF

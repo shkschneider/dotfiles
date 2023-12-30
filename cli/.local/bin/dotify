@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+dotify() {
+    for src in $@ ; do
+        src="$(readlink -f $src)"
+        if ! test -e "$src" ; then
+            echo "path does not exist: $src" >&2
+            continue
+        fi
+        dirname="${src%/*}"
+        basename="${src##*/}"
+        case "$basename" in
+            .*) dst="$dirname/${basename#.}" ;;
+            *) dst="$dirname/.${basename}" ;;
+        esac
+        if test -e "$dst" ; then
+            echo "path exists: $dst" >&2
+            continue
+        fi
+        if test "$src" == "$dst" ; then
+            echo "paths are the same: $src" >&2
+            continue
+        fi
+        mv -v -- "$src" "$dst"
+    done
+}
+
+test $# -eq 0 && set -- $(cat /dev/stdin)
+test $# -gt 0 && dotify "$@"
+
+# EOF

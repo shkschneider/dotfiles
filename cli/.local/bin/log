@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+log() {
+    case $1 in
+        debug) shift ; echo "... $*" >&2 ;;
+        info) shift ; echo "??? $*" >&2 ;;
+        warning) shift ; echo "### $*" >&2 ;;
+        error) shift ; echo "!!! $*" >&2 ;;
+        *) echo "$*" >&1 ;;
+    esac
+}
+
+test $# -eq 0 && set -- $(cat /dev/stdin)
+test $# -gt 0 && log $@
+
+# EOF

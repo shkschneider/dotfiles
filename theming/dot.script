@@ -1,0 +1,182 @@
+#!/usr/bin/env bash
+
+#:colorschemes
+
+if ! test -d ~/.config/colorschemes ; then
+    if type -p git >/dev/null ; then
+        mkdir -p ~/.cache
+        git clone https://github.com/Gogh-Co/Gogh.git ~/.cache/gogh
+        mkdir -p ~/.config/colorschemes
+        while read file ; do
+            id=$(
+                grep name: "$file" \
+                    | cut -d"'" -f2 \
+                    | sed 's/[^a-zA-Z0-9]/-/g' \
+                    | tr '[A-Z]' '[a-z]' \
+                    | sed -r 's;(^\-|\-$);;g' \
+                    | sed 's;\-\-;-;g'
+            )
+            echo "~/.config/colorschemes/$id"
+            name=$(grep name: "$file" | cut -d\' -f2)
+            echo "# $(grep name: "$file" | cut -d\' -f2) (dark)" > ~/.config/colorschemes/${id}-dark.cs
+            echo "export background=$(grep background: "$file" | cut -d\' -f2 | tr -d '#')" >> ~/.config/colorschemes/${id}-dark.cs
+            echo "export foreground=$(grep foreground: "$file" | cut -d\' -f2 | tr -d '#')" >> ~/.config/colorschemes/${id}-dark.cs
+            echo "export      black=$(grep   color_01: "$file" | cut -d\' -f2 | tr -d '#')" >> ~/.config/colorschemes/${id}-dark.cs
+            echo "export        red=$(grep   color_02: "$file" | cut -d\' -f2 | tr -d '#')" >> ~/.config/colorschemes/${id}-dark.cs
+            echo "export      green=$(grep   color_03: "$file" | cut -d\' -f2 | tr -d '#')" >> ~/.config/colorschemes/${id}-dark.cs
+            echo "export     yellow=$(grep   color_04: "$file" | cut -d\' -f2 | tr -d '#')" >> ~/.config/colorschemes/${id}-dark.cs
+            echo "export       blue=$(grep   color_05: "$file" | cut -d\' -f2 | tr -d '#')" >> ~/.config/colorschemes/${id}-dark.cs
+            echo "export    magenta=$(grep   color_06: "$file" | cut -d\' -f2 | tr -d '#')" >> ~/.config/colorschemes/${id}-dark.cs
+            echo "export       cyan=$(grep   color_07: "$file" | cut -d\' -f2 | tr -d '#')" >> ~/.config/colorschemes/${id}-dark.cs
+            echo "export      white=$(grep   color_08: "$file" | cut -d\' -f2 | tr -d '#')" >> ~/.config/colorschemes/${id}-dark.cs
+            echo "# $(grep name: "$file" | cut -d\' -f2) (light)" > ~/.config/colorschemes/${id}-light.cs
+            echo "export background=$(grep background: "$file" | cut -d\' -f2 | tr -d '#')" >> ~/.config/colorschemes/${id}-light.cs
+            echo "export foreground=$(grep foreground: "$file" | cut -d\' -f2 | tr -d '#')" >> ~/.config/colorschemes/${id}-light.cs
+            echo "export      black=$(grep   color_09: "$file" | cut -d\' -f2 | tr -d '#')" >> ~/.config/colorschemes/${id}-light.cs
+            echo "export        red=$(grep   color_10: "$file" | cut -d\' -f2 | tr -d '#')" >> ~/.config/colorschemes/${id}-light.cs
+            echo "export      green=$(grep   color_11: "$file" | cut -d\' -f2 | tr -d '#')" >> ~/.config/colorschemes/${id}-light.cs
+            echo "export     yellow=$(grep   color_12: "$file" | cut -d\' -f2 | tr -d '#')" >> ~/.config/colorschemes/${id}-light.cs
+            echo "export       blue=$(grep   color_13: "$file" | cut -d\' -f2 | tr -d '#')" >> ~/.config/colorschemes/${id}-light.cs
+            echo "export    magenta=$(grep   color_14: "$file" | cut -d\' -f2 | tr -d '#')" >> ~/.config/colorschemes/${id}-light.cs
+            echo "export       cyan=$(grep   color_15: "$file" | cut -d\' -f2 | tr -d '#')" >> ~/.config/colorschemes/${id}-light.cs
+            echo "export      white=$(grep   color_16: "$file" | cut -d\' -f2 | tr -d '#')" >> ~/.config/colorschemes/${id}-light.cs
+        done < <(find ~/.cache/gogh/themes -type f -name "*.yml")
+        rm -rf ~/.cache/gogh
+    else
+        echo "git: command not found" >&2
+    fi
+fi
+
+#:icons
+
+if ! test -d ~/.local/share/icons/feathericons ; then
+    if type -p wget >/dev/null && type -p unzip >/dev/null ; then
+        mkdir -p ~/.cache/feathericons
+        wget --quiet $(
+            wget --quiet https://api.github.com/repos/feathericons/feather/releases/latest -O - \
+                | grep -oP '"zipball_url": "https://api.github.com/' | cut -d'"' -f4
+            ) -O ~/.cache/feathericons/latest.zip
+        mkdir -p ~/.local/share/icons
+        ls -l ~/.cache/feathericons/
+        unzip -o ~/.cache/feathericons/latest.zip "*.svg" -d ~/.cache/feathericons/
+        find ~/.cache/feathericons -type f -name "*.svg" | xargs -i echo cp {} ~/.local/share/icons
+    else
+        echo "wget|unzip: command not found" >&2
+    fi
+fi
+
+#:font
+
+FONT="Hack"
+if test $(fc-list | grep -c $FONT) -eq 0 ; then
+    if type -p wget >/dev/null && type -p unzip >/dev/null ; then
+        mkdir -p ~/.cache/hack
+        wget --quiet $(
+            wget --quiet https://www.nerdfonts.com/font-downloads -O - \
+                | grep -oP "https://github.com/ryanoasis/nerd-fonts/releases/download/.*/$FONT.zip" | uniq
+            ) -O ~/.cache/hack/latest.zip
+        unzip -o ~/.cache/hack/latest.zip '*.ttf' -d ~/.cache/hack/
+        rm -f ~/.cache/hack
+        fc-cache -f -v >/dev/null
+    else
+        echo "wget|unzip: command not found" >&2
+    fi
+fi
+
+#:cursors
+
+if ! test -d ~/.local/share/icons/vimix ; then
+    if type -p git >/dev/null ; then
+        mkdir -p ~/.local/share/icons
+        git clone https://github.com/vinceliuice/Vimix-cursors.git ~/.cache/vimix
+        cp -r ~/.cache/vimix/dist ~/.local/share/icons/vimix
+        rm -rf ~/.cache/vimix
+    else
+        echo "git: command not found" >&2
+    fi
+fi
+
+#:theme:sweet
+
+if ! test -d ~/.themes/Sweet ; then
+    if type -p wget >/dev/null && type -p unzip >/dev/null ; then
+        wget --quiet https://github.com/EliverLara/Sweet/releases/download/v3.0/Sweet-Dark-v40.zip -O ~/.cache/sweet.zip
+        unzip -o ~/.cache/sweet.zip -d ~/.cache
+        mv ~/.cache/Sweet-Dark-v40 ~/.themes/Sweet
+        rm -f ~/.cache/sweet.zip
+    else
+        echo "wget|unzip: command not found" >&2
+    fi
+fi
+
+#:theme:nordic
+
+if ! test -d ~/.themes/Nordic ; then
+    if type -p wget >/dev/null && type -p tar >/dev/null ; then
+        wget --quiet https://github.com/EliverLara/Nordic/releases/download/v2.2.0/Nordic-darker-v40.tar.xz -O ~/.cache/nordic.tar.xz
+        tar -C ~/.cache -xJf ~/.cache/nordic.tar.xz
+        mv ~/.cache/Nordic-darker-v40 ~/.themes/Nordic
+        rm -f ~/.cache/Nordic-darker-v40.tar.xz
+    else
+        echo "wget|tar: command not found" >&2
+    fi
+fi
+
+#:theme:yaru
+
+if ! test -d ~/.themes/Yaru ; then
+    if type -p git >/dev/null ; then
+        git clone https://github.com/Jannomag/Yaru-Colors.git ~/.cache/yaru
+        mv ~/.cache/yaru/Themes/Yaru-Orange-dark ~/.themes/Yaru
+        rm -rf ~/.cache/yaru
+    else
+        echo "git: command not found" >&2
+    fi
+fi
+
+#:theme:graphite
+
+if ! test -d ~/.themes/Graphite ; then
+    if type -p git >/dev/null && type -p sassc >/dev/null ; then
+        git clone https://github.com/vinceliuice/Graphite-gtk-theme.git ~/.cache/graphite
+        cd ~/.cache/graphite
+        sh install.sh --theme orange --color dark --tweaks rimless
+        cd -
+        mv ~/.themes/Graphite-orange-Dark ~/.themes/Graphite
+        cp -rf ~/.themes/Graphite-orange-Dark-hdpi/* ~/.themes/Graphite/
+        rm -rf ~/.themes/Graphite-orange-Dark-hdpi
+        cp -rf ~/.themes/Graphite-orange-Dark-xhdpi/* ~/.themes/Graphite/
+        rm -rf ~/.themes/Graphite-orange-Dark-xhdpi
+        rm -rf ~/.cache/graphite
+    else
+        echo "git|sassc: command not found" >&2
+    fi
+fi
+
+#:theme
+
+if type -p gsettings >/dev/null ; then
+    if test -d ~/.themes/Graphite ; then
+        export GTK_THEME="Graphite"
+    elif test -d ~/.themes/Yaru ; then
+        export GTK_THEME="Yaru"
+    fi
+    gsettings set org.gnome.desktop.interface gtk-theme "$GTK_THEME"
+    gsettings set org.gnome.desktop.interface color-scheme "prefer-dark"
+    if test -d ~/.icons/Vimix ; then
+        gsettings set org.gnome.desktop.interface cursor-theme "Vimix"
+    fi
+else
+    echo "gsettings: command not found" >&2
+fi
+
+if type -p wget >/dev/null && type -p swaybg >/dev/null ; then
+    wget https://github.com/dracula/wallpaper/blob/master/first-collection/$(
+        grep ^ID= /etc/os-release | cut -d'=' -f2 | tr -d '"'
+    ).png -O ~/.wallpaper
+    nohup swaybg --image ~/.wallpaper &
+else
+    echo "wget|swaybg: command not found" >&2
+fi
+
+# EOF
