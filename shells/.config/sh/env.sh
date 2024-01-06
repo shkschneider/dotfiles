@@ -1,5 +1,54 @@
 # ~/.config/sh/env.sh
 
+test -n "$LANG" || eval "$(locale)"
+test -n "$LANG" || LANG='en_us.UTF-8'
+test $(umask) -eq 0 && umask 022
+
+#:user
+
+for user in $(echo $USER) $(id --user --name) $(echo $LOGNAME) ; do
+    export USER="$user"
+    export LOGNAME="$user"
+    break
+done
+
+#:host
+
+for host in $(cat /proc/sys/kernel/hostname 2>/dev/null) $(echo $HOSTNAME) $(hostnamectl hostname 2>/dev/null) $(uname --nodename) ; do
+    export HOST="$host"
+    break
+done
+
+#:editor
+
+for editor in $(command -v micro) $(command -v nano) ; do
+    export EDITOR="$editor"
+    break
+done
+alias e="$EDITOR"
+
+#:pager
+
+for pager in $(command -v most) $(command -v less) $(command -v more) $(command -v pg) ; do
+    export PAGER="$pager"
+    for opt in 'QUIT-AT-EOF' 'exit-on-eof' ; do
+        test "$($pager --help 2>&1 | grep -c -- "--$opt")" != "0" && \
+            export PAGER="$PAGER --$opt"
+    done
+    break
+done
+alias p="$PAGER"
+
+#:ls
+
+if command -v dircolors >/dev/null ; then
+    for f in $HOME/.dir_colors $HOME/.config/dircolors /etc/dircolors ; do
+        if test -f "$f" ; then
+            eval "$(dircolors $f)" && break
+        fi
+    done
+fi
+
 #:term
 test -n "$TERM" || export TERM="xterm-256color"
 
@@ -34,14 +83,14 @@ command -v fzf >/dev/null && {
 
 command -v go >/dev/null && GOPATH="${GOPATH:-$HOME/.go}"
 
-test "$XDG_SESSION_TYPE" == "wayland" && {
+if [[ "$XDG_SESSION_TYPE" == "wayland" ]] ; then
     export MOZ_ENABLE_WAYLAND=1
     export SDL_VIDEODRIVER=wayland
     export QT_QPA_PLATFORMTHEME=qt5ct
     export QT_QPA_PLATFORM=wayland
-    export QT_WAYLAND_DISABLE_WINDOWDECORATION,1
-    export QT_AUTO_SCREEN_SCALE_FACTOR,1
+    export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
+    export QT_AUTO_SCREEN_SCALE_FACTOR=1
     export _JAVA_AWT_WM_NONREPARENTING=1
-}
+fi
 
 # EOF

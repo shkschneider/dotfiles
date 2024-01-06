@@ -25,7 +25,7 @@ zource 'zsh-users/zsh-autosuggestions@v0.6.4'
 # https://thevaluable.dev/zsh-completion-guide-examples/
 # https://stackoverflow.com/a/27643846
 zstyle ':completion:*' use-cache on
-zstyle ':completion:*' cache-path "$ZCONFDIR/.cache"
+zstyle ':completion:*' cache-path "$HOME/.config/zsh/.cache"
 zstyle ':completion:*' rehash true
 zstyle ':completion:*' squeeze-slashes true # // -> /
 zstyle ':completion:*' list-dirs-first true

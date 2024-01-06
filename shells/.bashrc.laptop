@@ -1,0 +1,18 @@
+return
+
+# https://github.com/rcaloras/bash-preexec
+if test -f ~/.local/share/bash/preexec/bash-preexec.sh ; then
+    source ~/.local/share/bash/preexec/bash-preexec.sh
+    if command -v brightnessctl >/dev/null ; then
+        preexec() {
+            brightnessctl -d $(
+                brightnessctl -l 2>/dev/null | grep capslock | cut -d\' -f2
+            ) set 100% &>/dev/null
+        }
+        precmd() {
+            brightnessctl -d $(
+                brightnessctl -l 2>/dev/null | grep capslock | cut -d\' -f2
+            ) set 0% &>/dev/null
+        }
+    fi
+fi

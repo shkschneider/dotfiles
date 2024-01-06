@@ -1,6 +1,6 @@
-# aliases.zsh
+# ~/.config/zsh/aliases.zsh
 
-alias reload="source ~/.zshenv ~/.zshrc"
+alias r="source ~/.zshenv ~/.zshrc"
 alias z='zarp'
 
 # EOF

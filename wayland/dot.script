@@ -6,11 +6,11 @@ command -v redshift || echo "redshift: command not found" >&2
 
 # Day/night gamma adjustments for Wayland
 # https://github.com/kennylevinsen/wlsunset
-if ! command -v wlsunset >dev/null ; then
+if ! command -v wlsunset >/dev/null ; then
     if command -v git >/dev/null ; then
         git clone https://github.com/kennylevinsen/wlsunset.git ~/.local/share/wlsunset
         if command -v meson >/dev/null && command -v ninja >/dev/null ; then
-            cd ~/.local/share/sunset
+            cd ~/.local/share/wlsunset
             meson build
             ninja build
             sudo ninja build install

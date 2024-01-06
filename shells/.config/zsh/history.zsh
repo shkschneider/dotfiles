@@ -1,6 +1,6 @@
-# history.zsh
+# ~/.config/zsh/history.zsh
 
-HISTFILE="$ZCONFDIR/.history"
+HISTFILE="~/.config/zsh/.history"
 
 # fc -l 1 | awk '{ CMD[$2]++; count++; } END { for (a in CMD) print CMD[a] " " a }' | grep -v "./" | sort -nr | head -n 20
 
@@ -11,16 +11,15 @@ unsetopt share_history
 
 zmodload zsh/terminfo
 
-autoload -Uz history-search-end && {
-  zle -N history-beginning-search-backward-end history-search-end
-  zle -N history-beginning-search-forward-end history-search-end
-  bindkey '^[[A' history-beginning-search-backward-end # up
-  bindkey '^[[B' history-beginning-search-forward-end # down
-} || {
-  bindkey '^[[A' history-beginning-search-backward # up
-  bindkey '^[[B' history-beginning-search-forward # down
-}
-
+if autoload -Uz history-search-end ; then
+    zle -N history-beginning-search-backward-end history-search-end
+    zle -N history-beginning-search-forward-end history-search-end
+    bindkey '^[[A' history-beginning-search-backward-end # up
+    bindkey '^[[B' history-beginning-search-forward-end # down
+else
+    bindkey '^[[A' history-beginning-search-backward # up
+    bindkey '^[[B' history-beginning-search-forward # down
+fi
 bindkey -r '^R' # history-incremental-search-backward
 
 # EOF

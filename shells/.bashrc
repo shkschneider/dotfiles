@@ -1,9 +1,11 @@
 # ~/.bashrc
 
-source "${BASHCONFDIR:-$HOME/.config/bash}/bashrc"
+source $HOME/.profile
 
-while read rc ; do
-  source $rc
-done < <(find $HOME/.config/bash/.bashrc_* -maxdepth 1 2>/dev/null)
+source $HOME/.config/bash/bashrc
+
+for rc in $(find $HOME -name '.bashrc.*') ; do
+    source $rc
+done
 
 # EOF

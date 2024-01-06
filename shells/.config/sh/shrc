@@ -1,13 +1,7 @@
 # ~/.config/sh/shrc
 
-test -n "$LANG" || eval "$(locale)"
-test -n "$LANG" || LANG='en_us.UTF-8'
-test $(umask) -eq 0 && umask 022
-
 [[ $- == *i* ]] || return
 #echo "shopt -s nullglob extglob globstar &>/dev/null || :"
-
-tput bold ; for i in 1 2 3 4 5 6 7 0 ; do tput setaf $i ; printf '#! ' ; done ; tput sgr0
 
 export PS1="$(whoami)@$(hostname -s)> "
 
@@ -48,10 +42,8 @@ alias p="$PAGER"
 
 #:source
 
-while read rc ; do
+for rc in $(find $HOME/.config/sh -name '*.sh') ; do
     source $rc
-done < <(find $HOME/.config/sh/ -maxdepth 1 -name '*.sh' 2>/dev/null)
-
-test -f ~/.config/sh/shrc.local && source ~/.config/sh/shrc.local
+done
 
 # EOF

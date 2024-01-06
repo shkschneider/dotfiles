@@ -1,78 +1,69 @@
-# prompt.zsh
-
-setopt prompt_subst # dynamic
-unsetopt print_exit_value
+# ~/.config/zsh/prompt.zsh
+# https://gist.github.com/romkatv/2a107ef9314f0d5f76563725b42f7cab
 
 autoload -Uz promptinit ; promptinit
 
-function _pwd() {
-  # https://unix.stackexchange.com/a/273567
-  echo -n "%(5~|%-1~/…/%3~|%4~)"
-}
-
-TIMER=""
-function _timer() {
-  echo -n "%F{008}$TIMER%f"
-}
-
-function prompt() {
-  local uh
-  [[ $EUID -eq 0 ]] && uh="%F{red}%n%f" || uh="%F{green}%n%f"
-  [ -n "$SSH_TTY" ] && uh="$uh%F{blue}@%m%f"
-  local d="%F{cyan}$(_pwd)%f"
-  # › 0x203a
-  # ❯ 0x276f
-  local c="%(?.›.%B%F{red}!%f%b)" # %(!.#.$)
-  echo "$uh $d $1\n$c"
-}
-
-function rprompt() {
-  local j=$(jobs | wc -l | tr -d '[:space:]')
-  [[ $j -eq 0 ]] && j="%F{008}[$j]%f" || j="%F{magenta}[$j]%f"
-  echo -n "$1 $j $(_timer)"
-}
-
-PROMPT=$'$(prompt) '
-export SHELL=$(ps -o command -h $$) # sed '1d' | cut -d' ' -f1 | xargs basename
-RPROMPT=$'$(rprompt "%F{008}${SHELL:t}(%L)%f") '
-
-autoload -Uz vcs_info
-zource 'yonchu/zsh-vcs-prompt@1.1' 'lib/vcsstatus.sh'
-
-autoload add-zsh-hook
-# async: https://www.anishathalye.com/2015/02/07/an-asynchronous-shell-prompt/
-_PROMPT_ASYNC=0 # pid
-_PROMPT_TMP=/tmp/zsh_prompt_$$
-function _vcs_info() {
-  function _vcs_info_async() {
-    if [ -n "$(git rev-parse --show-toplevel 2>/dev/null)" ] ; then
-    local -a x=($(_zsh_vcs_prompt_vcs_detail_info 2>/dev/null))
-    [[ $? -eq 0 ]] || return $?
-    local sys="${x[1]}" #; [ "$sys" = "git" ] && sys="±"
-    local branch="${x[3]}@$(_git_head)"
-    local diff="${x[5]}↓↑${x[4]}"
-    local conflicts="${x[7]}!"
-    local action="<${x[2]}>"
-    local g="$sys:$branch"
-    [ "$diff" != "-0+0" ] && g="$g $diff"
-    [ "$conflicts" != "0!" ] && g="$g $conflicts"
-    g="$g $(_git_status)"
-    [ "$action" != "<0>" ] && g="$g $action"
-    echo -n "$(prompt "%F{yellow}$g%f")" > "$_PROMPT_TMP"
-    else
-    echo -n "$(prompt "%F{yellow}$g%f")" > "$_PROMPT_TMP"
+function prompt-length() {
+    emulate -L zsh
+    local -i COLUMNS=${2:-COLUMNS}
+    local -i x y=${#1} m
+    if (( y )) ; then
+        while (( ${${(%):-$1%$y(l.1.0)}[-1]} )) ; do
+            x=y
+            (( y *= 2 ))
+        done
+        while (( y > x + 1 )) ; do
+            (( m = x + (y - x) / 2 ))
+            (( ${${(%):-$1%$m(l.x.y)}[-1]} = m ))
+        done
     fi
-    kill -s USR1 $$ 2>/dev/null
-  }
-  [[ "$_PROMPT_ASYNC" != 0 ]] && kill -s HUP $_PROMPT_ASYNC >/dev/null 2>&1 || :
-  _vcs_info_async &!
-  _PROMPT_ASYNC=$!
+    typeset -g REPLY=$x
 }
-add-zsh-hook precmd _vcs_info
-function TRAPUSR1() {
-  PROMPT="$(cat $_PROMPT_TMP)%f "
-  _PROMPT_ASYNC=0
-  zle && zle reset-prompt
+
+function prompt-fill-line() {
+    emulate -L zsh
+    prompt-length $1
+    local -i left_len=REPLY
+    prompt-length $2 9999
+    local -i right_len=REPLY
+    local -i pad_len=$((COLUMNS - left_len - right_len - ${ZLE_RPROMPT_INDENT:-1}))
+    if (( pad_len < 1 )) ; then
+        typeset -g REPLY=$1
+    else
+        local pad=${(pl.$pad_len.. .)}
+        typeset -g REPLY=${1}${pad}${2}
+    fi
 }
+
+function set-prompt() {
+    emulate -L zsh
+    local userhost='%n'
+    if [ $EUID -eq 0 ] ; then
+        userhost="%F{red}$user%f"
+    else
+        userhost="%F{green}$user%f"
+    fi
+    if [ -n "$SSH_TTY$SSH_CLIENT$SSH2_CLIENT" ] ; then
+        userhost="$userhost%F{yellow}@%m%f"
+    fi
+    local path="%F{blue}%(5~|%-1~/…/%3~|%4~)%f"
+    local top_left="$userhost $path"
+    local top_right="%(1j.%F{magenta}%j&%f .)%(1L.%F{magenta}%L%f.)"
+    # › 0x203a
+    # ❯ 0x276f
+    local bottom_left="%(?.›.%F{red}!%f) "
+    local bottom_right=''
+    local REPLY
+    prompt-fill-line "$top_left" "$top_right"
+    PROMPT='%B'$REPLY$'%b\n%B'$bottom_left'%b'
+    RPROMPT=$bottom_right
+    PS2=""
+}
+
+setopt no_prompt_{bang,subst} prompt_{cr,percent,sp}
+setopt no_prompt_{bang,subst} prompt_{cr,percent,sp}
+autoload -Uz add-zsh-hook
+add-zsh-hook precmd set-prompt #setopt prompt_subst
+unsetopt print_exit_value
 
 # EOF

@@ -1,5 +1,7 @@
 # ~/.config/sh/aliases.sh
 
+alias dot="git -C ~/.dot"
+
 if [[ ! $OSTYPE == darwin* ]] || command -v gcp >/dev/null ; then
     alias cp="cp --recursive --verbose"
     alias mv="mv --verbose"
@@ -59,7 +61,7 @@ fi
 
 for ls in $(command -v exa) $(command -v ls) ; do
     l="-l"
-    for opt in '-C' '--grid' '--group-directories-first' '--human-readable' '--group' '--modified' '--no-permissions' '--octal-permissions' ; do
+    for opt in '-C' '--grid' '--classify' '--group-directories-first' '--human-readable' '--group' '--modified' '--no-permissions' '--octal-permissions' ; do
         $ls --help 2>&1 | grep -c -- "$opt" >/dev/null && \
             l="$l $opt"
     done

@@ -1,4 +1,4 @@
-# cursor.zsh
+# ~/.config/zsh/cursor.zsh
 
 case $OSTYPE in
   darwin*)
@@ -29,8 +29,6 @@ bindkey '^l' clear-screen
 zmodload zsh/terminfo
 
 bindkey "${terminfo[kdch1]}" delete-char # del
-# TODO bindkey "${terminfo[kpp]}" beginning-of-buffer-or-history # page-up
-# TODO bindkey "${terminfo[knp]}" end-of-buffer-or-history # page-down
 bindkey "${terminfo[khome]}" beginning-of-line # home
 bindkey "${terminfo[kend]}" end-of-line # end
 

@@ -1,7 +1,5 @@
 # ~/.bash_profile
 
-source "$HOME/.profile"
-
-source "$HOME/.bashrc"
+source $HOME/.bashrc
 
 # EOF

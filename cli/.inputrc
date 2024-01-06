@@ -22,9 +22,12 @@ set visible-stats on
 #C-n: history-search-forward
 #C-p: history-search-backward
 "\C-r": nop
+"\C-r": "history | fzf -0 -1 2>/dev/null | ${SHELL:-sh} || history"
 "\C-f": nop
+#"\C-r": "history | ${PAGER:-cat} | ${SHELL:-sh}"
 
 set editing-mode emacs
+
 $if mode=emacs
 
 "\e[A": history-search-backward
@@ -45,7 +48,7 @@ $if mode=emacs
 # for rxvt
 "\e[8~": end-of-line
 
-# for non RH/Debian xterm, can't hurt for RH/DEbian xterm
+# for non RH/Debian xterm, can't hurt for RH/Debian xterm
 "\eOH": beginning-of-line
 "\eOF": end-of-line
 

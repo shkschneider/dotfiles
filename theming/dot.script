@@ -171,7 +171,7 @@ else
 fi
 
 if type -p wget >/dev/null && type -p swaybg >/dev/null ; then
-    wget https://github.com/dracula/wallpaper/blob/master/first-collection/$(
+    wget --quiet https://github.com/dracula/wallpaper/blob/master/first-collection/$(
         grep ^ID= /etc/os-release | cut -d'=' -f2 | tr -d '"'
     ).png -O ~/.wallpaper
     nohup swaybg --image ~/.wallpaper &

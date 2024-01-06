@@ -1,13 +1,12 @@
-# notify.zsh
+# ~/.config/zsh/notify.zsh
 # ! before timer
 
 Z_NOTIFY=${Z_NOTIFY:-true}
-
 [[ "${Z_NOTIFY:-}" == true ]] || return
 
 case $OSTYPE in
-  darwin*) bin osascript || zlog e 'notify: missing osascript' >&2 ; return ;;
-  *) bin notify-send || zlog e 'notify: missing notify-send' >&2 ; return ;;
+  darwin*) command -v osascript >/dev/null || zlog e 'notify: missing osascript' >&2 ; return ;;
+  *) command -v notify-send >/dev/null || zlog e 'notify: missing notify-send' >&2 ; return ;;
 esac
 
 Z_NOTIFY_THRESHOLD=${Z_NOTIFY_THRESHOLD:-60} # s

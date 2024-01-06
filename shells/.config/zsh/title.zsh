@@ -1,7 +1,6 @@
 # title.zsh
 
 Z_TITLE=${Z_TITLE:-1}
-
 [[ $Z_TITLE -ne 0 ]] || return
 
 autoload -Uz add-zsh-hook
@@ -12,7 +11,10 @@ zource 'https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/lib/termsupport
 add-zsh-hook -d precmd omz_termsupport_precmd
 add-zsh-hook -d preexec omz_termsupport_preexec
 
-bin title || { zlog w 'title: missing termsupport' ; return }
+if ! command -v title >/dev/null ; then
+    zlog w 'title: missing termsupport'
+    return
+fi
 
 function _title_preexec() {
   local -a argv=(${(z)1})

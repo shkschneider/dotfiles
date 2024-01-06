@@ -43,8 +43,9 @@ Hightlights
   - alacritty
   - terminator
 - Shells
-  - bash + starship (no bash-it)
   - zsh + starship (no oh-my-zsh)
+  - bash + starship (no bash-it)
+  - sh
 - Editors
   - intellij'idea / (space|e)macs
   - micro / nano
@@ -71,19 +72,21 @@ Notable Scripts
 Dependencies
 ------------
 
-> wget, git, unzip, tar, sassc, ...
+I haven't done an exhaustive list of dependencies, but you might want:
+
+> wget, curl, make, git, unzip, tar, sassc, tree, bc...
 
 Post-Scriptum
 -------------
 
-Putting aside evertythin that is a fork of a fork or to serve a niche,
+Putting aside evertything that is a fork of a fork or to serve a niche,
 there is pretty much only Arch and Debian; plus Void; and maybe Nix; and...
 
 > The interface you see from a distro doesn't matter.
 > What matters are the supported architectures, package manager and packages/updates.
 
-- Started on Debian (stable)
-- Used many, in particular: LinuxMint, Manjaro and Fedora
+- My first love was Debian
+- My exploration phase was done mainly on LinuxMint, Manjaro and Fedora
 - Now running Arch and Void
 
 Thanks
@@ -92,8 +95,8 @@ Thanks
 - Richard Stallman / FSF / GNU
 - Linus Torvalds / Linux
 - Ian Murdock / Debian
-- Arch Linux / Wiki
-- Void Linux
+- Arch Linux, its Wiki and community
+- Void Linux, its Handbook and community
 - DistroWatch
 - Github
-- and everybody that shares open source <3
+- and every-single-one-of-you that shared open source <3

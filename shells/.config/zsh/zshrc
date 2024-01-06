@@ -4,54 +4,26 @@ source $HOME/.config/sh/shrc
 
 [[ -o interactive ]] || return
 
-export ZDOTDIR=${ZDOTDIR:-$HOME}
-export ZCONFDIR=${ZCONFDIR:-$HOME/.config/zsh}
-
-bindkey -e # emacs
-
-# https://zsh.sourceforge.io/Doc/Release/Options.html
-
-unsetopt beep list_beep hist_beep # stfu
-unsetopt flow_control # suspend
-unsetopt no_match
-setopt clobber # override with redirects
-setopt ignore_eof ; bindkey -r '^D' # exit
-unsetopt rm_star_silent
-setopt case_glob case_match # case-sensitives
-setopt glob_complete # expand globbing
-setopt interactive_comments
-
-# path
-
-typeset -U path # no duplicates
-
-setopt hash_executables_only
-
-type bin &>/dev/null || {
-  bin() {
-    type $@ &>/dev/null
-  }
-}
-
-# fpath
+#:modules
 
 typeset -U fpath # no duplicates
-
-if [ -d $ZCONFDIR/zfunctions ] ; then
-  fpath=($ZCONFDIR/zfunctions $fpath)
-  while read rc ; do
-    autoload -Uz ${rc:t:r}
-  done < <(find $ZCONFDIR/zfunctions/* -maxdepth 1 2>/dev/null)
+if test -d $HOME/.config/zsh/zfunctions ; then
+    fpath=($HOME/.config/zsh/zfunctions $fpath)
+    for zf in $(find $HOME/.config/zsh/zfunctions) ; do
+        autoload -Uz ${zf:t:r}
+    done
 fi
 
-# sources
+#:scripts
 
-while read rc ; do
-  source $rc
-done < <(find $ZCONFDIR/functions/*.zsh -maxdepth 1 2>/dev/null)
+for rc in $(find $HOME/.config/zsh/functions -name '*.zsh') ; do
+    source $rc
+done
 
-while read rc ; do
-  source $rc
-done < <(find $ZCONFDIR/*.zsh -maxdepth 1 2>/dev/null)
+#:sources
+
+for rc in $(find $HOME/.config/zsh -name '*.zsh') ; do
+    source $rc
+done
 
 # EOF
