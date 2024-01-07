@@ -1,0 +1,45 @@
+theme = "monokai_pro"
+
+[editor]
+scrolloff = 5
+line-number = "absolute"
+auto-format = true
+auto-save = true
+auto-pairs = false
+cursorline = true
+mouse = true
+scroll-lines = 5
+bufferline = "multiple"
+insert-final-newline = true
+
+[editor.search]
+smart-case = false
+
+[editor.whitespace]
+all = "none"
+
+[editor.soft-wrap]
+enable = false
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
+
+[editor.file-picker]
+hidden = true
+
+[editor.indent-guides]
+render = true
+
+[editor.statusline]
+left = ["mode","version-control","spinner"]
+center = ["read-only-indicator","file-base-name","file-modification-indicator","position","position-percentage"]
+right = ["file-encoding","file-line-ending","file-type","total-line-numbers"]
+mode.insert = "INSERT"
+mode.normal = "NORMAL"
+mode.select = "SELECT"
+separator = "╎"
+
+[keys.normal]
+esc = ["collapse_selection","keep_primary_selection"]
