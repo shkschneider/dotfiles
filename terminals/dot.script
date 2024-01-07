@@ -7,6 +7,11 @@ if ! test -f ~/.config/tmux/tmux.conf ; then
     test -d ~/.config/tmux || mkdir -p ~/.config/tmux
     wget --quiet https://raw.githubusercontent.com/gpakosz/.tmux/master/.tmux.conf -O ~/.config/tmux/tmux.conf
 fi
+if ! test -d ~/.config/tmux/tpm ; then
+    git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+    bash ~/.tmux/plugins/tpm/scripts/install_plugins.sh
+    test -f ~/.tmux.conf.local || touch ~/.tmux.conf.local
+fi
 
 # alacritty >= 0.13.0
 if test -f ~/.config/alacritty/alacritty.toml ; then
@@ -17,5 +22,7 @@ if test -f ~/.config/alacritty/alacritty.toml ; then
     fi
     #import = [ "~/.config/alacritty/themes/${THEME:-afterglow}.toml" ]'
 fi
+
+#test -d ~/.config/tmux/tpm && run '~/.config/tmux/tpm/tpm'
 
 # EOF
