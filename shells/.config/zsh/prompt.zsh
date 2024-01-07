@@ -55,7 +55,7 @@ function set-prompt() {
     local bottom_right=''
     local REPLY
     prompt-fill-line "$top_left" "$top_right"
-    PROMPT='%B'$REPLY$'%b\n%B'$bottom_left'%b'
+    PROMPT=$'\n''%B'$REPLY$'%b\n%B'$bottom_left'%b'
     RPROMPT=$bottom_right
     PS2=""
 }

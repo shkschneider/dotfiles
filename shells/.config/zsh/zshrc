@@ -14,12 +14,6 @@ if test -d $HOME/.config/zsh/zfunctions ; then
     done
 fi
 
-#:scripts
-
-for rc in $(find $HOME/.config/zsh/functions -name '*.zsh') ; do
-    source $rc
-done
-
 #:sources
 
 for rc in $(find $HOME/.config/zsh -name '*.zsh') ; do

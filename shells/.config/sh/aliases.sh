@@ -18,6 +18,8 @@ alias j="jobs"
 alias h="history"
 alias f="fzf"
 alias nano="nano -_"
+alias tmux="tmux -u new -As0"
+alias emacs="emacs -nw"
 
 case $OSTYPE in
     darwin*)

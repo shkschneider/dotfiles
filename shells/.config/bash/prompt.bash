@@ -26,7 +26,7 @@ set-prompt() {
     # › 0x203a
     # ❯ 0x276f
     (( c )) && c="$(tput setaf 1)!" || c="$(tput setaf 7)›"
-    export PS1=$PS1"\n$c$(tput sgr0) "
+    export PS1="\n"$PS1"\n$c$(tput sgr0) "
     export PS2=""
 }
 PROMPT_COMMAND=set-prompt
