@@ -16,3 +16,5 @@ for rc in $(find $HOME -name '.zshrc.*') ; do
 done
 
 # EOF
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

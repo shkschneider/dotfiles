@@ -1,7 +1,7 @@
 {
     "autoclose": false,
     "autosu": true,
-    "colorscheme": "monokai",
+    "colorscheme": "shk",
     "mkparents": true,
     "reload": "auto",
     "rmtrailingws": true,

@@ -9,3 +9,5 @@ for rc in $(find $HOME -name '.bashrc.*') ; do
 done
 
 # EOF
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash

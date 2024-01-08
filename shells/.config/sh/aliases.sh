@@ -19,7 +19,9 @@ alias h="history"
 alias f="fzf"
 alias nano="nano -_"
 alias tmux="tmux -u new -As0"
+alias vim="vim -y"
 alias emacs="emacs -nw"
+alias micro="COLORTERM=truecolor MICRO_TRUECOLOR=1 micro"
 
 case $OSTYPE in
     darwin*)
