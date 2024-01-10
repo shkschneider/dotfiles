@@ -1,0 +1,175 @@
+&[ $LF_LEVEL -eq 1 ] || lf -remote "send $id echoerr \"Warning: You're in a nested lf instance!\""
+
+# options
+
+set shell sh
+set drawbox
+set hidden false
+set icons true
+set info ''
+set mouse true
+set preview true
+set previewer ~/.config/lf/previewer
+set ratios 1:2
+set promptfmt "\033[34m%d\033[0m%f"
+#set cursorpreviewfmt "\033[7;90m"
+
+# (un)bindings
+
+map \" #no_op
+map \' #no_op
+map c #no_op
+map <c-b> #no_op
+map <c-d> #no_op
+map <c-e> #no_op
+map <c-f> #no_op
+map <c-u> #no_op
+map <c-y> #no_op
+map d #no_op
+map f #no_op
+map F #no_op
+map G #no_op
+map gg #no_op
+map h #no_op
+map j #no_op
+map k #no_op
+map l #no_op
+map m #no_op
+map s #no_op
+map S #no_op
+#map t #no_op
+map y #no_op
+
+# bindings
+
+map ./ $$f # execute
+map ? $~/.config/lf/help #$(${PAGER:-cat} ~/.config/lf/lfrc | grep ^map)
+map \$ shell # cmdline
+map A select-all
+map } bottom
+map <c-c> echo " Press <?> for help (or <q> to quickly exit)."
+map c :copy; down
+map ~ cd ~ # home
+map <c-down> half-down
+map <c-s> :glob-select
+map <c-u> :glob-unselect
+map <c-up> half-up
+map <c-z> $kill -STOP $PPID # suspend
+map <delete> ask-to-delete
+map <enter> :open
+map <esc> :unselect;clear
+map | filter
+map g :fuzzy-grep
+map h set hidden! # show/hide dotfiles
+map i set icons! # show/hide icons
+map j find # jumps to char
+map ] :jump-next
+map [ :jump-prev
+map l follow-link
+map n search-next
+map N search-prev
+map <pgdn> page-down
+map <pgup> page-up
+map p :paste; clear
+map P previews # enable/disable
+map q :quit
+map \: read # (lf) command
+map r :rename
+map <s-down> :toggle; down
+map / search
+map \\ search-back
+map <space> :toggle; down
+map <s-up> :toggle; up
+map { top
+map .. updir
+map v invert
+map x :cut; down
+map z :fuzzy-find # files
+
+# triggers
+
+cmd on-select &{{
+    if command -v eza >/dev/null ; then
+        lf -remote "send $id set statfmt \"$(eza -ld --color=always "$f")\""
+    fi
+}}
+
+# commands
+
+cmd ask-to-delete %{{
+    echo -ne " $(tput rev)Delete $(echo $fx | xargs) [Y/n]?$(tput rev) "
+    read -n1 r
+    echo
+    if test -z "$r" ; then lf -remote "send $id delete $fx" ; fi
+}}
+cmd delete %{{
+    for path in $fx ; do
+        rm -rf -- "$(readlink -f $path)"
+    done
+    lf -remote "send $id sync"
+}}
+cmd follow-link %{{
+    lf -remote "send ${id} select '$(readlink $f)'"
+}}
+cmd fuzzy-find ${{
+    res="$(find . -maxdepth 1 | fzf --reverse)"
+    if [ -n "$res" ]; then
+        if [ -d "$res" ]; then
+            cmd="cd"
+        else
+            cmd="select"
+        fi
+        res="$(printf '%s' "$res" | sed 's/\\/\\\\/g;s/"/\\"/g')"
+        lf -remote "send $id $cmd \"$res\""
+    fi
+}}
+cmd fuzzy-grep ${{
+    RG_PREFIX="rg --column --line-number --no-heading --color=always --smart-case "
+    res="$(
+        FZF_DEFAULT_COMMAND="$RG_PREFIX ''" \
+            fzf --bind "change:reload:$RG_PREFIX {q} || true" \
+            --ansi --layout=reverse --header 'Search in files' \
+            | cut -d':' -f1 | sed 's/\\/\\\\/g;s/"/\\"/g'
+    )"
+    [ -n "$res" ] && lf -remote "send $id select \"$res\""
+}}
+cmd open &{{
+    case $(file --mime-type -Lb $f) in
+        text/*) lf -remote "send $id \$$EDITOR \$fx";;
+        *) for f in $fx; do $OPENER $f > /dev/null 2> /dev/null & done;;
+    esac
+}}
+cmd previews %{{
+    if [ "$lf_preview" = "true" ]; then
+        lf -remote "send $id :set preview false; set ratios 1:3"
+    else
+        lf -remote "send $id :set preview true; set ratios 1:2"
+    fi
+}}
+cmd select-all &{{
+    get_all() {
+        if [ "$lf_hidden" = 'false' ]; then
+            find "$PWD/" -mindepth 1 -maxdepth 1 -not -name '.*' -print0
+        else
+            find "$PWD/" -mindepth 1 -maxdepth 1 -print0
+        fi | xargs -0 printf ' %q'
+    }
+    lf -remote "send $id :unselect; toggle $(get_all)"
+}}
+
+# ...
+
+#cmd open-with-gui &$@ $fx
+#cmd open-with-cli $$@ $fx
+#map O push :open-with-gui<space>
+#map o push :open-with-cli<space>
+
+cmd mkdir %{{
+    for dir in $@ ; do
+        dir="$(readlink -f $dir)"
+        mkdir -p -- "$dir" && lf -remote "send $id toggle \"$dir\""
+    done
+}}
+#map D push :mkdir<space>
+#cmd touch %test -d "$f" && touch "$f/$1" || touch "$(dirname "$f")/$1"
+#map F push :touch<space>

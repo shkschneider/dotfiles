@@ -129,7 +129,7 @@ elif command -v paru >/dev/null ; then
     install="paru -S"
     uninstall="paru -Rs"
     sources=""
-    clean="paru -Sc ; paru -Qtdq | xargs | xargs paru -Rs"
+    clean="paru -Sc ; paru -Qtdq | paru -Rns -"
 
 elif command -v pacman >/dev/null ; then
 
@@ -186,7 +186,8 @@ fi
 
 e=0
 _() {
-    for cmdline in "$(echo "$*" | tr ";" "\n")" ; do
+    IFS=';' read -ra cmdlines <<< "$@"
+    for cmdline in "${cmdlines[@]}"; do
         echo ">>> $cmdline"
         sh -c "$cmdline"
         if test $? -eq 0 ; then

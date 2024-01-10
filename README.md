@@ -45,12 +45,11 @@ Hightlights
 - Shells
   - zsh + starship (no oh-my-zsh)
   - bash + starship (no bash-it)
-  - sh
 - Editors
-  - intellij'idea / (space|e)macs
-  - micro / nano
+  - intellij'idea / emacs
+  - helix / micro / nano
 - File Managers
-  - ranger
+  - lf
   - nemo
 - Web Browsers
   - brave
