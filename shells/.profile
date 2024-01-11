@@ -3,6 +3,7 @@
 eval "$(locale)"
 test -n "$LANG" || LANG='en_us.UTF-8'
 umask &>/dev/null && umask 022
+COLORTERM="truecolor"
 
 for rc in $(find $HOME -name '.profile.*') ; do
     source $rc

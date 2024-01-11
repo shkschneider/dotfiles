@@ -20,15 +20,13 @@ dotfiles
 Usage
 -----
 
-Symlinks-based, much like GNU Stow.
+Symlinks-based, much like GNU Stow, but strictly via files, never directories.
 More advanced features done by scripts (dot.script).
 
 ```
 $ git clone https://github.com/shkschneider/dotfiles.git ~/.dot
-$ ./dot [--help] # please NOT as root
+$ ./dot [--help] # use at your own risk
 ```
-
-> Use at your own risk.
 
 Hightlights
 -----------
@@ -37,7 +35,7 @@ Hightlights
   - autologin: sddm (if full disk encryption)
   - otherwise: ly
 - Window Managers
-  - wayland: hyprland + waybar + dunst/mako
+  - wayland: hyprland + waybar + dunst
   - x11: awesome / gnome-shell
 - Terminals
   - alacritty
@@ -46,7 +44,7 @@ Hightlights
   - zsh + starship (no oh-my-zsh)
   - bash + starship (no bash-it)
 - Editors
-  - intellij'idea / emacs
+  - intellij'idea / lite-xl
   - helix / micro / nano
 - File Managers
   - lf
@@ -85,17 +83,18 @@ there is pretty much only Arch and Debian; plus Void; and maybe Nix; and...
 > What matters are the supported architectures, package manager and packages/updates.
 
 - My first love was Debian
-- My exploration phase was done mainly on LinuxMint, Manjaro and Fedora
+- My exploration phase was mainly done on Manjaro and Fedora
 - Now running Arch and Void
 
 Thanks
 ------
 
-- Richard Stallman / FSF / GNU
 - Linus Torvalds / Linux
+- Richard Stallman / FSF / GNU
 - Ian Murdock / Debian
 - Arch Linux, its Wiki and community
 - Void Linux, its Handbook and community
 - DistroWatch
 - Github
 - and every-single-one-of-you that shared open source <3
+

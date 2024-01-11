@@ -3,39 +3,45 @@
 test -n "$LANG" || eval "$(locale)"
 test -n "$LANG" || LANG='en_us.UTF-8'
 test $(umask) -eq 0 && umask 022
+COLORTERM="truecolor "
 
 #:user
 
 for user in $(echo $USER) $(id --user --name) $(echo $LOGNAME) ; do
     export USER="$user"
-    export LOGNAME="$user"
+    export LOGNAME="${LOGNAME:-$USER}"
     break
 done
 
 #:host
 
-for host in $(cat /proc/sys/kernel/hostname 2>/dev/null) $(echo $HOSTNAME) $(hostnamectl hostname 2>/dev/null) $(uname --nodename) ; do
-    export HOST="$host"
-    break
-done
+export HOST=${HOST:-$(
+    cat /proc/sys/kernel/hostname 2>/dev/null \
+        || echo $HOSTNAME \
+        || hostnamectl hostname 2>/dev/null \
+        || uname --nodename
+)}
 
 #:editor
 
-for editor in $(command -v micro) $(command -v nano) ; do
-    export EDITOR="$editor"
-    break
-done
+export EDITOR=${EDITOR:-$(
+    which micro 2>/dev/null \
+    || which nano 2>/dev/null
+)}
 alias e="$EDITOR"
 
 #:pager
 
-for pager in $(command -v most) $(command -v less) $(command -v more) $(command -v pg) ; do
-    export PAGER="$pager"
-    for opt in 'QUIT-AT-EOF' 'exit-on-eof' ; do
-        test "$($pager --help 2>&1 | grep -c -- "--$opt")" != "0" && \
-            export PAGER="$PAGER --$opt"
-    done
-    break
+for pager in less more most pg ; do
+    pager=$(which $pager 2>/dev/null)
+    if test -n "$pager" ; then
+        export PAGER="$pager"
+        for opt in 'QUIT-AT-EOF' 'exit-on-eof' ; do
+            test "$($pager --help 2>&1 | grep -c -- "--$opt")" != "0" && \
+                export PAGER="$PAGER --$opt"
+        done
+        break
+    fi
 done
 alias p="$PAGER"
 
@@ -50,16 +56,7 @@ if command -v dircolors >/dev/null ; then
 fi
 
 #:term
-test -n "$TERM" || export TERM="xterm-256color"
-
-#:editor
-test -z "$EDITOR" && command -v micro >/dev/null && export EDITOR="micro"
-test -z "$EDITOR" && command -v nano >/dev/null && export EDITOR="nano"
-
-#:pager
-test -z "$PAGER" && command -v less >/dev/null && export PAGER="less -e"
-test -z "$PAGER" && command -v more >/dev/null && export PAGER="more -e"
-test -z "$PAGER" && command -v most >/dev/null && export PAGER="most"
+export TERM=${TERM:-"xterm-256color"}
 
 test -z "$MANPAGER" && command -v bat >/dev/null && {
     # https://github.com/sharkdp/bat/issues/2668
