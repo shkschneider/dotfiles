@@ -9,19 +9,23 @@ if [[ ! $OSTYPE == darwin* ]] || command -v gcp >/dev/null ; then
     alias mkdir="mkdir --parents --verbose"
 fi
 
-alias t="tree -dx -ACF --noreport"
-alias scp="scp -r"
-alias wget="wget --quiet"
-alias curl="curl --silent"
 alias bc="bc --quiet"
-alias j="jobs"
-alias h="history"
-alias f="fzf"
-alias nano="nano -_"
-alias tmux="tmux -u new -As0"
-alias vim="vim -y"
+alias curl="curl --silent"
 alias emacs="emacs -nw"
-alias micro="COLORTERM=truecolor MICRO_TRUECOLOR=1 micro"
+alias f="fzf"
+alias h="history"
+alias htop="$(command -v btm || command -v gotop || command -v btop || which top)"
+alias j="jobs"
+alias lite="$(command -v lite-xl || command -v lite)"
+alias md="glow --pager"
+alias micro="MICRO_TRUECOLOR=1 micro"
+alias nano="nano -_"
+alias scp="scp -r"
+alias tmux="tmux -u new -As0"
+alias top="$(command -v procs || which top)"
+alias t="tree -dx -ACF --noreport"
+alias vim="vim -y"
+alias wget="wget --quiet"
 
 case $OSTYPE in
     darwin*)
@@ -51,6 +55,13 @@ else
     alias g="grep"
 fi
 
+#:find
+
+if command -v fd >/dev/null ; then
+    alias fp="fd | fzf | xargs readlink -f"
+else
+    alias fp="find | fzf | xargs readlink -f"
+fi
 
 #:ls
 
@@ -63,7 +74,7 @@ if command -v dircolors >/dev/null ; then
     done
 fi
 
-for ls in $(command -v exa) $(command -v ls) ; do
+for ls in $(command -v eza) $(command -v exa) $(command -v ls) ; do
     l="-l"
     for opt in '-C' '--grid' '--classify' '--group-directories-first' '--human-readable' '--group' '--modified' '--no-permissions' '--octal-permissions' ; do
         $ls --help 2>&1 | grep -c -- "$opt" >/dev/null && \

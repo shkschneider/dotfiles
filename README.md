@@ -97,4 +97,3 @@ Thanks
 - DistroWatch
 - Github
 - and every-single-one-of-you that shared open source <3
-

@@ -1,0 +1,28 @@
+# Make sure that Kew is closed before editing this file in order for changes to take effect.
+
+path=/home/shk/Music
+coverEnabled=0
+coverAnsi=0
+visualizerEnabled=1
+visualizerHeight=25
+useProfileColors=1
+
+# Key Bindings:
+
+volumeUp=+
+volumeUpAlt==
+volumeDown=-
+nextTrackAlt=l
+switchNumberedSong=
+togglePause=p
+toggleColorsDerivedFrom=i
+toggleVisualizer=v
+toggleCovers=c
+toggleAscii=b
+toggleRepeat=r
+toggleShuffle=s
+addToMainPlaylist=.
+quit=q
+
+
+
