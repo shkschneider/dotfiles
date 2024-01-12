@@ -1,151 +1,235 @@
-theme = "monokai_pro"
+theme = "edge"
+
+# helix: <onwhat>-<doeswhat>
+#c: char
+#cd: char delete (delete)
+#ce: char erase (backspace)
+#w: word
+#wn: word next
+#l: line
+#ld: line delete (delete)
+#ls: line start
+#le: line end
+#P: paragraph
+#p: parameter
+#s: selection
+#f: file
+#fo: file open
+#fc: file close
+#fw: file write
+#ff: file search
+##b: buffer
+#fw: file write
+#fo: file open
+#l<bspc>: line delete
+#l<del>: line delete
+#ls: line select
+#sd: selection delete
+#sr: selection replace
 
 [editor]
 scrolloff = 5
-line-number = "absolute"
-auto-format = true
-auto-save = true
-auto-pairs = false
-cursorline = true
 mouse = true
-scroll-lines = 5
+middle-click-paste = true
+scroll-lines = 3
+line-number = "relative"
+true-color = true
 bufferline = "multiple"
-insert-final-newline = true
-
-[editor.search]
-smart-case = false
-
-[editor.whitespace]
-all = "none"
-
-[editor.soft-wrap]
-enable = false
-
+auto-pairs = false
+[editor.statusline]
+left = [ "mode", "spinner", "position", "position-percentage" ]
+center = [ "file-name", "read-only-indicator", "file-modification-indicator" ]
+right = [ "version-control", "file-encoding", "file-line-ending", "file-type" ]
+separator = "│"
+mode.normal = "ro"
+mode.insert = "rw"
+mode.select = "_"
 [editor.cursor-shape]
 insert = "bar"
 normal = "block"
 select = "underline"
-
 [editor.file-picker]
-hidden = true
-
+hidden = false
+parents = false
+[editor.search]
+smart-case = false
+wrap-around = false
+[editor.whitespace.render]
+nbsp = "all"
 [editor.indent-guides]
 render = true
+[editor.soft-wrap]
+enable = true
+wrap-indicator = ""
 
-[editor.statusline]
-left = ["mode","spinner","version-control"]
-center = ["read-only-indicator","file-base-name","file-modification-indicator","position","position-percentage"]
-right = ["file-encoding","file-line-ending","file-type"]
-mode.insert = "INSERT"
-mode.normal = "NORMAL"
-mode.select = "SELECT"
-#separator = "╎"
+# TODO align_selections
+# TODO toggle_comments
 
 [keys.normal]
-'~' = ":config-open"
-r = ":reload"
-R = ":reload-all"
-i = "insert_mode"
-a = "append_mode"
-v = "select_mode"
-c = "change_selection"
-d = "delete_selection"
-backspace = "delete_char_backward"
-del = "delete_char_forward"
-ret = "insert_newline"
-esc = ["collapse_selection","keep_primary_selection"]
-#left = "move_prev_long_word_end"
-#right = "move_next_long_word_start"
-C-a = ["goto_line_start","goto_first_nonwhitespace"]
-C-e = "goto_line_end"
-C-left = "goto_line_start"
-C-right = ["goto_line_end","move_char_right"]
+v = "no_op"
+#i = "no_op"
+space = "insert_mode"
 C-space = "command_palette"
-C-up = "page_up"
-C-S-up = "goto_file_start"
-C-down = "page_down"
-C-S-down = "goto_file_end"
-S-up = ["select_mode","extend_line_up","exit_select_mode"]
-S-down = ["select_mode","extend_line_down","exit_select_mode"]
-S-left = ["select_mode","extend_char_left","exit_select_mode"]
-S-right = ["select_mode","extend_char_right","exit_select_mode"]
-C-S-left = ["select_mode","extend_to_line_start","exit_select_mode"]
-C-S-right = ["select_mode","extend_to_line_end_newline","exit_select_mode"]
-C-c = "yank_main_selection_to_primary_clipboard"
-C-v = "paste_primary_clipboard_after"
-#:sort	Sort ranges in selection.
-#:rsort	Sort ranges in selection in reverse order.
-[keys.normal.C-o]
-f = "file_picker"
-b = "buffer_picker"
-n = ":new"
-[keys.normal.C-b]
-n = ":buffer-next"
-p = ":buffer-previous"
-[keys.normal.C-s]
-s = ":write"
-a = ":write-all"
-[keys.normal.C-q]
-b = ":buffer-close"
-B = ":buffer-close-others"
-a = ":buffer-close-all"
-q = ":quit"
-Q = ":quit!"
-
-[keys.insert]
-C-space = "command_palette"
-C-backspace = "delete_word_backward"
-C-del = "delete_word_forward"
+S-up = [ "select_mode", "extend_line_up", "exit_select_mode" ]
+S-down = [ "select_mode", "extend_line_down", "exit_select_mode" ]
+S-left = [ "select_mode", "extend_char_left", "exit_select_mode" ]
+S-right = [ "select_mode", "extend_char_right", "exit_select_mode" ]
+a = "goto_line_start"
+e = "goto_line_end"
+A = [ "select_mode", "extend_to_line_start", "exit_select_mode" ]
+E = [ "select_mode", "extend_to_line_end", "exit_select_mode" ]
+w = [ "move_next_word_end", "collapse_selection" ]
+t = "rename_symbol"
+z = "undo"
+Z = "redo"
+C-o = "file_picker"
 C-f = "search"
-C-F = "global_search"
-'C-]' = "search_next"
-'C-[' = "search_prev"
-#C-t = "rename_symbol"
-#C-u = "switch_to_uppercase"
-#C-l = "switch_to_lowercase"
-#'C-|' = ":pipe"
-#'C-.' = "repeat_last_motion"
+C-x = [ "yank", "delete_selection" ]
+C-c = [ "yank" ]
+C-v = [ "replace_with_yanked", "collapse_selection" ]
+C-s = ":write"
+C-q = ":quit"
+C-z = "suspend"
+r = [ ":reload" ]
+R = [ ":reload-all", ":config-reload" ]
+esc = "collapse_selection"
+l = "extend_line_down"
+L = "extend_line_up"
+'.' = "repeat_last_motion"
+tab = "indent"
+S-tab = "unindent"
+'$' = [ "delete_selection", "shell_append_output" ]
+'|' = "shell_pipe"
+i = "hover"
 
-[keys.insert.g]
-D = "goto_definition"
-d = "goto_declaration"
-i = "goto_implementation"
-r = "goto_reference"
+# copy
+[keys.normal.c]
+c = "yank"
+x = [ "yank", "delete_selection" ]
+v = [ "replace_with_yanked", "collapse_selection" ]
+
+# open
+[keys.normal.o]
+o = "file_picker"
+f = "file_picker"
+d = "file_picker_in_current_directory"
+b = "file_picker_in_current_buffer_directory"
+#s = "symbol_picker"
+#w = "workspace_symbol_picker"
+'.' = "last_picker"
+
+# jump
+[keys.normal.j]
+j = "jump_backward"
+',' = "jump_backward"
+'.' = "jump_forward"
+m = "goto_last_modification"
+M = "goto_last_modified_file"
+n = "goto_next_buffer"
+p = "goto_previous_buffer"
+
+# find
+[keys.normal.f]
+f = [ "search_selection", "search" ]
+F = [ "search_selection", "rsearch" ]
+g = [ "search_selection", "global_search" ]
+#c = "find_next_char"
+#C = "find_prev_char"
+r = "surround_replace"
+e = "search_next"
+n = "search_next"
+a = "search_prev"
+p = "search_prev"
+
+# go
+[keys.normal.g]
+g = "goto_last_modification"
 c = "goto_window_center"
+d = "goto_definition"
+i = "goto_implementation"
+a = "jump_backward"
+e = "jump_forward"
+m = "goto_last_modification"
+
+# go buffer
+[keys.normal.g.b]
+b = "goto_previous_buffer"
+n = "goto_next_buffer"
+p = "goto_previous_buffer"
+
+# go line
+[keys.normal.g.l]
 l = "goto_line"
+a = "goto_line_start"
+e = "goto_line_end"
+u = "move_line_up"
+d = "move_line_down"
 
-[keys.insert.C-s]
-s = ":write"
-a = ":write-all"
+# go file
+[keys.normal.g.f]
+f = "goto_last_modified_file"
+l = "goto_last_modified_file"
+a = "goto_file_start"
+e = "goto_file_end"
+u = "half_page_up"
+d = "half_page_down"
+U = "page_up"
+D = "page_down"
 
-[keys.insert.C-z]
-u = "undo"
-r = "redo"
-z = "suspend"
+# go word
+[keys.normal.g.w]
+w = [ "move_next_word_end", "collapse_selection" ]
+s = [ "move_next_word_start", "collapse_selection" ]
+e = [ "move_next_word_end", "collapse_selection" ]
+[keys.normal.g.W]
+w = [ "move_prev_word_end", "collapse_selection" ]
+s = [ "move_prev_word_start", "collapse_selection" ]
+e = [ "move_prev_word_end", "collapse_selection" ]
 
-[keys.normal."+"]
+# select
+[keys.normal.s]
+i = "select_textobject_inner"
+o = "select_textobject_around"
+m = "match_brackets"
+x = "expand_selection"
+z = "shrink_selection"
+
+# TODO switch_case
+
+# special
+[keys.normal.'+']
+s = "shell_append_output"
+p = "shell_pipe"
+#h = "hover"
 m = ":run-shell-command make"
 
-[keys.select]
-f = "format_selections"
-j = "join_selections"
-l = "align_selections"
+# quit
+[keys.normal.q]
+w = ":write"
+W = ":write-all"
+q = ":quit"
+Q = ":quit-all"
 
-# :yank-join	Yank joined selections. A separator can be provided as first argument. Default value is newline.
-# :clipboard-yank	Yank main selection into system clipboard.
-# :clipboard-yank-join	Yank joined selections into system clipboard. A separator can be provided as first argument. Default value is newline.
-# :primary-clipboard-yank	Yank main selection into system primary clipboard.
-# :primary-clipboard-yank-join	Yank joined selections into system primary clipboard. A separator can be provided as first argument. Default value is newline.
-# :clipboard-paste-after	Paste system clipboard after selections.
-# :clipboard-paste-before	Paste system clipboard before selections.
-# :clipboard-paste-replace	Replace selections with content of system clipboard.
-# :primary-clipboard-paste-after	Paste primary clipboard after selections.
-# :primary-clipboard-paste-before	Paste primary clipboard before selections.
-# :primary-clipboard-paste-replace	Replace selections with content of system primary clipboard.
-# :set-language, :lang	Set the language of current buffer (show current language if no value specified).
-# :set-option, :set	Set a config option at runtime.
-# :toggle-option, :toggle	Toggle a boolean config option at runtime.
-# :get-option, :get	Get the current value of a config option.
-# :reflow	Hard-wrap the current selection of lines to a given width.
-# :insert-output	Run shell command, inserting output before each selection.
-# :append-output	Run shell command, appending output after each selection.
+# macro
+[keys.normal.m]
+m = "record_macro"
+M = "replay_macro"
+
+# delete
+[keys.normal.backspace]
+backspace = "delete_word_backward"
+c = "delete_char_backward"
+w = "delete_word_backward"
+l = [ "extend_to_line_start", "delete_selection" ]
+p = [ "select_mode", "goto_prev_paragraph", "exit_select_mode", "delete_selection" ]
+[keys.normal.del]
+del = "delete_word_forward"
+c = "delete_char_forward"
+w = "delete_word_forward"
+l = [ "extend_to_line_end", "delete_selection" ]
+
+[keys.insert]
+tab = "completion"
+#del = "delete_char_forward"
+#C-del = "delete_word_forward"
+#C-S-backspace = "switch_case"
