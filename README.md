@@ -52,8 +52,8 @@ Hightlights
 - Web Browsers
   - brave
 
-Notable Scripts
----------------
+Notable Resources
+-----------------
 
 - ./dot
 - cli/.local/bin/*
@@ -63,8 +63,8 @@ Notable Scripts
   - neo: system information
   - pm: one package manager (wrapper) to rule them all
   - rc: config files for machine type, kernel, hostname, .local...
-- root/install/
-  post-installation text files (not scripts)
+- cli/.local/share/fastfetch/presets/shk.jsonc
+- root/install/*
 
 Dependencies
 ------------

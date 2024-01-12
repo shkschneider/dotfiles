@@ -91,24 +91,13 @@ if [[ $VERBOSITY =~ ^v{1,}$ ]] ; then
 fi
 printf "\n"
 
-if command -v hostnamectl >/dev/null ; then
-    printf "󰓼 %s\n" "$(hostnamectl status | grep 'Hardware Model:' | cut -d':' -f2- | xargs)"
-elif test -d /sys/devices/virtual/dmi/id ; then
-    printf "󰓼 %s %s\n" \
-         "$(cat /sys/devices/virtual/dmi/id/product_name 2>/dev/null || cat /sys/devices/virtual/dmi/id/board_name 2>/dev/null)" \
-        "$(cat /sys/devices/virtual/dmi/id/product_version 2>/dev/null || cat /sys/devices/virtual/dmi/id/board_version 2>/dev/null)"
-fi
-
-#:user
-
 if [[ $VERBOSITY =~ ^v{2,}$ ]] ; then
-    printf " "
-    if command -v lslogins >/dev/null ; then
-        lslogins --output=USER,SHELL --logins="$user" | tail -1 | xargs -d ' ' -i basename {} | xargs
-    elif test -z "$SHELL" ; then
-        printf "%s %s\n" "$user" "$(readlink /proc/$$/exe 2>/dev/null | xargs basename)"
-    else
-        printf "%s %s\n" "$user" "$(command -v $SHELL 2>/dev/null | xargs basename)"
+    if command -v hostnamectl >/dev/null ; then
+        printf "󰓼 %s\n" "$(hostnamectl status | grep 'Hardware Model:' | cut -d':' -f2- | xargs)"
+    elif test -d /sys/devices/virtual/dmi/id ; then
+        printf "󰓼 %s %s\n" \
+             "$(cat /sys/devices/virtual/dmi/id/product_name 2>/dev/null || cat /sys/devices/virtual/dmi/id/board_name 2>/dev/null)" \
+            "$(cat /sys/devices/virtual/dmi/id/product_version 2>/dev/null || cat /sys/devices/virtual/dmi/id/board_version 2>/dev/null)"
     fi
 fi
 
@@ -234,6 +223,20 @@ else
 fi
 
 #:session
+
+if test -d /var/run/systemd/sessions ; then
+    printf "󰍂 %s\n" $(
+        grep -h ^SERVICE /var/run/systemd/sessions/* 2>/dev/null \
+            | head -1 | cut -d'=' -f2-)
+else
+    # https://wiki.archlinux.org/title/Display_desktop
+    for s in cmd emptty entrance gdm greetd lemurs lightdm loginx lxdm ly sddm slim tbsm tdm xdm xfwm sshd ; do
+        if ps -C $s >/dev/null ; then
+            printf "󰍂 %s" "$s"
+            break
+        fi
+    done
+fi
 
 session="${XDG_SESSION_TYPE,,:-$(tty)}"
 case "$session" in
@@ -430,12 +433,11 @@ fi
 
 #:colors
 
-printf "  "
+printf " "
 for ((i=0; i<=7; i++)) ; do
-    printf "\e[1;4${i}m  \e[0m"
-done
-for ((i=0; i<=7; i++)) ; do
-    printf "\e[1;10${i}m  \e[0m"
+    printf " "
+    printf "\e[0;3${i}m■\e[0m"
+    printf "\e[1;3${i}m■\e[0m"
 done
 printf "\n"
 

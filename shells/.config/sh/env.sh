@@ -58,12 +58,7 @@ fi
 #:term
 export TERM=${TERM:-"xterm-256color"}
 
-test -z "$MANPAGER" && command -v bat >/dev/null && {
-    # https://github.com/sharkdp/bat/issues/2668
-    export MANROFFOPT=""
-    export MANPAGER="sh -c \"sed -e 's/\x1b\[[0-9;]*m//g' | bat -l man\""
-}
-test -z "$MANPAGER" && command -v less >/dev/null && {
+test -z "$MANPAGER" && test "$PAGER" == "less" && {
     # https://github.com/sharkdp/bat/issues/2593#issuecomment-1637234733
     export MANROFFOPT="-c"
     export MANPAGER="less -R --use-color -Dd+r -Du+b"
@@ -75,7 +70,7 @@ command -v fzf >/dev/null && {
     } || {
         export FZF_DEFAULT_COMMAND="find"
     }
-    export FZF_DEFAULT_OPTS="--height 75% --preview-window up,25% $FZF_DEFAULT_OPTS"
+    #export FZF_DEFAULT_OPTS="--height 75% --preview-window up,25% $FZF_DEFAULT_OPTS"
 }
 
 command -v go >/dev/null && GOPATH="${GOPATH:-$HOME/.go}"
