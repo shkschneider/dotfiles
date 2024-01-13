@@ -1,9 +1,0 @@
-# ~/.config/bash/bashrc
-
-source $HOME/.config/sh/shrc
-
-for rc in $(find $HOME/.config/bash -name '*.bash') ; do
-    source $rc
-done
-
-# EOF

@@ -1,0 +1,11 @@
+# ~/.config/sh/shrc
+
+[[ $- == *i* ]] || return
+
+#:source
+
+for rc in $(find $HOME/.config/sh -name '*.sh') ; do
+    source $rc
+done
+
+# EOF

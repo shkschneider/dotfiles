@@ -1,0 +1,21 @@
+{
+    "autoclose": false,
+    "backup": false,
+    "basename": true,
+    "colorscheme": "shk",
+    "diffgutter": true,
+    "ignorecase": false,
+    "mkparents": true,
+    "relativeruler": true,
+    "reload": "auto",
+    "rmtrailingws": true,
+    "savecursor": true,
+    "savehistory": false,
+    "saveundo": true,
+    "softwrap": true,
+    "status": false,
+    "statusformatl": " $(shkstatus.left) ",
+    "statusformatr": " $(shkstatus.right) ",
+    "tabstospaces": true,
+    "wordwrap": true
+}

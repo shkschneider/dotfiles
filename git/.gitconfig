@@ -1,6 +1,0 @@
-# ~/.config/gitconfig
-
-[include]
-path = ~/.config/git/config
-
-# EOF

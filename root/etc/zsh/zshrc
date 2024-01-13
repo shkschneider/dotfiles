@@ -1,6 +1,0 @@
-# /etc/zsh/zshrc
-
-PS1="%n@%m %1~ %# "
-PS2=""
-
-# EOF

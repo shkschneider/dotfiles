@@ -1,0 +1,86 @@
+theme = "edge"
+#modeless = true
+
+[editor]
+scrolloff = 5
+mouse = true
+middle-click-paste = true
+scroll-lines = 3
+line-number = "relative"
+true-color = true
+bufferline = "multiple"
+auto-pairs = false
+[editor.statusline]
+left = [ "mode", "position", "position-percentage" ]
+center = [ "spinner", "file-name", "read-only-indicator", "file-modification-indicator" ]
+right = [ "version-control", "file-encoding", "file-line-ending", "file-type" ]
+separator = "│"
+mode.normal = "RO"
+mode.insert = "RW"
+mode.select = "--"
+[editor.cursor-shape]
+insert = "block"
+normal = "block"
+select = "block"
+[editor.file-picker]
+hidden = false
+parents = false
+[editor.search]
+smart-case = false
+wrap-around = false
+[editor.whitespace.render]
+nbsp = "all"
+[editor.indent-guides]
+render = true
+[editor.soft-wrap]
+enable = true
+wrap-indicator = ""
+
+[keys.normal]
+"esc" = "command_palette"
+"C-space" = "command_palette"
+"S-up" = [ "select_mode", "extend_line_up" ]
+"S-down" = [ "select_mode", "extend_line_down" ]
+"S-left" = [ "select_mode", "extend_char_left" ]
+"S-right" = [ "select_mode", "extend_char_right" ]
+"C-q" = ":quit"
+"C-Q" = ":quit!"
+
+[keys.select]
+"up" = "extend_line_up"
+"down" = "extend_line_down"
+"left" = "extend_char_left"
+"right" = "extend_char_right"
+"w" = "extend_next_word_end"
+"W" = "extend_prev_word_start"
+"l" = "extend_line_below"
+"L" = "extend_line_above"
+"backspace" = [ "delete_selection", "exit_select_mode", "insert_mode" ]
+"del" = [ "delete_selection", "exit_select_mode", "insert_mode" ]
+"ret" = [ "delete_selection", "add_newline_below", "exit_select_mode", "insert_mode" ]
+#"x" = "cut"
+#"c" = "copy"
+#"v" = "paste"
+
+[keys.insert]
+"esc" = "command_palette"
+"S-up" = "extend_line_up"
+"S-down" = "extend_line_down"
+"S-left" = "extend_char_left"
+"S-right" = "extend_char_right"
+"C-q" = ":quit"
+"C-Q" = ":quit!"
+"C-w" = ":buffer-close"
+"C-W" = ":buffer-close-others"
+"C-s" = ":write"
+"C-S" = ":write-all"
+"C-o" = "file_picker"
+"C-O" = "file_picker_in_current_directory"
+"C-c" = "yank_main_selection_to_primary_clipboard"
+"C-v" = "paste_primary_clipboard_after"
+"C-a" = "goto_line_start"
+"C-e" = "goto_line_end_newline"
+"C-r" = ":reload"
+"C-R" = [ ":reload-all", ":config-reload" ]
+"C-u" = "undo"
+"C-U" = "redo"

@@ -1,9 +1,10 @@
-dotfiles
-========
+# dotfiles
 
 > This is my dotfiles. There are many like them, but those are mine.
 > My dotfiles are my best friends. It is my life. I must master it as I must master my life.
 > Without me, my dotfiles are useless. Without my dotfiles, I am useless.
+
+Symlinks-based, much like GNU Stow, but strictly via files, never directories.
 
 ```
  shk@cell
@@ -14,80 +15,53 @@ dotfiles
  wayland
  hyprland
  alacritty
- zsh/bash
+ bash/zsh
 ```
 
-Usage
------
+> NO WARRANTY. Use at your own risk.
 
-Symlinks-based, much like GNU Stow, but strictly via files, never directories.
-More advanced features done by scripts (dot.script).
+## SysSet
+
+> System Setup
 
 ```
-$ git clone https://github.com/shkschneider/dotfiles.git ~/.dot
-$ ./dot [--help] # use at your own risk
+./sysset [-v[v]] [common|desktop|server]
 ```
 
-Hightlights
------------
+## SysGet
 
-- Display Managers
-  - autologin: sddm (if full disk encryption)
-  - otherwise: ly
+> System Get software
+
+```
+install ./sysget /usr/local/bin/sysget
+
+sysget <update|upgrade|search|install|list|remove|clean>
+```
+
+## SysSrv
+
+> System Services
+
+```
+install ./syssrv /usr/local/bin/syssrv
+
+syssrv <start|status|reload|stop>
+```
+
+## ...
+
+- Display Managers: sddm / ly
 - Window Managers
   - wayland: hyprland + waybar + dunst
-  - x11: awesome / gnome-shell
-- Terminals
-  - alacritty
-  - terminator
-- Shells
-  - zsh + starship (no oh-my-zsh)
-  - bash + starship (no bash-it)
-- Editors
-  - intellij'idea / lite-xl
-  - helix / micro / nano
-- File Managers
-  - lf
-  - nemo
-- Web Browsers
-  - brave
+  - xorg: awesome / gnome-shell
+- Terminals: alacritty / terminator
+- Shells: bash (+ starship - bash-it)/ zsh (+ starship - oh-my-zsh)
+- Editors: micro / nano
+- File Managers: lf / nemo
+- Web Browsers: brave
+- Fonts: jetbrains / hack mono (no ligatures)
 
-Notable Resources
------------------
-
-- ./dot
-- cli/.local/bin/*
-  - barrel: loading spinners
-  - casse: capitalizze, lower, upper, kebab, pascal, snake...
-  - demon: one service manager (wrapper) to rule them all
-  - neo: system information
-  - pm: one package manager (wrapper) to rule them all
-  - rc: config files for machine type, kernel, hostname, .local...
-- cli/.local/share/fastfetch/presets/shk.jsonc
-- root/install/*
-
-Dependencies
-------------
-
-I haven't done an exhaustive list of dependencies, but you might want:
-
-> wget, curl, make, git, unzip, tar, sassc, tree, bc...
-
-Post-Scriptum
--------------
-
-Putting aside evertything that is a fork of a fork or to serve a niche,
-there is pretty much only Arch and Debian; plus Void; and maybe Nix; and...
-
-> The interface you see from a distro doesn't matter.
-> What matters are the supported architectures, package manager and packages/updates.
-
-- My first love was Debian
-- My exploration phase was mainly done on Manjaro and Fedora
-- Now running Arch and Void
-
-Thanks
-------
+**Thanks**
 
 - Linus Torvalds / Linux
 - Richard Stallman / FSF / GNU
@@ -96,4 +70,4 @@ Thanks
 - Void Linux, its Handbook and community
 - DistroWatch
 - Github
-- and every-single-one-of-you that shared open source <3
+- and every-single-one-of-you that shares open source <3

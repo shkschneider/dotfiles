@@ -1,0 +1,17 @@
+#/usr/bin/env sh
+
+bin() {
+    for p in $(echo $PATH | tr ":" "\n") ; do
+        if test -x "$p/$1" ; then
+            echo "$p/$1"
+            return 0
+        fi
+    done
+    # https://stackoverflow.com/questions/592620/how-can-i-check-if-a-program-exists-from-a-bash-script
+    type -P "$1" 2>/dev/null || command -v "$1"
+}
+
+test $# -eq 0 && set -- $(cat /dev/stdin)
+for arg in $@ ; do bin $arg ; done
+
+# EOF
