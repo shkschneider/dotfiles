@@ -1,6 +1,10 @@
-# /etc/profile.d/login.sh ~/.config/profile.d/login.sh
+#!/usr/bin/env sh
+# /etc/profile.d/login.sh
 
-if [ $(id -u) -eq 0 ] ; then
+[ "$NO_COLOR" = "1" ] && return
+
+if [ "$(id -u)" -eq 0 ] ; then
+    # shellcheck disable=SC2021
     printf '\033[31m%s ' "$(uname -n | tr '[a-z]' '[A-Z]')"
     printf '\033[32m%s ' "$(grep 'NAME=' /etc/os-release | head -1 | cut -d\" -f2 | sed -e 's/Linux//' | xargs)"
     printf '\033[33m%s ' "$(uname -s)"
@@ -14,3 +18,5 @@ else
     done
 fi
 printf '\033[0m\n'
+
+# EOF

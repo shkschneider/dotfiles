@@ -1,0 +1,20 @@
+#!/usr/bin/env zsh
+# ~/.config/zsh/rc
+
+source "$HOME/.config/sh/rc"
+
+[[ -o interactive ]] || return
+
+typeset -U fpath # no duplicates
+if test -d "$HOME/.config/zsh/zfunctions" ; then
+    fpath=( "$HOME/.config/zsh/zfunctions" "$fpath")
+    for zf in "$(find "$HOME/.config/zsh/zfunctions" -maxdepth 1 2>/dev/null)" ; do
+        autoload -Uz "${zf:t:r}"
+    done
+fi
+
+while read -r rc ; do
+    source "$rc"
+done < <(find "$HOME/.config/zsh" -maxdepth 1 -name '*.zsh')
+
+# EOF

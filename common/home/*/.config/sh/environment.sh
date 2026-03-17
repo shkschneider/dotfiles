@@ -1,17 +1,13 @@
+#!/usr/bin/env sh
 # ~/.config/sh/environment.sh
 
-test -n "$LANG" || eval "$(locale)"
-test -n "$LANG" || LANG='en_us.UTF-8'
-#(( $(umask) != 0 )) || umask 022
+[ -n "$LANG" ] || eval "$(locale)"
+[ -n "$LANG" ] || LANG='en_us.UTF-8'
 
-export USER="${USER:-$(id --user --name)}"
-export HOST="${HOST:-$(uname --nodename)}"
-
-if [[ -n "$VISUAL" ]] ; then
-    alias e="$VISUAL"
-elif [[ -n "$EDITOR" ]] ; then
-    alias e="$EDITOR"
-fi
+USER="${USER:-$(id --user --name)}"
+export USER
+HOST="${HOST:-$(uname --nodename)}"
+export HOST
 
 if command -v most >/dev/null ; then
     export PAGER="most -ds"
@@ -28,14 +24,16 @@ fi
 if command -v bat >/dev/null ; then
     export MANPAGER="bat -plman"
 fi
+# shellcheck disable=SC2139
 alias p="$PAGER"
 
-COLORTERM="truecolor "
-export TERM=${TERM:-"xterm-256color"}
+#COLORTERM="truecolor "
+TERM="${TERM:-xterm-256color}"
+export TERM
 if command -v dircolors >/dev/null ; then
     for f in "$HOME/.dir_colors" "$HOME/.config/dircolors" "/etc/dircolors" ; do
-        if [[ -f "$f" ]] ; then
-            eval "$(dircolors $f)" && break
+        if [ -f "$f" ] ; then
+            eval "$(dircolors -- "$f")" && break
         fi
     done
 fi

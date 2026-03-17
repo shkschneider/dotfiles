@@ -1,9 +1,14 @@
+#!/usr/bin/env bash
 # ~/.config/bash/completion.bash
 
-[[ -f /usr/share/bash-completion/bash_completion ]] && \
+if [[ -f /usr/share/bash-completion/bash_completion ]] ; then
+    # shellcheck disable=SC1091
     source /usr/share/bash-completion/bash_completion
-[[ -f /etc/bash_completion ]] && \
+fi
+if [[ -f /etc/bash_completion ]] ; then
+    # shellcheck disable=SC1091
     source /etc/bash_completion
+fi
 if [ -n "$BASH_COMPLETION" ] ; then
     complete -cf sudo
     complete -cf man

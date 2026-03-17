@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# ~/.config/bash/rc
+
+# shellcheck disable=SC1091
+source "$HOME/.config/sh/rc"
+
+[[ $- != *i* ]] && return
+
+set -o emacs || set -o vi
+
+while read -r rc ; do
+    source "$rc"
+done < <(find "$HOME/.config/bash" -maxdepth 1 -name '*.bash')
+
+# EOF

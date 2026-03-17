@@ -9,10 +9,10 @@ Z_NOTIFY_IGNORE+=($EDITOR)
 Z_NOTIFY_SUCCESS=false
 Z_TITLE=true
 
-source "$HOME/.config/zsh/zshrc"
+source "$HOME/.config/zsh/rc"
 
-for rc in $(find $HOME -maxdepth 1 -name '.zshrc.*') ; do
-    source $rc
+for rc in $(find "$HOME" -maxdepth 1 -name '.zshrc.*' 2>/dev/null) ; do
+    source "$rc"
 done
 
 # EOF

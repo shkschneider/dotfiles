@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+# ~/.config/sh/rc
+
+[ -f /etc/profile ] && . /etc/profile
+
+echo "$-" | grep i >/dev/null || return
+
+# shellcheck disable=SC2044
+for rc in $(find "$HOME/.config/sh" -maxdepth 1 -name '*.sh') ; do
+    # shellcheck disable=SC1090
+    . "$rc"
+done
+
+# EOF

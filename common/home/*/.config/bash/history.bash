@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # ~/.config/bash/history.bash
 
 shopt -s histappend # append instead of overwriting

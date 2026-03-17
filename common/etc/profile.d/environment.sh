@@ -1,13 +1,24 @@
+#!/usr/bin/env sh
 # /etc/profile.d/environment.sh ~/.config/profile.d/environment.sh
 
-export TERM=xterm-256color #xterm-color xterm linux
+TERM=xterm-256color #xterm-color xterm linux
+export TERM
 
 # LANGUAGE > LC_ALL > LANG
-export LC_ALL=C.UTF-8
+LC_ALL=C.UTF-8
+export LC_ALL
 
 # VISUAL > EDITOR
-export VISUAL=EDITOR=$(command -v emacs || command -v micro || command -v nano || echo 'vim -y')
+VISUAL="$(command -v emacs || command -v micro || command -v nano || echo 'vim -y')"
+export VISUAL
+EDITOR="$VISUAL"
+export EDITOR
 
-export PAGER='less -R'
-export MANPAGER=$PAGER
-command -v git >/dev/null && export GIT_PAGER=$PAGER
+PAGER='less -R'
+export PAGER
+MANPAGER="$PAGER"
+export MANPAGER
+if command -v git >/dev/null ; then
+    GIT_PAGER="$PAGER"
+    export GIT_PAGER
+fi
