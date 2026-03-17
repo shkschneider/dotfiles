@@ -28,12 +28,12 @@ font = "JetBrains Mono"
 font-size = 10
 font-features = "liga 0"
 
-background-color = #333333
-text-color = #eeeeee
+background-color = #333333 # @theme:background@
+text-color = #eeeeee # @theme:foreground@
 outline-width = 0
-outline-color = #1793d1
+outline-color = #1793d1 # @theme:accent@
 border-width = 1
-border-color = #1793d1
+border-color = #1793d1 # @theme:accent@
 corner-radius = 8
 margin-top = 6
 margin-bottom = 0
@@ -47,11 +47,11 @@ padding-right = 0
 prompt-text = " "
 placeholder-text = "_"
 
-#input-background = #333333
-input-color = #1793d1
+#input-background = #333333 # @theme:background@
+input-color = #1793d1 # @theme:accent@
 text-cursor-style = block
-text-cursor-color = #1793d1
+text-cursor-color = #1793d1 # @theme:accent@
 text-cursor-corner-radius = 1s
 
-selection-color = #1793d1
+selection-color = #1793d1 # @theme:accent@
 #selection-match-color =
