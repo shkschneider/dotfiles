@@ -1,0 +1,185 @@
+#!/usr/bin/env bash
+#
+# dotfiles -- symlinks only files
+# 2026 github.com/shkschneider/dotfiles (licensed under MIT)
+#
+# > each profile is its own root filesystem
+# > (common desktop laptop server KERNEL HOST...)
+# > home/\* (literal '*') means "any" user's home
+# > home/USER only target USER's home
+# > defaults to dry-run for safety
+# > logs all unlink/mv/ln commands to ~/dotfiles.log
+# >
+# > never removes (rm) but backups (.bak) existing files
+# > only (un)links files but will create directories
+# >
+# > NO WARRANTY. Use at your own risk.
+#
+
+LC_ALL=C.UTF-8
+set -o noclobber
+shopt -s nullglob
+DOT="${BASH_SOURCE[0]}" ; DOT="$(realpath -- "${DOT%/*}")"
+LOG="${LOG:-$HOME/${0##*/}}.log"
+
+# options
+
+DRYRUN=1
+while (( $# > 0 )) ; do
+    case "$1" in
+        -f|--force) shift ; DRYRUN=0 ;;
+        --) shift ; break ;;
+        -*) exit 1 ;;
+        *) break ;;
+    esac
+done
+
+# profiles
+
+USER=${LOGNAME:-$(whoami)}
+HOST=${HOST:-$(uname -n)}
+KERN=${KERNEL:-$(uname -m)} ; KERN="${KERN,,}"
+
+profiles=()
+if (( $# > 0 )) ; then
+    profiles+=("${@##*/}")
+else
+    profiles+=("common")
+    if [[ -z "$SSH_CONNECTION" ]] ; then
+        if [[ -n "$XDG_SESSION_TYPE" ]] ; then
+            profiles+=("desktop")
+            if [[ -n "$(echo /sys/class/power_supply/BAT*)" || -n "$(echo /proc/acpi/button/lid/LID*)" ]] ; then
+                profiles+=("laptop")
+            fi
+        else
+            profiles+=("server")
+        fi
+    fi
+    if [[ -d "$DOT/$KERN" ]] ; then
+        profiles+=("$KERN")
+    fi
+    if [[ -d "$DOT/$HOST" ]] ; then
+        profiles+=("$HOST")
+    fi
+fi
+(( ${#profiles[@]} > 0 )) || exit 1
+for profile in "${profiles[@]}" ; do
+    if [[ ! -d "$DOT/$profile" ]] ; then
+        echo "$DOT: profile '$profile' not found!" >&2
+        exit 1
+    fi
+    if [[ ! -r "$DOT/$profile" ]] ; then
+        echo "$DOT: profile '$profile' not readable!" >&2
+        exit 1
+    fi
+done
+echo "$DOT: ${profiles[*]}"
+
+# dotfiles
+
+_dotfiles() {
+    [[ -n "$DOT" ]] || return 1
+    local profiles ; profiles=("$@")
+    (( ${#profiles[@]} > 0 )) || return 2
+    local profile ; for profile in "${profiles[@]}" ; do
+        if (( $(id -u) == 0 )) ; then
+            # system-wide configuration only
+            while read -r src ; do
+                echo "$src=${src#"$DOT/$profile/"}"
+            done < <(find "$DOT/$profile" -not -path "$DOT/$profile/home/*" -type f)
+            continue
+        fi
+        # user-wide configurations only
+        while read -r src ; do
+            # system configurations that can also be user's
+            dst="$(head "$src" | grep '^# /' | awk '{print $3}' | sed "s;~;$HOME;")" # documented in-file
+            if [[ -n "$dst" ]] ; then
+                echo "$src=$dst"
+            fi
+        done < <(find "$DOT/$profile" -not -path "$DOT/$profile/home/*" -type f -exec grep -Iq . {} \; -print 2>/dev/null)
+        if [[ -d "$DOT/$profile/home/*" ]] ; then
+            # any user
+            while read -r src ; do
+                echo "$src=$HOME/${src#"$DOT/$profile/home/*/"}" || (( e+=1 ))
+            done < <(find "$DOT/$profile/home/*" -type f)
+        fi
+        if [[ -d "$DOT/$profile/home/$USER" ]] ; then
+            # current user
+            while read -r src ; do
+                echo "$src=$HOME/${src#"$DOT/$profile/home/$USER/"}" || (( e+=1 ))
+            done < <(find "$DOT/$profile/home/$USER" -type f)
+        fi
+    done
+}
+
+# summary
+
+if (( DRYRUN == 1 )) ; then
+    for profile in "${profiles[@]}" ; do
+        echo
+        echo "# $profile:"
+        mapfile -t dotfiles < <(_dotfiles "$profile")
+        for dotfile in "${dotfiles[@]}" ; do
+            dst="${dotfile#*=}"
+            echo "${dst/$HOME/\~}"
+        done
+    done
+    echo
+    command -v tput >/dev/null && tput rev 2>/dev/null
+    echo "DRYRUN: re-run with -f|--force" >&2
+    command -v tput >/dev/null && tput sgr0 2>/dev/null
+    exit 0
+fi
+
+# symlinks
+
+_run() {
+    echo "$*" >> "$LOG"
+    (( DRYRUN == 0 )) && "$@" >/dev/null 2>> "$LOG"
+}
+
+_link() {
+    local src ; src="$1"
+    [[ -r "$src" ]] || return 1
+    [[ -f "$src" ]] || return 2
+    local dst ; dst="$2"
+    [[ -n "$dst" ]] || return 3
+    if [[ -L "$dst" ]] ; then
+        _run unlink "$dst" || echo return 4
+    fi
+    if [[ -f "$dst" ]] ; then
+        _run mv "$dst" "${dst}.bak" || echo return 5
+    fi
+    if [[ ! -d "${dst%/*}" ]] ; then
+        _run mkdir -p "${dst%/*}" || echo return 6
+    fi
+    _run ln -s "$src" "$dst" || return 7
+    return 0
+}
+
+echo
+e=0
+for profile in "${profiles[@]}" ; do
+    printf '%s ' "$profile"
+    mapfile -t dotfiles < <(_dotfiles "$profile")
+    for dotfile in "${dotfiles[@]}" ; do
+        printf '.'
+        src="${dotfile%%=*}"
+        dst="${dotfile#*=}"
+        _link "$src" "$dst" || (( e+=1 ))
+    done
+    echo
+done
+
+# report
+
+echo
+if (( e > 0 )) ; then
+    printf 'There was some err' >&2
+    printf '%*sr' "$e" ' ' | tr ' ' 'o' >&2
+    (( e > 1 )) && printf 's' >&2
+    printf '\n' >&2
+fi
+echo "$LOG"
+
+# EOF

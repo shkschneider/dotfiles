@@ -5,69 +5,83 @@
 > Without me, my dotfiles are useless. Without my dotfiles, I am useless.
 
 Symlinks-based, much like GNU Stow, but strictly via files, never directories.
-
-```
- shk@cell
-󰔛 up 42 day, 4 hour, 2 minutes
- linux
- arch/void
-󰌧 systemd/runit
- wayland
- hyprland
- alacritty
- bash/zsh
-```
+Which allows for local configurations without messing up with those ;
+If you want copies, use `rsync`.
 
 > NO WARRANTY. Use at your own risk.
 
-## SysSet
+## Usage
 
-> System Setup
-
-```
-./sysset [-v[v]] [common|desktop|server]
-```
-
-## SysGet
-
-> System Get software
-
-```
-install ./sysget /usr/local/bin/sysget
-
-sysget <update|upgrade|search|install|list|remove|clean>
+```bash
+git clone https://github.com/shkschneider/dotfiles [~/.dot]
+./dotfiles [-f|--force] [profile...]
 ```
 
-## SysSrv
+- common
+- desktop
+- laptop
+- root
+- server
 
-> System Services
+## Typical Setups
 
+**Desktop**
+
+- ArchLinux
+- gdm
+- gnome-shell
+- kitty / alacritty
+- zsh / bash
+- nemo
+- brave
+- outfit / jetbrains mono
+
+**Laptop**
+
+- ArchLinux
+- greetd / sddm
+- hyprland + waybar
+- kitty / alacritty
+- zsh / bash
+- thunar / lf
+- brave
+- outfit / jetbrains mono
+
+**Server**
+
+- VoidLinux
+- bash
+- lf
+- wget
+
+**RIP**
+
+- Debian (sysv)
+- AwesomeWM (X11)
+
+## Scripts
+
+- bin/neo -- neofetch-like script
+- bin/copy -- cp with progress bar
+- bin/move -- mv with progress bar
+- bin/trash -- safer rm for the cli
+- sbin/pkg -- one package manager (wrapper) to rule them all
+
+## Undo
+
+```sh
+find ~/.* -type l -print # lists symlinks
+#find ~/.* -type l -delete # removes symlinks
+find ~ -xtype l -delete # broken symlinks
 ```
-install ./syssrv /usr/local/bin/syssrv
 
-syssrv <start|status|reload|stop>
-```
+## Thanks
 
-## ...
-
-- Display Managers: sddm / ly
-- Window Managers
-  - wayland: hyprland + waybar + dunst
-  - xorg: awesome / gnome-shell
-- Terminals: alacritty / terminator
-- Shells: bash (+ starship - bash-it)/ zsh (+ starship - oh-my-zsh)
-- Editors: micro / nano
-- File Managers: lf / nemo
-- Web Browsers: brave
-- Fonts: jetbrains / hack mono (no ligatures)
-
-**Thanks**
-
-- Linus Torvalds / Linux
-- Richard Stallman / FSF / GNU
-- Ian Murdock / Debian
-- Arch Linux, its Wiki and community
-- Void Linux, its Handbook and community
-- DistroWatch
-- Github
-- and every-single-one-of-you that shares open source <3
+- _Linus Torvalds_ for _Linux_
+- _Ian Murdock_ for _Debian_
+- _Richard Stallman_ for the _FSF_ and _GNU_
+- _DistroWatch_ for helping me distro-hop too much
+- _ArchLinux_ for its Wiki and community
+- _VoidLinux_ for its Handbook and community
+- _Github_ for spreading open-source
+- and _every-single-one-of-you_ for sharing code <3
