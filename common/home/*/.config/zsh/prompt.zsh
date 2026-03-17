@@ -1,7 +1,8 @@
+#!/usr/bin/env zsh
 # ~/.config/zsh/prompt.zsh
 # https://gist.github.com/romkatv/2a107ef9314f0d5f76563725b42f7cab
 
-autoload -Uz promptinit ; promptinit
+autoload -Uz promptinit
 
 function prompt-length() {
     emulate -L zsh
@@ -39,9 +40,9 @@ function set-prompt() {
     emulate -L zsh
     local userhost='%n'
     if [ $EUID -eq 0 ] ; then
-        userhost="%F{red}$user%f"
+        userhost="%F{red}$userhost%f"
     else
-        userhost="%F{green}$user%f"
+        userhost="%F{green}$userhost%f"
     fi
     if [ -n "$SSH_TTY$SSH_CLIENT$SSH2_CLIENT" ] ; then
         userhost="$userhost%F{yellow}@%m%f"

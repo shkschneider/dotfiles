@@ -1,19 +1,20 @@
-# completion.zsh
+#!/usr/bin/env zsh
+# ~/.config/zsh/completion.zsh
 # ! after colors
 
 zmodload zsh/complete
 zmodload zsh/complist
 
-setopt rec_exact # completes if correct even if more possibilities
-setopt auto_param_slash # directories
-setopt auto_menu ; unsetopt menu_complete # menu & auto-select-first-candidate
-setopt complete_in_word ; setopt always_to_end
-setopt list_types ; unsetopt list_ambiguous
+setopt   rec_exact # completes if correct even if more possibilities
+setopt   auto_param_slash # directories
+setopt   auto_menu ; unsetopt menu_complete # menu & auto-select-first-candidate
+setopt   complete_in_word ; setopt always_to_end
+setopt   list_types ; unsetopt list_ambiguous
 unsetopt complete_aliases # https://stackoverflow.com/a/20643204
-setopt glob_complete
+setopt   glob_complete
 unsetopt glob_dots # auto-include .*
 unsetopt cdable_vars correct correct_all ; CORRECT_IGNORE="[_|.]*"
-setopt always_last_prompt # completion below prompt
+setopt   always_last_prompt # completion below prompt
 
 zource 'zsh-users/zsh-completions@0.34.0'
 
@@ -69,9 +70,12 @@ zle -N expand-or-complete-or-list-files
 bindkey '^I' expand-or-complete-or-list-files # tab
 
 zmodload zsh/terminfo
-
 bindkey "${terminfo[kcbt]}" reverse-menu-complete # shift-tab
+bindkey "${terminfo[kdch1]}" delete-char # del
+bindkey "${terminfo[kend]}" end-of-line # end
+bindkey "${terminfo[khome]}" beginning-of-line # home
 
-autoload -Uz bashcompinit && bashcompinit
+autoload -Uz bashcompinit
+autoload -Uz compinit
 
 # EOF

@@ -1,28 +1,29 @@
+#!/usr/bin/env zsh
 # ~/.config/zsh/zfunctions/zlog
 
 _zlog_verbose() {
-  print -P "%F{008}-- $@ --%f"
+    print -P "%F{008}-- $@ --%f"
 }
 
 _zlog_info() {
-  print -P "%F{green}-- $@ --%f"
+    print -P "%F{green}-- $@ --%f"
 }
 
 _zlog_warning() {
-  print -P "%F{yellow}-- $@ --%f"
+    print -P "%F{yellow}-- $@ --%f"
 }
 
 _zlog_error() {
-  print -P "%F{red}-- $@ --%f"
+    print -P "%F{red}-- $@ --%f"
 }
 
-local lvl=$1
+local lvl="$1"
 shift
-case $lvl in
-  e) _zlog_error $@ ;;
-  w) _zlog_warning $@ ;;
-  i) _zlog_info $@ ;;
-  *) _zlog_verbose $@ ;;
+case "$lvl" in
+    i|info) _zlog_info $@ ;;
+    w|warning) _zlog_warning $@ ;;
+    e|error) _zlog_error $@ ;;
+    *) _zlog_verbose $@ ;;
 esac
 
 # EOF

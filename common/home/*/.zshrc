@@ -1,3 +1,4 @@
+#!/usr/bin/env zsh
 # ~/.zshrc
 
 Z_CHPWD=true
@@ -10,9 +11,5 @@ Z_NOTIFY_SUCCESS=false
 Z_TITLE=true
 
 source "$HOME/.config/zsh/rc"
-
-for rc in $(find "$HOME" -maxdepth 1 -name '.zshrc.*' 2>/dev/null) ; do
-    source "$rc"
-done
 
 # EOF

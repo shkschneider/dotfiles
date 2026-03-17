@@ -1,3 +1,4 @@
+#!/usr/bin/env zsh
 # ~/.config/zs/cli.zsh
 
 autoload -Uz edit-command-line

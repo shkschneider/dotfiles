@@ -1,3 +1,4 @@
+#!/usr/bin/env zsh
 # ~/.config/zsh/cursor.zsh
 
 case $OSTYPE in

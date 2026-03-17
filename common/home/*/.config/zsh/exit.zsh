@@ -1,7 +1,8 @@
-# exit.zsh
+#!/usr/bin/env zsh
+# ~/.config/zsh/exit.zsh
 
 function _exit() {
-  rm -f /tmp/zsh_prompt_* 2>/dev/null >&2
+    rm -f /tmp/zsh_prompt_* 2>/dev/null >&2
 }
 
 autoload -Uz add-zsh-hook

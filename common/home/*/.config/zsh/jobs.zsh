@@ -1,4 +1,5 @@
-# jobs.zsh
+#!/usr/bin/env zsh
+# ~/.config/zsh/jobs.zsh
 
 setopt check_jobs # upon exit
 setopt hup # upon exit
