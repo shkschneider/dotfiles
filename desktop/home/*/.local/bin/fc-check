@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# ~/.local/bin/fc-cache
+
+command -v fc-cache >/dev/null || exit 1
+printf '...'
+fc-cache -rf >/dev/null
+printf '\r'
+
+command -v fc-list >/dev/null || exit 1
+fc-list : family | cut -d',' -f1 | sort -u | xargs -I{} printf '- {}\n'
+
+command -v fc-match >/dev/null || exit 1
+for font in serif sans-serif monospace ; do
+    printf '%s:%s\n' "${font^}" "$(fc-match "$font" | cut -d':' -f2)"
+done
+
+# EOF
