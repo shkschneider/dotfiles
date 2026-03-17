@@ -6,22 +6,25 @@
 
 Symlinks-based, much like GNU Stow, but strictly via files, never directories.
 Which allows for local configurations without messing up with those ;
-If you want copies, use `rsync`.
+(If you want copies, use `rsync`.)
 
 > NO WARRANTY. Use at your own risk.
 
 ## Usage
 
 ```bash
-git clone https://github.com/shkschneider/dotfiles [~/.dot]
+git clone https://github.com/shkschneider/dotfiles [~/.dot|/opt/dotfiles]
 ./dotfiles [-f|--force] [profile...]
 ```
 
-- common
-- desktop
-- laptop
-- root
-- server
+## Profiles
+
+_automatic by default_
+
+- [common](common)
+- [desktop](desktop)
+- [laptop](laptop)
+- [server](server)
 
 ## Typical Setups
 
@@ -39,7 +42,7 @@ git clone https://github.com/shkschneider/dotfiles [~/.dot]
 **Laptop**
 
 - ArchLinux
-- greetd / sddm
+- greetd
 - hyprland + waybar
 - kitty / alacritty
 - zsh / bash
@@ -59,13 +62,13 @@ git clone https://github.com/shkschneider/dotfiles [~/.dot]
 - Debian (sysv)
 - AwesomeWM (X11)
 
-## Scripts
+## (Notable) Scripts
 
-- bin/neo -- neofetch-like script
-- bin/copy -- cp with progress bar
-- bin/move -- mv with progress bar
-- bin/trash -- safer rm for the cli
-- sbin/pkg -- one package manager (wrapper) to rule them all
+- [bin/neo](common/usr/local/bin/neo) -- neofetch-like script
+- [bin/copy](common/usr/local/bin/copy) -- cp with progress bar
+- [bin/move](common/usr/local/bin/move) -- mv with progress bar
+- [bin/trash](common/usr/local/bin/trash) -- safer rm for the cli
+- [sbin/pkg](common/usr/local/sbin/pkg) -- one package manager (wrapper) to rule them all
 
 ## Undo
 
