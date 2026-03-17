@@ -1,0 +1,4 @@
+#!/bin/sh
+
+makoctl dismiss -a 2>/dev/null
+dunstctl close-all 2>/dev/null

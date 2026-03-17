@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+(( $# == 0 )) && set -- "$(cat /dev/stdin)"
+
+for path in "$@" ; do
+    dirname="${path%/*}"
+    basename="${path##*/}"
+    case "$basename" in
+        *.bak) mv -v -- "$path" "$dirname/${basename%.bak}" ;;
+        *) mv -v -- "$path" "$dirname/${basename}.bak" ;;
+    esac
+done
+
+# EOF

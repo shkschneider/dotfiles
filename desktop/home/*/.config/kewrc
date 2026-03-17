@@ -1,0 +1,16 @@
+path=~/Music
+coverEnabled=0
+coverAnsi=0
+visualizerEnabled=1
+visualizerHeight=25
+useProfileColors=1
+
+volumeUp=+
+volumeUpAlt==
+volumeDown=-
+togglePause=p
+toggleVisualizer=v
+toggleRepeat=r
+toggleShuffle=s
+addToMainPlaylist=.
+quit=q

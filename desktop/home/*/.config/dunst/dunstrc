@@ -1,0 +1,33 @@
+# dunstctl close-all ; dunstctl reload ; for l in low normal critical ; do notify-send -u $l "$l" ; done
+
+[global]
+origin = top-right
+offset = (7, 8)
+corner_radius = 8
+progress_bar_corner_radius = 4
+padding = 4
+frame_width = 1
+gap_size = 2
+sort = update
+font = "JetBrainsMonoNL Nerd Font" 11
+hide_duplicate_count = false
+min_icon_size = 8
+max_icon_size = 16
+
+[urgency_low]
+background = "#333333"
+foreground = "#eeeeee"
+frame_color = "#eeeeee"
+timeout = 1
+
+[urgency_normal]
+background = "#333333"
+foreground = "#eeeeee"
+frame_color = "#1793d1"
+timeout = 3
+
+[urgency_critical]
+background = "#333333"
+foreground = "#eeeeeeaa"
+frame_color = "#ff6188"
+timeout = 0

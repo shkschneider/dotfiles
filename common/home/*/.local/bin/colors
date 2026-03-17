@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+for i in {0..255} ; do
+    printf '\e[38;5;%dm%03d\e[0m ' "$i" "$i"
+done
+echo
+
+# EOF

@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+
+if [[ -z "$DIR" ]] ; then
+    if [[ -d "${XDG_PICTURES_DIR:-$HOME/Pictures}" ]] ; then
+        DIR="${XDG_PICTURES_DIR:-$HOME/Pictures}/Screenshots"
+    elif [[ -d "$HOME/Desktop" ]] ; then
+        DIR="$HOME/Desktop"
+    else
+        DIR="$PWD"
+    fi
+fi
+echo "$DIR"
+if [[ -z "$FILE" ]] ; then
+    FILE="$(date +%Y%M%d_%H%M%S).png"
+fi
+
+case "$1" in
+    region)
+        if command -v grimblast ; then
+            grimblast save area "$DIR/$FILE"
+        elif command -v hyprshot ; then
+            hyprshot -s -m region -o "$DIR" -f "$FILE"
+        elif command -v grim && command -v slurp ; then
+            grim -g "$(slurp)" "$DIR/$FILE"
+        else
+            scrot --silent -s -F "$DIR/$FILE"
+        fi
+        ;;
+    window)
+        if command -v grimblast ; then
+            grimblast save active "$DIR/$FILE"
+        elif command -v hyprshot ; then
+            hyprshot -s -m window -m active -o "$DIR" -f "$FILE"
+        elif command -v grimshot ; then
+            grimshot save active "$DIR/$FILE"
+        else
+            scrot --silent -u -F "$DIR/$FILE"
+        fi
+        ;;
+    *)
+        if command -v grimblast ; then
+            grimblast save output "$DIR/$FILE"
+        elif command -v hyprshot ; then
+            hyprshot -s -m output -m active -o "$DIR" -f "$FILE"
+        elif command -v grim ; then
+            grim "$DIR/$FILE"
+        else
+            scrot --silent -F "$DIR/$FILE"
+        fi
+        ;;
+esac
+
+# shellcheck disable=SC2181
+(( $? == 0 )) || exit 1
+echo "$FILE"
+command -v notify-send && \
+    notify-send -u low "Screenshot" "$DIR/$FILE"
+
+# EOF

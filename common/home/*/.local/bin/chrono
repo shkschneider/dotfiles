@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+start=$(date +'%s')
+
+while true ; do
+    printf '\r%s %s' \
+        "$(date -u -d "@$(($(date +'%s') - start))" +'%H:%M:%S')" \
+        "$(date +'%H:%M:%S.%N')" \
+        ;
+done
+
+# EOF

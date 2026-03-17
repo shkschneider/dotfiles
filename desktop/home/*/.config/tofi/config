@@ -1,0 +1,57 @@
+# general
+
+output = ""
+width = 99%
+height = 30
+anchor = top
+scale = true
+exclusive-zone = -1
+multi-instance = false
+history = false
+#num-results = 1
+
+hide-cursor = true
+text-cursor = true
+ascii-input = true
+hide-input = false
+result-spacing = 4
+clip-to-padding = true
+#matching-algorithm = fuzzy
+require-match = true
+auto-accept-single = false
+
+# style
+
+horizontal = true
+
+font = "JetBrains Mono"
+font-size = 10
+font-features = "liga 0"
+
+background-color = #333333
+text-color = #eeeeee
+outline-width = 0
+outline-color = #1793d1
+border-width = 1
+border-color = #1793d1
+corner-radius = 8
+margin-top = 6
+margin-bottom = 0
+margin-left = 0
+margin-right = 0
+padding-top = 2
+padding-bottom = 0
+padding-left = 0
+padding-right = 0
+
+prompt-text = " "
+placeholder-text = "_"
+
+#input-background = #333333
+input-color = #1793d1
+text-cursor-style = block
+text-cursor-color = #1793d1
+text-cursor-corner-radius = 1s
+
+selection-color = #1793d1
+#selection-match-color =

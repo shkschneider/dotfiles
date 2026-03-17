@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+if command -v fzf >/dev/null ; then
+    find "$@" -exec realpath {} \; | fzf
+else
+    find "$@" -exec realpath {} \;
+fi
+
+# EOF

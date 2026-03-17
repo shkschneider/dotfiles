@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+command -v swaybg >/dev/null || exit 1
+
+_() {
+    echo "$@"
+    local pid ; pid=$(pidof swaybg)
+    swaybg --image "$@" >/dev/null 2>&1 &
+    test -n "$pid" && sleep 1 && kill -9 "$pid"
+}
+
+if (( $# == 1 )) ; then
+    # sole argument
+    _ "$1"
+elif (( $# > 1 )) ; then
+    # random from arguments
+    _ "$(shuf -e -n1 "$@")"
+else
+    _wallpaper_random() {
+        find "$HOME/.local/share/backgrounds" -type f \
+            \( -iname '*.png' -o -iname "*.jpg" -o -iname "*.jpeg" \) \
+            | shuf -n1
+    }
+    if test -d "$HOME/.local/share/backgrounds" ; then
+        if test -d "$HOME/.local/share/backgrounds/25th-hour" ; then
+            # time-related 25th-hour
+            h=$(date +'%H %M' | awk '{printf "%03.0f", $1 * (16 / 24) + ($2 * (60/100)) / 100}')
+            _ "$HOME/.local/share/backgrounds/25th-hour/$h.png"
+        else
+            # random local wallpaper
+            _ "$(_wallpaper_random "$HOME/.local/share/backgrounds")"
+        fi
+    elif test -d "/usr/share/backgrounds" ; then
+        # random global wallpaper
+        _ "$(_wallpaper_random "/usr/share/backgrounds")"
+    else
+        exit 1
+    fi
+fi
+
+# EOF

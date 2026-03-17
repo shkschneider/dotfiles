@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+(( $# == 0 )) && set -- "$(cat /dev/stdin)"
+
+[[ -n "$1" ]] || exit 1
+
+case "$1" in
+    debug  ) shift ; echo "... $*" >&2 ;;
+    info   ) shift ; echo "??? $*" >&2 ;;
+    warning) shift ; echo "### $*" >&2 ;;
+    error  ) shift ; echo "!!! $*" >&2 ;;
+    *      )         echo     "$*" >&1 ;;
+esac
+
+# EOF

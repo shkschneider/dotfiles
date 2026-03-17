@@ -1,0 +1,6 @@
+Host localhost
+     HostName localhost
+     Port 22
+
+# Useful for completions and scripts, but slightly insecure
+HashKnownHosts no

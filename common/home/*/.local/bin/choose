@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+(( $# == 0 )) && set -- "$(cat /dev/stdin)"
+
+if command -v fzf >/dev/null ; then
+    for option in "$@" ; do echo -- "$option" ; done | \
+        fzf --height=~100% --reverse --border --pointer=">" --prompt="? " --no-info +m #--border=none --color=16
+else
+    n=0
+    for option in "$@" ; do
+        echo "$n. $option"
+        (( n+= 1 ))
+    done
+    read -r -p "Please choose [1-$n]: " n </dev/tty
+    echo "${@[$((n - 1))]}"
+fi
+
+# EOF

@@ -1,0 +1,8 @@
+# ~/.inputrc
+
+"\e[A": history-search-backward # arrow-up
+"\e[B": history-search-forward  # arrow-down
+
+set enable-bracketed-paste off  # fix copy-paste
+
+# EOF

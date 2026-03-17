@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+command -v curl >/dev/null || exit 1
+
+LANG=${LANG:-$(locale | grep '^LANG=' | cut -d'=' -f2)}
+LANG=${LANG:-'en_US.UTF-8'}
+curl --silent wttr.in/"${*:-?d&m&lang=$LANG}"
+
+# EOF
