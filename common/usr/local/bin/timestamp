@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# /usr/local/bin/timestamp ~/.local/bin/timestamp
+
+date '+%s'
+
+# EOF

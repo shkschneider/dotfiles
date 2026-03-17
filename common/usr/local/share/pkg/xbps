@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# /usr/local/share/pkg/xbps ~/.local/share/pkg/xbps
+
+export BACKEND="xbps"
+
+pkg_version() {   xbps-install --version | cut -d' ' -f2 ; }
+pkg_update()  { _ xbps-install -S && _ xbps-query -m ;  }
+pkg_upgrade() { _ xbps-install -Su "$@" ; }
+pkg_search()  { _ xbps-query -Rs "$@" ; }
+pkg_info()    { _ xbps-query -S "$@" ; }
+pkg_install() { _ xbps-install "$@" ; }
+pkg_list()    { _ xbps-query -l ; }
+pkg_remove()  { _ xbps-remove -R "$@" ; }
+pkg_purge()   { _ xbps-remove -Rco "$@" ; }
+pkg_clean()   { _ xbps-remove -oO ; }
+pkg_wipe()    { _ xbps-remove -OO ; }
+
+# EOF

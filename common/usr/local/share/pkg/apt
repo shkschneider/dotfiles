@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# /usr/local/share/pkg/apt ~/.local/share/pkg/apt
+
+export BACKEND="apt"
+
+pkg_version() {   apt --version ; }
+pkg_update()  { _ apt update && _ apt list --upgradable ; }
+pkg_upgrade() { _ apt update && _ apt upgrade "$@" ; }
+pkg_search()  { _ apt search "$@" ; }
+pkg_info()    { _ apt show "$@" ; }
+pkg_install() { _ apt install "$@" ; }
+pkg_list()    { _ apt list --installed ; }
+pkg_remove()  { _ apt remove "$@" ; }
+pkg_purge()   { _ apt purge "$@" ; }
+pkg_clean()   { _ apt clean ; }
+pkg_wipe()    { _ apt autoremove ; }
+
+# EOF

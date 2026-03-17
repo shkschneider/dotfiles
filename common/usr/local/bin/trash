@@ -1,0 +1,103 @@
+#!/usr/bin/env bash
+# /usr/local/bin/trash ~/.local/bin/trash
+#
+# trash -- a more casual rm for the terminal
+# 2026 github.com/shkschneider (licensed under MIT)
+#
+
+TRASH="${XDG_DATA_HOME:-$HOME/.local/share}/Trash"
+
+_info() {
+    if [[ -d "$TRASH" ]] ; then
+        printf "%s %s (%d items: %d directories %d files)\n" \
+            "${TRASH/$HOME/\~}" \
+            "$(du -sh -- "$TRASH" 2>/dev/null | awk '{print $1}')" \
+            "$(find -- "$TRASH/info" -type f 2>/dev/null | wc -l)" \
+            "$(find -- "$TRASH/files" -type d 2>/dev/null | sed '1d' | wc -l)" \
+            "$(find -- "$TRASH/files" -type f 2>/dev/null | sed '1d' | wc -l)" \
+            ;
+    else
+        printf "%s %s\n" \
+            "${TRASH/$HOME/\~}" \
+            "$(du -h '/dev/null' 2>/dev/null | awk '{print $1}')" \
+            ;
+    fi
+}
+
+_list() {
+    local info ; mapfile -t info < <(find -- "$TRASH/info" -type f -printf '%C@ %p\n' | sort -n | cut -d' ' -f2-)
+    for (( i=0 ; i<${#info[@]} ; i++ )) ; do
+        local name ; name=${info[i]/%\.trashinfo/} ; name=${name##*/}
+        local trash_path ; trash_path=$(sed -n '/Path=/s|.*=||p' "${info[i]}")
+        #[[ -d "$TRASH/files/$name" ]] && trash_path="${trash_path}/"
+        local trash_date ; trash_date=$(sed -n '/DeletionDate=/s|.*=||p' "${info[i]}")
+        local sz ; sz="$(du -sh -- "$TRASH/files/$name" | cut -f1)"
+        local perm ; perm=""
+        [[ -d "$TRASH/files/$name" ]] && perm="${perm}d" || perm="${perm}-"
+        [[ -r "$TRASH/files/$name" ]] && perm="${perm}r" || perm="${perm}-"
+        [[ -w "$TRASH/files/$name" ]] && perm="${perm}w" || perm="${perm}-"
+        [[ -x "$TRASH/files/$name" ]] && perm="${perm}x" || perm="${perm}-"
+        printf '%s: %s %s %s %s\n' \
+            "$name" \
+            "$perm" \
+            "$sz" \
+            "${trash_date/T/ }" \
+            "$trash_path" \
+            ;
+    done
+}
+
+_restore() {
+    (( $# > 0 )) || { _list ; exit 1 ; }
+    local name ; for name in "$@" ; do
+        [[ -f "$TRASH/info/$name.trashinfo" ]] || { echo "${TRASH/$HOME/\~}: $name (info) not found" >&2 ; continue ; }
+        [[ -e "$TRASH/files/$name" ]] || { echo "${TRASH/$HOME/\~}: $name (file) not found" >&2 ; continue ; }
+        local trash_path ; trash_path=$(sed -n '/^Path=/s|.*=||p' "$TRASH/info/$name.trashinfo" 2>/dev/null)
+        [[ -n "$trash_path" ]] || { echo "${TRASH/$HOME/\~}: $name (info) invalid path" >&2 ; continue ; }
+        mkdir -vp -- "${trash_path%/*}" || continue
+        mv -vb -- "$TRASH/files/$name" "$trash_path" || continue
+        rm -vf -- "$TRASH/info/$name.trashinfo"
+    done
+}
+
+_trash() {
+    mkdir -p -- "$TRASH"/{files,info} || exit 1
+    local path ; for path in "$@" ; do
+        path="$(realpath -- "$path")"
+        local name="${path##*/}"
+        mv -vf -- "$path" "$TRASH/files/$name$$" || exit 1
+        printf '[Trash Info]\nPath=%s\nDeletionDate=%s\n' \
+            "$(realpath -- "$path")" "$(date +'%Y-%m-%dT%H:%M:%S')" \
+            > "$TRASH/info/$name$$.trashinfo"
+    done
+}
+
+_empty() {
+    (rm -rf -- "$TRASH" && mkdir -p -- "$TRASH"/{files,info}) || exit 1
+}
+
+while (( $# > 0 )) ; do
+    case "$1" in
+        --) shift ; break ;;
+        *) break ;;
+    esac
+done
+
+_help() {
+    grep "# $0 " "${BASH_SOURCE[0]}" | head -1 | cut -d' ' -f2-
+    sed -n '/^case/,$ p' "${BASH_SOURCE[0]}" | \
+        grep -- '--' | cut -d')' -f1 | \
+        xargs -I{} printf "      %s\n" "{}"
+    printf "      %s\n" "..."
+}
+case "$1" in
+    ""          ) _help ; exit 1 ;;
+    -h|--help   ) _help ; exit 0 ;;
+    -i|--info   ) _info ; exit 0 ;;
+    -l|--list   ) _list ; exit 0 ;;
+    -r|--restore) shift ; _restore "$@" ;;
+    -e|--empty  ) _empty ;;
+    *           ) _trash "$@" ;;
+esac
+
+# EOF

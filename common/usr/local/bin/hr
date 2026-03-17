@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# /usr/local/bin/hr ~/.local/bin/hr
+
+printf '%*s\n' "$(tput cols 2>/dev/null || echo 80)" ' ' | tr ' ' "${1:--}"
+
+# EOF

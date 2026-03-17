@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# /usr/local/bin/lsb ~/.local/bin/lsb
+
+# mimics lsb_release
+if [[ -r /etc/os-release ]] ; then
+    (
+        # shellcheck disable=SC1091
+        source /etc/os-release
+        name="${PRETTY_NAME:-${NAME:-${ID:-$ID_LIKE}}}" ; name=${name// /}
+        version="${VERSION:-${VERSION_ID:-$BUILD_ID}}" ; version=${version// /_}
+        printf '%s %s\n' "$name" "$version"
+    )
+else
+    echo "$(uname -o) $(uname -r)"
+fi
+
+# EOF

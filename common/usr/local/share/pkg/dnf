@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# /usr/local/share/pkg/dnf ~/.local/share/pkg/dnf
+
+export BACKEND="dnf"
+
+pkg_version() {   dnf --version | head -1 | cut -d' ' -f3 ; }
+pkg_update()  { _ dnf --refresh list updates ; }
+pkg_upgrade() { _ dnf --refresh upgrade "$@" ; }
+pkg_search()  { _ dnf search "$@" ; }
+pkg_info()    { _ dnf info "$@" ; }
+pkg_install() { _ dnf install "$@" ; }
+pkg_list()    { _ dnf list --installed ; }
+pkg_remove()  { _ dnf remove "$@" ; }
+pkg_purge()   { _ dnf remove "$@" ; }
+pkg_clean()   { _ dnf clean all ; }
+pkg_wipe()    { _ dnf autoremove ; }
+
+# EOF

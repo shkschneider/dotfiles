@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# /usr/local/bin/bin ~/.local/bin/bin
+
+(( $# == 0 )) && set -- "$(cat /dev/stdin)"
+
+for arg in "$@" ; do
+    for path in ${PATH//:/ } ; do
+        if test -x "$path/$arg" ; then
+            echo "$path/$arg"
+            exit 0
+        fi
+    done
+    # https://stackoverflow.com/questions/592620/how-can-i-check-if-a-program-exists-from-a-bash-script
+    command -v "arg" 2>/dev/null
+done
+
+# EOF

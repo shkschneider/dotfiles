@@ -1,0 +1,46 @@
+# /etc/nanorc ~/.nanorc
+
+set   afterends     # ctrl+left/right
+set   atblanks      # wrap at blanks
+set   autoindent    # new lines
+set   casesensitive # search
+unset indicator     # scroll bar
+set   linenumbers
+set   minibar       # no titlebar
+unset mouse         # but disables middle-click-to-paste
+unset multibuffer
+unset noconvert
+unset nohelp        # when familiar enought
+unset nonewlines
+set   numbercolor   yellow,normal
+set   scrollercolor grey,normal
+set   smarthome     # line start first
+set   softwrap
+set   tabsize       4
+set   tabstospaces
+set   trimblanks
+set   wordchars     "_" # underscore is often part of a word in code
+set   zap           # delete selected text
+
+bind ^A     home         main
+bind ^C     copy         main
+bind ^/     comment      main
+bind ^E     end          main
+bind ^F     whereis      all
+bind ^G     gotoline     main
+bind ^H     findbracket  main
+bind ^J     findprevious all
+bind ^K     findnext     all
+bind ^L     center       main
+bind ^]     complete     main
+bind ^O     insert       main
+bind ^Q     exit         all
+bind ^Space execute      main
+bind ^S     savefile     all
+bind ^V     paste        main
+bind ^X     cut          main
+bind ^U     undo         main
+
+#include "/usr/share/nano/*.nanorc"
+
+# EOF

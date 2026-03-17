@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# /usr/local/bin/calc ~/.local/bin/calc
+
+(( $# == 0 )) && set -- "$(cat /dev/stdin)"
+
+if command -v numfmt >/dev/null ; then
+    echo "$(( $@ ))" | numfmt --to=si
+elif command -v bc >/dev/null ; then
+    bc -ql <<< "$@"
+else
+    echo "$*"
+    exit 1
+fi
+
+# EOF

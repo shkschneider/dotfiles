@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+# /usr/local/share/pkg/arch ~/.local/share/pkg/arch
+
+BACKEND="pacman"
+command -v yay >/dev/null && BACKEND="yay"
+command -v paru >/dev/null && BACKEND="paru"
+export BACKEND
+
+pkg_version() {   "$BACKEND" --version | grep -oP 'v[0-9\.]+' | head -1 | cut -c2- ; }
+pkg_update()  {
+    # succeeds if up-to-date
+    _ "$BACKEND" -Sy || exit 1
+    local dryrun=$DRYRUN
+    DRYRUN=1
+    _ "$BACKEND -Qu"
+    DRYRUN=$dryrun
+    local updates ; mapfile -t updates < <("$BACKEND" -Qu)
+    (( ${#update[@]} == 0 )) && exit 0
+    echo "${updates[@]}"
+    exit 1
+}
+pkg_upgrade() { _ "$BACKEND" -Su "$@" ; }
+pkg_search()  { _ "$BACKEND" -Ss "$@" ; }
+pkg_info()    { _ "$BACKEND" -Si "$@" ; }
+pkg_install() { _ "$BACKEND" -S "$@" ; }
+pkg_list()    { _ "$BACKEND" -Q ; }
+pkg_remove()  { _ "$BACKEND" -Rs "$@" ; }
+pkg_purge()   { _ "$BACKEND" -Rns "$@" ; }
+pkg_clean()   {
+    case "$BACKEND" in
+        yay) _ "$BACKEND" -Scc --noconfirm ;;
+        paru) _ "$BACKEND" -Sc --delete --noconfirm ;;
+        pacman) _ "$BACKEND" -Scc --noconfirm ;;
+        *) exit 1 ;;
+    esac
+}
+pkg_wipe()    {
+    case "$BACKEND" in
+        yay) _ "$BACKEND" -Ycc --noconfirm ;;
+        paru|pacman)
+            # missing autoremove
+            local dryrun=$DRYRUN
+            DRYRUN=1
+            _ "$BACKEND -Qdtq | $BACKEND -Rns -"
+            DRYRUN=$dryrun
+            local orphans
+            mapfile -t orphans < <("$BACKEND" -Qdtq 2>/dev/null)
+            (( ${#orphans[@]} > 0 )) && "$BACKEND" -Rns -- "${orphans[@]}"
+            ;;
+        *) exit 1 ;;
+    esac
+}
+
+# EOF

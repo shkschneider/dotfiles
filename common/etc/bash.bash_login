@@ -1,0 +1,31 @@
+# /etc/bash.bash_login ~/.bash_login
+
+_ps1_path() {
+    pwd | sed "s;$HOME;~;"
+}
+_ps1_user() {
+    idu=$EUID
+    if test $idu -eq 0 ; then
+        printf '\033[31m'
+    else
+        printf '\033[32m'
+    fi
+}
+_ps1_char() {
+    code=$?
+    idu=$EUID
+    if test $code -eq 0 ; then
+        c=$(test $idu -eq 0 && printf '#' || printf '$')
+        printf '\033[37m%c' $c
+    else
+        c=$(test $idu -eq 0 && printf '#' || printf '$')
+        printf '\033[31m%c' $c
+    fi
+}
+PROMPT_COMMAND='U=$(_ps1_user);P=$(_ps1_path);C=$(_ps1_char)'
+export PS1='${U}\u@\h \033[34m${P}\n${C}\033[0m '
+export PS2="> "
+export PS3="> "
+export PS4="> "
+
+# EOF

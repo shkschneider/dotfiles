@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# /usr/local/bin/manual ~/.local/bin/manual
+
+if command -v fzf >/dev/null ; then
+    m="$(man -k "${@:-.}" | fzf)"
+    [[ -n "$m" ]] || exit 0
+    man "$(echo "$m" | tr -d '()' | cut -d' ' -f2)" "$(echo "$m" | tr -d '()' | cut -d' ' -f1)"
+else
+    man "$@"
+fi
+
+# EOF

@@ -1,0 +1,99 @@
+#!/usr/bin/env bash
+# /usr/local/sbin/pkg ~/.local/sbin/pkg
+#
+# pkg -- one package manager (wrapper) to rule them all
+# 2026 github.com/shkschneider (licensed under MIT)
+#
+
+LC_ALL=C.UTF-8
+
+FRONTEND="${0##*/}"
+BACKEND="${BACKEND:-}"
+
+if test -z "$BACKEND" ; then
+    if command -v pacman >/dev/null ; then
+        BACKEND="arch"
+    elif command -v apt >/dev/null ; then
+        BACKEND="apt"
+    elif command -v dnf >/dev/null ; then
+        BACKEND="dnf"
+    elif command -v xbps-install >/dev/null ; then
+        BACKEND="xbps"
+    else
+        echo "Unknown backend" >&2
+        exit 1
+    fi
+fi
+
+_() {
+    test "$QUIET" = "0" && echo "[ $* ]"
+    test "$DRYRUN" = "0" && "$@"
+}
+
+src=""
+for src in "$HOME/.local/share" "/usr/local/share" "/opt" "/etc" "" ; do
+    [[ -r "$src/$FRONTEND/$BACKEND" ]] && {
+        break
+    }
+done
+# shellcheck disable=SC1090 # ShellCheck can't follow non-constant source.
+if [[ -n "$src" ]] ; then
+    source "$src/$FRONTEND/$BACKEND" || exit 1
+else
+    echo "Missing backend: $BACKEND" >&2
+    exit 1
+fi
+
+_version() {
+    echo "$FRONTEND > $BACKEND $(pkg_version)"
+}
+
+_help() {
+    grep "# $0 " "${BASH_SOURCE[0]}" | head -1 | cut -c3-
+    echo "Usage: $FRONTEND ..."
+    sed -n '/^case/,$ p' "${BASH_SOURCE[0]}" \
+        | grep ';;' | sed '1d;$d' | cut -d')' -f1 \
+        | xargs -I{} printf "       %s\n" "{}"
+}
+
+DRYRUN=${DRYRUN:-0}
+QUIET=${QUIET:-0}
+while (( $# > 0 )) ; do
+    case "$1" in
+        --version) _version ; exit 0 ;;
+        -h|--help) _help ; exit 0    ;;
+        --dry-run) shift ; DRYRUN=1  ;;
+        --quiet  ) shift ; QUIET=1   ;;
+        --       ) shift ; break     ;;
+        *        ) break             ;;
+    esac
+done
+#(( QUIET == 0 )) && echo "[ $src ]"
+__() {
+    local target ; target="$1" ; shift
+    local options ; options=()
+    while (( $# > 0 )) ; do
+        case "$1" in
+            --) shift ; break           ;;
+            -*) options+=("$1") ; shift ;;
+            * ) break                   ;;
+        esac
+    done
+    "$target" "${options[@]}" -- "$@"
+}
+case "$1" in
+    ""       ) _help >&2 ; exit 1          ;;
+    u|update ) shift ; __ pkg_update  "$@" ;;
+    U|upgrade) shift ; __ pkg_upgrade "$@" ;;
+    s|search ) shift ; __ pkg_search  "$@" ;;
+    q|info   ) shift ; __ pkg_info    "$@" ;;
+    i|install) shift ; __ pkg_install "$@" ;;
+    l|list   ) shift ; __ pkg_list    "$@" ;;
+    r|remove ) shift ; __ pkg_remove  "$@" ;;
+    R|purge  ) shift ; __ pkg_purge   "$@" ;;
+    c|clean  ) shift ; __ pkg_clean   "$@" ;;
+    C|wipe   ) shift ; __ pkg_wipe    "$@" ;;
+    *        ) _ "$BACKEND" "$@"           ;;
+esac
+
+# EOF

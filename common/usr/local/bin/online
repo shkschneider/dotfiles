@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# /usr/local/bin/online ~/.local/bin/online
+
+# https://github.com/gpakosz/.tmux/blob/master/.tmux.conf.local
+# https://stackoverflow.com/a/26820300
+ping -c 1 1.1.1.1 &>/dev/null || \
+echo -e "GET / HTTP/1.0\n\n" | nc 1.1.1.1 80 &>/dev/null
+
+exit $?
+
+# api.ipify.org
+# ifconfig.co
+# ipecho.net/plain
+
+# EOF

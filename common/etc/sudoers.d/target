@@ -1,0 +1,3 @@
+# /etc/sudoers.d/target
+
+Defaults targetpw

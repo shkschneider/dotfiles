@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# /usr/local/bin/move ~/.local/bin/move
+#
+# move -- mv with progress bar
+# 2026 github.com/shkschneider (licensed under MIT)
+#
+
+shopt -s nullglob
+shopt -s extglob
+
+if command -v copy >/dev/null ; then
+    (copy "$@" | sed 's/copy/move/g') && \
+    rm -rf -- "${@:1:$#-1}" >/dev/null
+else
+    mv -- "$@"
+fi
+
+# EOF

@@ -1,0 +1,3 @@
+# /etc/sudoers.d/prompt
+
+Defaults passprompt="[%p] make me a sandwich: "

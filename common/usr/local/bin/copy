@@ -1,0 +1,93 @@
+#!/usr/bin/env bash
+# /usr/local/bin/copy ~/.local/bin/copy
+#
+# copy -- cp with progress bar
+# 2026 github.com/shkschneider (licensed under MIT)
+#
+# copy --help
+#
+#     ls ~/dir/                  # ~/dir/file
+#     copy ~/dir      /tmp       # /tmp/dir/file
+#     copy ~/dir/     /tmp       # /tmp/dir/file
+#     copy ~/dir      /tmp/      # /tmp/dir/file
+#     copy ~/dir/     /tmp/      # /tmp/dir/file
+#     copy ~/dir      /tmp/dir2  # /tmp/dir2/file
+#     copy ~/dir/file /tmp       # /tmp/file
+#     copy ~/dir/file /tmp/      # /tmp/file
+#     copy ~/dir/file /tmp/file2 # /tmp/file2
+#
+# cp -- --help
+#
+
+shopt -s nullglob
+shopt -s extglob
+
+OPTIONS=("-a" "-r")
+while (( $# > 0 )) ; do
+    case "$1" in
+        --) shift ; break ;;
+        --help) grep -- '^#' "${BASH_SOURCE[0]}" | sed '1d;$d' | cut -c3- | sed '1d;$d' ; exit 0 ;;
+        -*) OPTIONS+=("$1") ; shift ;;
+        *) break ;;
+    esac
+done
+(( $# >= 2 )) || { cp "$@" ; exit 1 ; }
+SRC=("$@")
+DST=("${SRC[-1]}")
+for (( i=0; i < ${#SRC[@]} ; i++ )) ; do
+    DST[i]="${SRC[-1]}"
+done
+unset 'SRC[-1]'
+for (( i=0; i < ${#SRC[@]} ; i++ )) ; do
+    src="$(realpath -- "${SRC[i]}")"
+    [[ -r "$src" ]] || { echo "$src: not readable!" >&2 ; exit 1 ; }
+    SRC[i]="$src"
+    dst="$(realpath -- "${DST[i]}")"
+    [[ -f "$src" && -d "$dst" ]] && dst="$dst/${src##*/}"
+    [[ -w "${dst%/*}" ]] || { echo "${dst%/*}: not writable!" >&2 ; exit 1 ; }
+    DST[i]="$dst"
+done
+
+n=${#SRC[@]}
+for (( i=0 ; i<n ; i++ )) ; do
+    src="${SRC[i]}"
+    dst="${DST[i]}"
+    echo "[$src $dst]"
+    printf '[%d/%d] copy %s' $((i+1)) "$n" "$(du -sh --si "$src" | cut -f1)"
+    if [[ -d "$src" ]] ; then
+        pre=("-C" "${src%/*}" "${src##*/}")
+        pst=()
+        if [[ ! -d "$dst" ]] ; then
+            printf ' %s as %s' "${src/$HOME/\~}" "${dst/$HOME/\~}"
+            pst+=("--strip-components=1")
+        else
+            printf ' %s into %s' "${src/$HOME/\~}" "${dst/$HOME/\~}"
+        fi
+        if command -v tar >/dev/null && command -v pv >/dev/null ; then
+            echo ' using tar+pv+tar'
+            sz=$(du -sb -- "$src" | cut -f1)
+            mkdir -p -- "$dst" >/dev/null && \
+            tar cf - "${pre[@]}" | \
+                pv -s "$sz" -btepa --si | \
+                tar xf - "${pst[@]}" -C "$dst" && \
+            continue
+        fi
+    else
+        printf ' %s as %s' "${src/$HOME/\~}" "${dst/$HOME/\~}"
+        if command -v pv >/dev/null ; then
+            echo ' using pv'
+            sz=$(du -sb -- "$src" | cut -f1)
+            pv -s "$sz" -btepa --si -- "$src" > "$dst" && \
+            continue
+        fi
+    fi
+    if command -v rsync >/dev/null ; then
+        echo ' using rsync'
+        rsync -ah --info=progress2 -- "$src" "$dst" && \
+        continue
+    fi
+    echo ' using cp'
+    cp "${OPTIONS[@]}" -- "$src" "$dst"
+done
+
+# EOF
