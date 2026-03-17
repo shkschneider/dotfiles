@@ -1,9 +1,0 @@
-#!/usr/bin/env sh
-
-if command -v bat >/dev/null ; then
-    bat --force-colorization "$@"
-else
-    cat "$@"
-fi
-
-# EOF

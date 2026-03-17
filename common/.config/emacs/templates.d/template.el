@@ -1,7 +1,0 @@
-;;
-;; Elisp
-;;
-
-(provide 'name)
-
-;; EOF

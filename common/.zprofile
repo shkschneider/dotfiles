@@ -1,5 +1,0 @@
-# ~/.zprofile
-#
-# PLACEHOLDER
-#
-# EOF

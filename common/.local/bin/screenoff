@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-# warning: this might reset xset's -dpms
-xset dpms force off
-
-# EOF
