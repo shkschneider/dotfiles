@@ -5,11 +5,6 @@
 Z_NOTIFY=${Z_NOTIFY:-true}
 [[ "${Z_NOTIFY:-}" == true ]] || return
 
-case $OSTYPE in
-    darwin*) command -v osascript >/dev/null || zlog e 'notify: missing osascript' >&2 ; return ;;
-    *) command -v notify-send >/dev/null || zlog e 'notify: missing notify-send' >&2 ; return ;;
-esac
-
 Z_NOTIFY_THRESHOLD=${Z_NOTIFY_THRESHOLD:-60} # s
 Z_NOTIFY_IGNORE=(${Z_NOTIFY_IGNORE:-${EDITOR:-nano} sleep})
 Z_NOTIFY_SUCCESS=${Z_NOTIFY_SUCCESS:-false}
@@ -24,14 +19,7 @@ function _notify() {
     (( $Z_NOTIFY_IGNORE[(Ie)$cmd] )) && return
     local diff=$((EPOCHREALTIME - TIMER))
     [[ $diff -ge Z_NOTIFY_THRESHOLD ]] || return
-    case $OSTYPE in
-        darwin*)
-            osascript -e "display notification \"$argv\" with title \"$cmd took ${diff%.*}s\""
-            ;;
-        *)
-            notify-send -u low "$cmd took ${diff%.*}s"
-            ;;
-    esac
+    notify-send -u low "$cmd took ${diff%.*}s" 2>/dev/null
 }
 
 autoload -Uz add-zsh-hook

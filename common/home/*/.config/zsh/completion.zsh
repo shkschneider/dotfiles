@@ -71,9 +71,6 @@ bindkey '^I' expand-or-complete-or-list-files # tab
 
 zmodload zsh/terminfo
 bindkey "${terminfo[kcbt]}" reverse-menu-complete # shift-tab
-bindkey "${terminfo[kdch1]}" delete-char # del
-bindkey "${terminfo[kend]}" end-of-line # end
-bindkey "${terminfo[khome]}" beginning-of-line # home
 
 autoload -Uz bashcompinit
 autoload -Uz compinit

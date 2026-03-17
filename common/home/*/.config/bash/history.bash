@@ -11,10 +11,4 @@ export HISTCONTROL="erasedups:ignoreboth" #ignoredups,ignorespace
 export HISTIGNORE="&:test;[ ]*:exit:cd;ls:pwd;bg:fg:history:clear" # ignore
 export HISTTIMEFORMAT='%Y-%m-%d %H:%M:%S ' # prefix
 
-case $OSTYPE in
-    darwin*)
-        export SHELL_SESSION_HISTORY=0
-        ;;
-esac
-
 # EOF
