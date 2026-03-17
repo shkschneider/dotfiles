@@ -1,3 +1,4 @@
+#!/usr/bin/env sh
 # ~/.config/bashmount/config
 
 udisks='auto'
@@ -12,5 +13,7 @@ pretty='1'
 #mount_options='--options nosuid,noexec,noatime'
 
 filemanager() {
-    st -e 'ranger || fff' & >/dev/null 2>&1
+    kitty -e 'lf' & >/dev/null 2>&1
 }
+
+# EOF
