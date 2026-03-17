@@ -1,0 +1,8 @@
+# ~/.config/wpaperd/config.toml
+
+[default]
+duration = "1h"
+sorting = "random"
+recursive = "true"
+
+# EOF

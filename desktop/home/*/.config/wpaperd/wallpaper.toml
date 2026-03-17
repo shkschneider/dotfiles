@@ -1,0 +1,7 @@
+# ~/.config/wpaperd/wallpaper.toml
+
+[any]
+path = "~/.local/share/backgrounds/"
+#path = "/usr/share/backgrounds/"
+
+# EOF
