@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+if locale | grep 'UTF-8' ; then
+    echo -n
+else
+    locale -a
+fi
+
+echo -e 'emoji: ♠' # spades
+echo -e 'emoji: ♣' # clubs
+echo -e 'emoji: ♥' # hearts
+echo -e 'emoji: ♦' # diamonds
+echo -e 'emoji: ✔' # heavy check mark
+echo -e 'emoji: ✖' # heavy multiplication
+echo -e 'emoji: 🎉' # tada
+
+echo -e 'nerdicon: \ue712' # linux
+echo -e 'nerdicon: \uf32e' # voidlinux
+echo -e 'nerdicon: \uf303' # archlinux
+echo -e 'nerdicon: \uf306' # debian
+
+# EOF
