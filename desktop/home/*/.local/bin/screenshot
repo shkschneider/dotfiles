@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# ~/.local/bin/screenshot
 
 if [[ -z "$DIR" ]] ; then
     if [[ -d "${XDG_PICTURES_DIR:-$HOME/Pictures}" ]] ; then

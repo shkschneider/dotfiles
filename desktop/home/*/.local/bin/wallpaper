@@ -1,12 +1,17 @@
 #!/usr/bin/env bash
+# ~/.local/bin/wallpaper
 
 command -v swaybg >/dev/null || exit 1
 
 _() {
     echo "$@"
-    local pid ; pid=$(pidof swaybg)
+    local pids ; pids=($(pidof swaybg))
     swaybg --image "$@" >/dev/null 2>&1 &
-    test -n "$pid" && sleep 1 && kill -9 "$pid"
+    sleep 1
+    for pid in "${pids[@]}" ; do
+        echo "$pid"
+        kill -9 "$pid"
+    done
 }
 
 if (( $# == 1 )) ; then

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# ~/.local/bin/gravatar
 
 email="${1:-$EMAIL}"
 [[ -z "$email" ]] && command -v git >/dev/null && email="$(git config user.email 2>/dev/null)"

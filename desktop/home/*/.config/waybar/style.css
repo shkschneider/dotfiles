@@ -1,16 +1,20 @@
-@define-color background #333333; /* @theme:background@ */
-@define-color foreground #eeeeee; /* @theme:foreground@ */
-@define-color accent #1793d1; /* @theme:accent@ */
-@define-color green #A9DC76; /* @theme:green@ */
-@define-color yellow #FFD866; /* @theme:yellow@ */
-@define-color red #FF6188; /* @theme:red@ */
+/* @theme@ */
+@define-color background #333333;
+@define-color foreground #eeeeee;
+@define-color accent #1793d1;
+@define-color green #A9DC76;
+@define-color yellow #FFD866;
+@define-color red #FF6188;
+@define-color darker #464646;
+@define-color dark #8c8c8c;
 
+/* @theme@ */
 * {
     border: none;
     border-radius: 8px;
     min-height: 0;
-    font-family: "JetBrainsMonoNL Nerd Font", monospace;
-    font-size: 11px;
+    font-family: symbols, sans-serif, monospace;
+    font-size: 12px;
 }
 
 window#waybar {
@@ -28,7 +32,7 @@ window#waybar .modules-right *:hover {
 }
 #custom-logo {
     margin: 0px 8px;
-    font-size: 15px;
+    font-size: 16px;
     border-radius: 8px 0px 0px 8px;
     color: @accent;
 }
@@ -52,7 +56,10 @@ window#waybar .modules-right *:hover {
 }
 #window {
     padding: 0px 10px;
-    color: #8c8c8c; /* @theme:normal+@ */
+    color: @dark;
+}
+#window > * {
+    font-size: 16px;
 }
 
 .modules-right > * > * {
@@ -70,13 +77,13 @@ window#waybar .modules-right *:hover {
     margin-right: 0;
     border-right: none;
     padding: 0px 4px;
-    color: #464646; /* @theme:normal-@ */
+    color: @darker;
 }
 window#waybar .modules-right #custom-separator:hover {
-    color: #464646; /* @theme:normal-@ */
+    color: @darker;
 }
 #custom-logo:hover, #custom-power:hover {
-    color: @foreground; /* @theme:foreground@ */
+    color: @foreground;
 }
 #cpu, #clock, #network {
     border-radius: 8px 0px 0px 8px;

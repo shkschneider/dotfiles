@@ -34,9 +34,9 @@
         "format": "|",
     },
     "custom/logo": {
-        "format": "  ",
+        "format": " ",
         "tooltip": false,
-        "on-click": "tofi",
+        "on-click": "tofi -drun",
     },
     "hyprland/workspaces": {
         "on-click": "activate",
@@ -59,44 +59,44 @@
         "spacing": 10,
     },
     "cpu": {
-        "format": " {usage}%",
+        "format": "  {usage}%",
     },
     "memory": {
-        "format": " {percentage}%",
+        "format": "  {percentage}%",
         "tooltip-format": "{used:0.1f}G / {total:0.1f}G ({avail:0.1f}G)",
     },
     "disk": {
-        "format": " {percentage_used}%",
+        "format": "  {percentage_used}%",
         "tooltip-format": "{path}: {specific_used:0.1f}G / {specific_total:0.1f}G ({specific_free:0.1f}G)",
         "unit": "GB",
     },
     "network": {
-        "format-wifi" : "{icon} {signalStrength}%",
+        "format-wifi" : "{icon}  {signalStrength}%",
         "format-icons": ["󰤯","󰤟","󰤢","󰤥","󰤨"],
         "format-ethernet": "󰀂",
-	    // "format-alt" : "󱛇",
+        // "format-alt" : "󱛇",
         "format-disconnected" : "󰖪",
-	    "tooltip-format-wifi": "{essid}\n{ipaddr}",
+        "tooltip-format-wifi": "{essid}\n{ipaddr}",
         "tooltip-format-ethernet": "{ipaddr}",
-    	"tooltip-format-disconnected": "Offline",
-    	"on-click": "rfkill unblock wifi",
-    	"nospacing": 1,
+        "tooltip-format-disconnected": "Offline",
+        "on-click": "rfkill unblock wifi",
+        "nospacing": 1,
     },
     "bluetooth": {
-        "format": " {status}",
-        "format-connected": " {device_alias}",
-        "format-connected-battery": " {device_alias} ({device_battery_percentage}%)",
-        "format-no-controller": " —",
+        "format": "  {status}",
+        "format-connected": "  {device_alias}",
+        "format-connected-battery": "  {device_alias} ({device_battery_percentage}%)",
+        "format-no-controller": "  —",
         "format-disabled": "",
         "tooltip-format": "{controller_alias}\t{controller_address}",
         "tooltip-format-connected": "{controller_alias}\t{controller_address}\n{device_enumerate}",
     },
     "pulseaudio": {
-        "format": "{icon} {volume}%",
+        "format": "{icon}  {volume}%",
         "format-bluetooth": "󰂰",
         "tooltip": false,
         "nospacing": 1,
-        "format-muted": "󰝟 —",
+        "format-muted": "󰝟  —",
         "format-icons": {
             "headphone": "",
             "default": ["󰖀","󰕾",""],
@@ -105,11 +105,11 @@
         "scroll-step": 5,
     },
     "backlight": {
-        "format": " {percent}%",
+        "format": "  {percent}%",
         "tooltip": false,
     },
     "battery": {
-        "format": "{icon} {capacity}%",
+        "format": "{icon}  {capacity}%",
         "format-icons": {
             "charging": [
                 "󰢜","󰂆","󰂇","󰂈","󰢝","󰂉","󰢞","󰂊","󰂋","󰂅"
@@ -118,7 +118,7 @@
                 "󰁺","󰁻","󰁼","󰁽","󰁾","󰁿","󰂀","󰂁","󰂂","󰁹"
             ],
         },
-        "format-full": " 100%",
+        "format-full": "  100%",
         "states": {
             "warning": 50,
             "critical": 25

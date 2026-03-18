@@ -1,4 +1,7 @@
-#!/bin/sh
+#!/usr/bin/env sh
+# ~/.local/bin/notify-clear
 
-makoctl dismiss -a 2>/dev/null
-dunstctl close-all 2>/dev/null
+command -v dunstctl >/dev/null && dunstctl close-all 2>/dev/null
+command -v makoctl >/dev/null && makoctl dismiss -a 2>/dev/null
+
+# EOF

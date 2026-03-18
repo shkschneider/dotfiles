@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# ~/.local/bin/desktops
 
 desktops=()
 for location in "$HOME/.local/share" "/usr/share" ; do

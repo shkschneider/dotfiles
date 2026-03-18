@@ -1,12 +1,15 @@
+# /usr/share/plymouth/themes/shk/shk.plymouth
+
 [Plymouth Theme]
 Name=SHK
 Description=SHK
 ModuleName=two-step
 
+# @theme@
 [two-step]
-Font=Adwaita Sans 12
-TitleFont=Adwaita Sans Light 30
-MonospaceFont=Adwaita Mono 12
+Font=Outfit 12
+TitleFont=Outfit 24
+MonospaceFont=JetBrains Mono 12
 ImageDir=/usr/share/plymouth/themes/spinner
 DialogHorizontalAlignment=.5
 DialogVerticalAlignment=.382
@@ -64,3 +67,5 @@ ProgressBarShowPercentComplete=true
 UseProgressBar=true
 Title=Resetting System...
 SubTitle=Do not turn off your computer
+
+# EOF

@@ -6,7 +6,6 @@
 
 Symlinks-based, much like GNU Stow, but strictly via files, never directories.
 Which allows for local configurations without messing up with those ;
-(If you want copies, use `rsync`.)
 
 > NO WARRANTY. Use at your own risk.
 
@@ -16,6 +15,19 @@ Which allows for local configurations without messing up with those ;
 git clone https://github.com/shkschneider/dotfiles [~/.dot|/opt/dotfiles]
 ./dotfiles [-f|--force] [profile...]
 ```
+
+If you want copies, just use `rsync`.
+
+**Customize**
+
+Expected [fonts](desktop/home/*/.config/fontconfig/fonts.conf) are:
+
+- Symbols Nerd Font Mono
+- Outfit
+- JetBrains Mono
+- Hack
+
+All variables are commented with `@theme[:...]@` for easy replacements.
 
 ## Profiles
 
