@@ -1,9 +1,9 @@
 #!/bin/sh
-# ~/.config/sh/rc
+# /usr/local/etc/sh/rc
 
 echo "$-" | grep i >/dev/null || return 0
 
-for rc in $(find "$HOME/.config/sh/" -name '*.sh' 2>/dev/null) ; do
+for rc in $(find "/usr/local/etc/sh/" -name '*.sh' 2>/dev/null) ; do
     [ -r "$rc" ] && . "$rc"
     unset rc
 done

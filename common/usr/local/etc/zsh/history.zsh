@@ -1,0 +1,33 @@
+#!/usr/bin/env zsh
+# /usr/local/etc/zsh/history.zsh ~/.config/zsh/history.zsh
+
+[[ -w "$HOME/.config/zsh" ]] && HISTFILE="$HOME/.config/zsh/.history"
+HISTSIZE=1000
+SAVEHIST=1000
+
+# fc -l 1 | awk '{ CMD[$2]++; count++; } END { for (a in CMD) print CMD[a] " " a }' | grep -v "./" | sort -nr | head -n 20
+
+setopt   extended_history # timestamp
+setopt   append_history inc_append_history # incremental not at exit
+setopt   hist_find_no_dups hist_ignore_dups hist_ignore_space hist_reduce_blanks ; unsetopt hist_save_no_dups # clean
+unsetopt share_history
+
+if autoload -Uz history-search-end ; then
+    zle -N history-beginning-search-backward-end history-search-end
+    zle -N history-beginning-search-forward-end history-search-end
+    bindkey '^[[A' history-beginning-search-backward-end # up
+    bindkey '^[[B' history-beginning-search-forward-end # down
+else
+    bindkey '^[[A' history-beginning-search-backward # up
+    bindkey '^[[B' history-beginning-search-forward # down
+fi
+bindkey -r '^R' # history-incremental-search-backward
+
+function _exit() {
+    history -p
+}
+
+autoload -Uz add-zsh-hook
+add-zsh-hook zshexit _exit
+
+# EOF

@@ -1,0 +1,11 @@
+#!/bin/sh
+# /usr/local/etc/profile ~/.profile
+
+for rc in $(find "/usr/local/etc/profile.d/" -name '*.sh' 2>/dev/null) ; do
+    [ -r "$rc" ] && . "$rc"
+    unset rc
+done
+
+true # $?
+
+# EOF

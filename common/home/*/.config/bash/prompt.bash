@@ -1,41 +1,24 @@
 #!/usr/bin/env bash
 # ~/.config/bash/prompt.bash
 
-PROMPT() {
-    echo -n "$(tput setaf 7)"
-    if (( $(id -u) == 0 )) ; then
-        echo -n "$(tput setaf 1)"
-    else
-        echo -n "$(tput setaf 2)"
+if command -v oh-my-posh >/dev/null ; then
+
+    eval "$(oh-my-posh init bash --config pure)"
+
+elif command -v starship >/dev/null ; then
+
+    if ! test -f "$HOME/.config/starship.toml" ; then
+        echo 'add_newline = true' >> ~/.config/starship.toml
+        starship preset pure-preset >> ~/.config/starship.toml
     fi
-    echo -n "%u"
-    if [[ -n "$SSH_TTY$SSH_CLIENT$SSH2_CLIENT" ]] ; then
-        echo -n "$(tput setaf 3)@%h"
-    fi
-    echo -n " $(tput setaf 4)%w"
-}
-
-RPROMPT() {
-    printf '%s%*s' "$(tput setaf 5)" $COLUMNS '%j'
-}
-
-set-prompt() {
-    c=$?
-    PS1="$(tput bold)$(tput sc)$(RPROMPT)$(tput rc)$(PROMPT)"
-    PS1="${PS1//%/\\}"
-    # › 0x203a
-    # ❯ 0x276f
-    (( c )) && c="$(tput setaf 1)!" || c="$(tput setaf 7)›"
-    PS1="\n$PS1\n$c$(tput sgr0) "
-    export PS1
-    PS2=""
-    export PS2
-}
-
-if command -v starship >/dev/null ; then
     eval "$(starship init bash)"
-else
-    PROMPT_COMMAND=set-prompt
+
+elif test -d ~/.bash_it ; then
+
+    export BASH_IT="${BASH_IT:-$HOME/.bash_it}"
+    export BASH_IT_THEME="${BASH_IT_THEME:-pure}"
+    source "$BASH_IT/bash_it.sh"
+
 fi
 
 # EOF

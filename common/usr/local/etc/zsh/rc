@@ -1,0 +1,13 @@
+#!/usr/bin/env zsh
+# /usr/local/etc/zsh/rc
+
+[[ -o interactive ]] || return 0
+
+for rc in $(find "/usr/local/etc/zsh/" -name '*.zsh' 2>/dev/null) ; do
+    [[ -r "$rc" ]] && source "$rc"
+    unset rc
+done
+
+true # $?
+
+# EOF

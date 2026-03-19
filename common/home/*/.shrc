@@ -1,0 +1,12 @@
+#!/bin/sh
+# ~/.shrc
+
+if [[ -r "$HOME/.config/sh/rc" ]] ; then
+    . "$HOME/.config/sh/rc"
+elif [[ -r "/usr/local/etc/sh/rc" ]] ; then
+    . "/usr/local/etc/sh/rc"
+fi
+
+true # $?
+
+# EOF

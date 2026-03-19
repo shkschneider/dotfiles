@@ -82,6 +82,15 @@ _automatic by default_
 - [bin/trash](common/usr/local/bin/trash) -- safer rm for the cli
 - [sbin/pkg](common/usr/local/sbin/pkg) -- one package manager (wrapper) to rule them all
 
+## Shells
+
+`strace -e openat SHELL [-i|-l] -c exit 2>&1 | grep -E '(etc|profile|rc)'`
+
+- login: profile
+- interactive: rc
+
+TLDR: profile source rc
+
 ## Undo
 
 ```sh
