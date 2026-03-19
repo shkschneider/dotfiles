@@ -5,7 +5,7 @@
 #
 # > each profile is its own root filesystem
 # > (common desktop laptop server KERNEL HOST...)
-# > home/\* (literal '*') means "any" user's home
+# > home/\* (literal '*') means any user
 # > home/USER only target USER's home
 # > defaults to dry-run for safety
 # > logs all unlink/mv/ln commands to ~/dotfiles.log
@@ -16,7 +16,7 @@
 # > NO WARRANTY. Use at your own risk.
 #
 
-LC_ALL=C.UTF-8
+LC_ALL=C.utf8
 set -o noclobber
 shopt -s nullglob
 DOT="${BASH_SOURCE[0]}" ; DOT="$(realpath -- "${DOT%/*}")"

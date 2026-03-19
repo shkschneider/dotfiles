@@ -23,6 +23,7 @@ $container\
 $shell\
 $character"""
 
+# @theme:shk@
 palette = 'shk'
 
 [battery]
@@ -70,7 +71,7 @@ disabled = true
 [package]
 disabled = true
 
-# @theme:shk@ #
+# @theme:shk@
 [palettes.shk]
 black = '#000000'
 red = '#ED1515'

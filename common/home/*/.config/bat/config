@@ -1,2 +1,6 @@
+# ~/.config/bat/config
+
 --theme="OneHalfDark"
 #--paging=never
+
+# EOF

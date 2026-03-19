@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 grep ^map ~/.config/lf/lfrc | grep -v 'no_op' | ${PAGER:-cat}
 
