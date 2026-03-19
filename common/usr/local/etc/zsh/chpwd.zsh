@@ -2,7 +2,7 @@
 # /usr/local/etc/zsh/chpwd.zsh ~/.config/zsh/chpwd.zsh
 
 Z_CHPWD=${Z_CHPWD:-true}
-[[ "${Z_CHPWD:-}" == true ]] || return
+[[ "$Z_CHPWD" == true ]] || return
 
 autoload -Uz add-zsh-hook
 

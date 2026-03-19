@@ -5,12 +5,13 @@
 
 Z_CHPWD=true
 Z_COLORS=true
-Z_ELAPSED=true
+Z_EXEC_TIME=true
 Z_HIGHLIGHT=false
 Z_NOTIFY=false
 Z_NOTIFY_IGNORE+=($EDITOR)
 Z_NOTIFY_SUCCESS=false
 Z_NOTIFY_THRESHOLD=1 # s
+Z_PROMPT_NEWLINE=true
 Z_TITLE=true
 
 if [[ -r "$HOME/.shrc" ]] ; then

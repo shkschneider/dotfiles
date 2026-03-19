@@ -2,14 +2,15 @@
 # /usr/local/etc/zsh/promtp.zsh ~/.config/zsh/prompt.zsh
 # https://gist.github.com/romkatv/2a107ef9314f0d5f76563725b42f7cab
 
-Z_ELAPSED=${Z_ELAPSED:-true}
+Z_EXEC_TIME=${Z_EXEC_TIME:-true}
+Z_PROMPT_NEWLINE=${Z_PROMPT_NEWLINE:-true}
 
 autoload -Uz promptinit
 
 function pre-exec() {
     timer=$(($(date +%s%0N)/1000000))
 }
-[[ "${Z_CHPWD:-}" == true ]] && add-zsh-hook preexec pre-exec
+[[ "$Z_EXEC_TIME" == true ]] && add-zsh-hook preexec pre-exec
 
 function pre-cmd() {
     if [ $timer ]; then
@@ -19,7 +20,7 @@ function pre-cmd() {
         unset timer
     fi
 }
-[[ "${Z_CHPWD:-}" == true ]] && add-zsh-hook precmd pre-cmd
+[[ "$Z_EXEC_TIME" == true ]] && add-zsh-hook precmd pre-cmd
 
 function prompt-length() {
     emulate -L zsh
@@ -71,7 +72,8 @@ function set-prompt() {
     local bottom_right=''
     local REPLY
     prompt-fill-line "$top_left" "$top_right"
-    PROMPT=$'\n%B'$REPLY$'%b\n%B'$bottom_left'%b'
+    PROMPT='' ; [[ "$Z_PROMPT_NEWLINE" == true ]] && PROMPT=$'\n'
+    PROMPT=$PROMPT'%B'$REPLY$'%b\n%B'$bottom_left'%b'
     RPROMPT=$bottom_right
     PS2=""
 }
