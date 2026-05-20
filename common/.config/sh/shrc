@@ -1,11 +1,14 @@
 # ~/.config/sh/shrc
 
-[[ $- == *i* ]] || return
+case $- in
+    *i*) ;;
+    *) return 0 2>/dev/null || exit 0 ;;
+esac
 
 #:source
 
-for rc in $(find $HOME/.config/sh -name '*.sh') ; do
-    source $rc
+find "$HOME/.config/sh" -name '*.sh' -print | while IFS= read -r rc ; do
+    . "$rc"
 done
 
 # EOF

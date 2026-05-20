@@ -1,7 +1,6 @@
 # ~/.gitattributes
 
-# Automatically normalize line endings for all text-based files
-[core]
-* -crlf
+# Normalize line endings for text files
+* text=auto eol=lf
 
 # EOF

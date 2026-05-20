@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 _() {
-    if ! command -v $1 ; then
+    if ! command -v "$1" >/dev/null 2>&1 ; then
         echo -n "$1: command not found"
         shift
         test $# -gt 0 && echo " -- $@"
@@ -71,7 +71,7 @@ _ fzf "https://github.com/junegunn/fzf" # a command-line fuzzy finder
 #_ fzy "https://github.com/jhawthorn/fzy" # fuzzy finder for the terminal
 _ ghfetch "https://github.com/mrshmllow/ghfetch" # neofetch for githu
 _ glances "https://github.com/nicolargo/glances" # glances an eye on your system
-- glow "https://github.com/charmbracelet/glow" # render markdown on the cli
+_ glow "https://github.com/charmbracelet/glow" # render markdown on the cli
 _ gron "https://github.com/tomnomnom/gron" # make json greppable
 _ httpie "https://github.com/httpie/cli" # modern, user-friendly command-line http client for the api era
 _ hyperfine "https://github.com/sharkdp/hyperfine" # command-line benchmarking tool
@@ -213,7 +213,7 @@ if command -v batsignal >/dev/null ; then
     if command -v systemctl >/dev/null ; then
         systemctl --user enable batsignal
         systemctl --user start batsignal
-        if test -f ~/.config/systemd/user/batsignal.service.d/options.conf ; then
+        if ! test -f ~/.config/systemd/user/batsignal.service.d/options.conf ; then
             mkdir --parents ~/.config/systemd/user/batsignal.service.d
             printf "[Service]\nExecStart=batsignal -d 5 -c 10 -w 20\n" \
                 > ~/.config/systemd/user/batsignal.service.d/options.conf
